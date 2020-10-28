@@ -1,0 +1,18 @@
+﻿@page "/vacationView"
+
+@using TravelClubProto.Data
+@inject VacationAdmin VacationAdmin
+
+<h3>View Vacations</h3>
+<ul>
+    @foreach (var Vacation in VacationAdmin.PublishedVacations)
+    {
+        <li> Type: @Vacation.Type Destination: @Vacation.Destination  Price: @Vacation.Price</li>
+    }
+</ul>
+
+
+
+@code {
+
+}
