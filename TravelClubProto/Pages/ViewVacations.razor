@@ -5,9 +5,61 @@
 
 <h3>View Vacations</h3>
 
+<button @onclick="Add"> Add </button>
+<button @onclick="PublishedVac"> Publish </button>
 
+<button @onclick="StartGracePeriod"> StartGrace </button>
+
+@foreach (var item in VacationAdmin.AllVacations)
+{
+    <p>
+        ALL
+        @item.State
+        @item.ID
+    </p>
+}
+
+@foreach (var item in VacationAdmin.PublishedVacations)
+{
+    <p>
+        Published
+        @item
+    </p>
+}
+
+@foreach (var item in VacationAdmin.GracePeriodVacations)
+{
+    <p>
+        Grace
+        @item
+    </p>
+}
 
 
 @code {
+
+    public void Add()
+    {
+        VacationAdmin.AllVacations.Add(new Vacation(DateTime.Now,
+                                   DateTime.Now.AddDays(1),
+                                   new List<int> { 2, 6, 10 },
+                                   new List<decimal> { 4000, 3500, 3000 }));
+        Console.WriteLine("Add");
+    }
+
+    public void PublishedVac()
+    {
+
+        Vacation currentVac = VacationAdmin.FindVac(0);
+        currentVac.State = "Published";
+
+    }
+
+    public void StartGracePeriod()
+    {
+        Vacation currentVac = VacationAdmin.FindVac(0);
+        currentVac.State = "GracePeriod";
+
+    }
 
 }

@@ -8,14 +8,16 @@ namespace TravelClubProto.Data
     public class Vacation
     {
 
-        private Dictionary<string, DateTime> Dates = new Dictionary<string, DateTime>();
+        public Dictionary<string, DateTime> Dates = new Dictionary<string, DateTime>();
 
         private Dictionary<int, decimal> Prices = new Dictionary<int, decimal>();
         private Destination Destination { get; set; }
-        private int VacationID { get; set; }
+        public int ID { get; set; }
         private int MinNumberOfUsers { get; set; }
         private bool MinNumberOfUsersExceeded { get; set; }
         private DateTime GracePeriodLength { get; set; }
+
+        public VacationAdministrator VacationAdministrator = new VacationAdministrator();
 
         private string _state;
         public string State
@@ -24,17 +26,22 @@ namespace TravelClubProto.Data
             set 
             {
                 _state = value;
-                OnStateChange();
+                VacationAdministrator.OnStateChange(_state, ID);
             }
         }
 
 
-        public Vacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices, int vacationID)
+        public Vacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices)
         {
             Dates.Add("ProposalDate", proposalDate);
             Dates.Add("Deadline", deadline);
             AddPrices(stretchGoals, prices);
-            VacationID = vacationID;
+            ID = IncrementID();
+        }
+
+        private int IncrementID()
+        {
+            return VacationAdministrator.IDInc++;
         }
 
         private void AddPrices(List<int> stretchGoals, List<decimal> prices)
@@ -43,31 +50,6 @@ namespace TravelClubProto.Data
             {
                 Prices.Add(stretchGoals[i], prices[i]);
             }
-        }
-
-        private void OnStateChange()
-        {
-            switch (_state)
-            {
-                case "Published":
-                    //Do stuff publishVacation();
-                    break;
-                case "Rejected":
-                    //Do stuff
-                    break;
-                case "Cancelled":
-                    //Do stuff
-                    break;
-                case "GracePeriod":
-                    //Do stuff
-                    break;
-                case "Completed":
-                    //Do stuff
-                    break;
-                default:
-                    break;
-            }
-            //TODO Add switch for every state, including adding to date to Dict
         }
     }
 }
