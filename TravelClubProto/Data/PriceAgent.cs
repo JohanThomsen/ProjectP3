@@ -22,9 +22,10 @@ namespace TravelClubProto.Data
 
         public List<Vacation> LookForRelevantPriceChanges(List<string> preferences)
         {
-            List<Vacation> RelevantChangedVacations;
+            List<Vacation> RelevantChangedVacations = new List<Vacation>();
             // Check each Property in the recently changed vacations againt the preferences of the agent, an add them to a list
             // Return the changed list to the manager who called it.
+            return RelevantChangedVacations;
         }
 
     }

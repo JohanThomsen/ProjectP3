@@ -12,7 +12,7 @@ namespace TravelClubProto.Data
 
         private Dictionary<int, decimal> Prices = new Dictionary<int, decimal>();
         private Destination Destination { get; set; }
-        private int VacationID { get; set; }
+        public int VacationID { get; }
         private int MinNumberOfUsers { get; set; }
         private bool MinNumberOfUsersExceeded { get; set; }
         private DateTime GracePeriodLength { get; set; }
