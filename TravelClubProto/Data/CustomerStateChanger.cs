@@ -16,23 +16,22 @@ namespace TravelClubProto.Data
         private void JoinVacation(Vacation CurrentVacation) //Guessing the functions are called on command from the UI with some sort of access to the viewed vacation
         {
             VacationLists.JoinedVacations.Add(CurrentVacation);
-            ChangeDateAndType.Add(DateTime.Now, "Joined " + CurrentVacation.VacationID);
+            ChangeDateAndType.Add(DateTime.Now, "Joined " + CurrentVacation.ID);
         }
-
         private void LeaveVacaion(Vacation CurrentVacation)
         {
             VacationLists.JoinedVacations.Remove(CurrentVacation);
-            ChangeDateAndType.Add(DateTime.Now, "Left " + CurrentVacation.VacationID);
+            ChangeDateAndType.Add(DateTime.Now, "Left " + CurrentVacation.ID);
         }
         private void FavouriteVacation(Vacation CurrentVacation)
         {
             VacationLists.FavouritedVacations.Add(CurrentVacation);
-            ChangeDateAndType.Add(DateTime.Now, "Favourited " + CurrentVacation.VacationID);
+            ChangeDateAndType.Add(DateTime.Now, "Favourited " + CurrentVacation.ID);
         }
         private void UnFavouriteVacation(Vacation CurrentVacation)
         {
             VacationLists.FavouritedVacations.Remove(CurrentVacation);
-            ChangeDateAndType.Add(DateTime.Now, "Unfavourited " + CurrentVacation.VacationID);
+            ChangeDateAndType.Add(DateTime.Now, "Unfavourited " + CurrentVacation.ID);
         }
     }
 }
