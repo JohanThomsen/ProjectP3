@@ -16,7 +16,7 @@
         ALL
         @item.State
         @item.ID
-    </p>
+    </p> <br/>
 }
 
 @foreach (var item in VacationAdmin.PublishedVacations)
@@ -24,7 +24,7 @@
     <p>
         Published
         @item
-    </p>
+    </p> <br />
 }
 
 @foreach (var item in VacationAdmin.GracePeriodVacations)
@@ -32,7 +32,7 @@
     <p>
         Grace
         @item
-    </p>
+    </p> <br />
 }
 
 
@@ -43,21 +43,22 @@
         VacationAdmin.AllVacations.Add(new Vacation(DateTime.Now,
                                    DateTime.Now.AddDays(1),
                                    new List<int> { 2, 6, 10 },
-                                   new List<decimal> { 4000, 3500, 3000 }));
+                                   new List<decimal> { 4000, 3500, 3000 },
+                                   VacationAdmin));
         Console.WriteLine("Add");
     }
 
     public void PublishedVac()
     {
-
-        Vacation currentVac = VacationAdmin.FindVac(0);
+        Console.WriteLine("Publish");
+        Vacation currentVac = VacationAdmin.FindVac(1);
         currentVac.State = "Published";
 
     }
 
     public void StartGracePeriod()
     {
-        Vacation currentVac = VacationAdmin.FindVac(0);
+        Vacation currentVac = VacationAdmin.FindVac(1);
         currentVac.State = "GracePeriod";
 
     }

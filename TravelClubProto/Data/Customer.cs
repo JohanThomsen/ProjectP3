@@ -7,37 +7,40 @@ namespace TravelClubProto.Data
 {
     public class Customer : Account
     {
-        private struct PersonalInformation
+        public struct PersonalInformation
         {
-            string Name         { get; set; }
-            string EmailAddress { get; set; } 
+            public string Name        { get; set; }
+            public string EmailAddress { get; set; } 
         }
         
-        private struct TravelPreferences
+        public struct TravelPreferences
         {
-            Destination Destination { get; set; }
-            Activity    Activity    { get; set; }
+            public Destination Dest { get; set; }
+            public Activity Act    { get; set; }
         }
         
         private PriceAgentManager priceAgentManager { get; set; }
 
         private CustomerVacations customerVacations { get; set; }
 
-        public Customer(string username, string password, int id) : base(string username, string password, int id)
+        public PersonalInformation PI;
+        public TravelPreferences   TP;
+
+        public Customer(string username, string password, int id) : base(username, password)
         {
             ID = id;
         }
 
-        private void ChangePersonalInformation(string name, string emailAddress)
+        public void ChangePersonalInformation(string name, string emailAddress)
         {
-            PersonalInformation.Name         = name;
-            PersonalInformation.EmailAddress = emailAddress;
+            PI.Name         = name;
+            PI.EmailAddress = emailAddress;
         }
 
         private void ChangeCustomerPreferences(Destination destination, Activity activity)
         {
-            TravelPreferences.Destination = destination;
-            TravelPreferences.Activity    = activity;
+            TP.Dest = destination;
+            TP.Act  = activity;
         }
 
 

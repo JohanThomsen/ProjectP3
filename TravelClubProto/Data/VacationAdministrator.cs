@@ -13,83 +13,83 @@ namespace TravelClubProto.Data
        public List<int> PublishedVacations = new List<int>();
        public List<int> GracePeriodVacations = new List<int>();
        public List<int> RecentlyChangedVacations = new List<int>();
-       public static int IDInc = 0;
+       public static int IDInc = 1;
 
-        public void OnStateChange(string state, int ID)
+        public void OnStateChange(string state, int vacationID)
         {
             switch (state)
             {
                 case "Published":
-                    PublishVacation(ID);
+                    PublishVacation(state, vacationID);
                     break;
                 case "Rejected":
-                    RejectProposal(ID);
+                    RejectProposal(vacationID);
                     break;
                 case "Cancelled":
-                    CancelVacation(ID);
+                    CancelVacation(vacationID);
                     break;
                 case "GracePeriod":
-                    StartGracePeriod(ID);
+                    StartGracePeriod(vacationID);
                     break;
                 case "Completed":
-                    CompleteVacation(ID);
+                    CompleteVacation(vacationID);
                     break;
                 default:
                     break;
             }
         }
 
-        public void StartGracePeriod(int ID)
+        public void StartGracePeriod(int vacationID)
         {
 
-            if (FindVac(ID).State == "Published") 
+            if (FindVac(vacationID).State == "GracePeriod") 
             {
-                AddDateTime("GracePeriodDate", ID);
-                GracePeriodVacations.Add(ID);
-                PublishedVacations.Remove(ID);
+                AddDateTime("GracePeriodDate", vacationID);
+                GracePeriodVacations.Add(vacationID);
+                PublishedVacations.Remove(vacationID);
                 //TODO add exceptions
             }
         }
 
-        public void CompleteVacation(int ID)
+        public void CompleteVacation(int vacationID)
         {
-            if (FindVac(ID).State == "GracePeriod")
+            if (FindVac(vacationID).State == "Completed")
             {
-                AddDateTime("CompletionDate", ID);
+                AddDateTime("CompletionDate", vacationID);
                 //TODO tilføj til TravelBureauCompletedVacations
                 //TODO tilføj til TravelClubCompletedVacations
                 //TODO tilføj til CustomerCompletedVacations
-                GracePeriodVacations.Remove(ID);
+                GracePeriodVacations.Remove(vacationID);
                 //TODO add exceptions
             }
         }
 
-        public void PublishVacation(int ID)
+        public void PublishVacation(string state, int vacationID)
         {
-            if (FindVac(ID).State == "Published")
+            if (state == "Published")
             {
                 //TODO fjern fra travelbureausProposedVacations
-                PublishedVacations.Add(ID);
-                ProposedVacations.Remove(ID);
-                AddDateTime("PublishDate", ID);
+                PublishedVacations.Add(vacationID);
+                ProposedVacations.Remove(vacationID);
+                AddDateTime("PublishDate", vacationID);
                 //Add Exceptions
             }
         }
 
-        public void CancelVacation(int ID)
+        public void CancelVacation(int vacationID)
         {
-            PublishedVacations.Remove(ID);
-            AddDateTime("CancelDate", ID);
+            PublishedVacations.Remove(vacationID);
+            AddDateTime("CancelDate", vacationID);
             //TODO fjerne joinedVacation(Customer)
             //TODO fjern fra favouritedVacation(Customer)
         }
 
-        public void RejectProposal(int ID)
+        public void RejectProposal(int vacationID)
         {
-            if (FindVac(ID).State == "Proposed")
+            if (FindVac(vacationID).State == "Proposed")
             {
-                ProposedVacations.Remove(ID);
-                AddDateTime("RejectionDate", ID);
+                ProposedVacations.Remove(vacationID);
+                AddDateTime("RejectionDate", vacationID);
                 //TODO Fjern fra TravelBureauProposedVacations
                 //TODO tilføj til RejectedVacations(travelbureau)
                 //TODO Add exceptions
@@ -97,22 +97,26 @@ namespace TravelClubProto.Data
 
         }
 
-        private void AddDateTime (string state, int ID)
+        private void AddDateTime (string state, int vacationID)
         {
-            FindVac(ID).Dates.Add(state, DateTime.Now);
+            Vacation currentVac = FindVac(vacationID);
+            currentVac.Dates.Add(state, DateTime.Now);
         }
 
-        public Vacation FindVac(int ID)
+        public Vacation FindVac(int vacationID)
         {
             Vacation currentVac = null;
-            foreach (Vacation vac in AllVacations)
+            Console.WriteLine(AllVacations);
+            for (int i = 0; i < AllVacations.Count; i++)
             {
-                if (vac.ID == ID)
+                if (AllVacations[i].ID == vacationID)
                 {
-                    currentVac = vac;
+                    currentVac = AllVacations[i];
+                    Console.WriteLine("In if" + currentVac.ID);
                 }
             }
 
+            Console.WriteLine(currentVac.ID);
             return currentVac;
         }
     }

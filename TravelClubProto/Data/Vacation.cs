@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace TravelClubProto.Data
 {
+    
     public class Vacation
     {
-
         public Dictionary<string, DateTime> Dates = new Dictionary<string, DateTime>();
 
         private Dictionary<int, decimal> Prices = new Dictionary<int, decimal>();
@@ -16,8 +16,7 @@ namespace TravelClubProto.Data
         private int MinNumberOfUsers { get; set; }
         private bool MinNumberOfUsersExceeded { get; set; }
         private DateTime GracePeriodLength { get; set; }
-
-        public VacationAdministrator VacationAdministrator = new VacationAdministrator();
+        public VacationAdministrator VacAdmin { get; set; }
 
         private string _state;
         public string State
@@ -26,17 +25,18 @@ namespace TravelClubProto.Data
             set 
             {
                 _state = value;
-                VacationAdministrator.OnStateChange(_state, ID);
+                VacAdmin.OnStateChange(_state, ID);
             }
         }
 
 
-        public Vacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices)
+        public Vacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices, VacationAdministrator vacAdmin)
         {
             Dates.Add("ProposalDate", proposalDate);
             Dates.Add("Deadline", deadline);
             AddPrices(stretchGoals, prices);
             ID = IncrementID();
+            VacAdmin = vacAdmin;
         }
 
         private int IncrementID()
