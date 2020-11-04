@@ -18,7 +18,7 @@ namespace TravelClubProto.Data
             VacationLists.JoinedVacations.Add(CurrentVacation);
             ChangeDateAndType.Add(DateTime.Now, "Joined " + CurrentVacation.ID);
         }
-        private void LeaveVacaion(Vacation CurrentVacation)
+        private void LeaveVacation(Vacation CurrentVacation)
         {
             VacationLists.JoinedVacations.Remove(CurrentVacation);
             ChangeDateAndType.Add(DateTime.Now, "Left " + CurrentVacation.ID);

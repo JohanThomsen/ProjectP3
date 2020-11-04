@@ -1,7 +1,7 @@
 ﻿@page "/vacationView"
 
 @using TravelClubProto.Data
-@inject VacationAdministrator VacationAdmin
+@inject VacationData VacData
 
 <h3>View Vacations</h3>
 
@@ -10,7 +10,7 @@
 
 <button @onclick="StartGracePeriod"> StartGrace </button>
 
-@foreach (var item in VacationAdmin.AllVacations)
+@foreach (var item in VacData.AllVacations)
 {
     <p>
         ALL
@@ -19,7 +19,7 @@
     </p> <br/>
 }
 
-@foreach (var item in VacationAdmin.PublishedVacations)
+@foreach (var item in VacData.PublishedVacations)
 {
     <p>
         Published
@@ -27,7 +27,7 @@
     </p> <br />
 }
 
-@foreach (var item in VacationAdmin.GracePeriodVacations)
+@foreach (var item in VacData.GracePeriodVacations)
 {
     <p>
         Grace
@@ -40,25 +40,25 @@
 
     public void Add()
     {
-        VacationAdmin.AllVacations.Add(new Vacation(DateTime.Now,
-                                   DateTime.Now.AddDays(1),
-                                   new List<int> { 2, 6, 10 },
-                                   new List<decimal> { 4000, 3500, 3000 },
-                                   VacationAdmin));
+        VacData.AllVacations.Add(new Vacation(DateTime.Now,
+                               DateTime.Now.AddDays(1),
+                               new List<int> { 2, 6, 10 },
+                               new List<decimal> { 4000, 3500, 3000 },
+                               VacData));
         Console.WriteLine("Add");
     }
 
     public void PublishedVac()
     {
         Console.WriteLine("Publish");
-        Vacation currentVac = VacationAdmin.FindVac(1);
+        Vacation currentVac = VacData.FindVac(1);
         currentVac.State = "Published";
 
     }
 
     public void StartGracePeriod()
     {
-        Vacation currentVac = VacationAdmin.FindVac(1);
+        Vacation currentVac = VacData.FindVac(1);
         currentVac.State = "GracePeriod";
 
     }

@@ -30,7 +30,7 @@ namespace TravelClubProto
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<Data.WeatherForecastService>();
-            services.AddSingleton<Data.VacationAdministrator>();
+            services.AddSingleton<Data.VacationData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

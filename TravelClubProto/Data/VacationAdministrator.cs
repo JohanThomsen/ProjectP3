@@ -7,13 +7,12 @@ namespace TravelClubProto.Data
 {
     public class VacationAdministrator
     {
-       public List<Vacation> AllVacations = new List<Vacation>();
+        public VacationData VacData;
 
-       public List<int> ProposedVacations = new List<int>();
-       public List<int> PublishedVacations = new List<int>();
-       public List<int> GracePeriodVacations = new List<int>();
-       public List<int> RecentlyChangedVacations = new List<int>();
-       public int IDInc { get; set; }
+        public VacationAdministrator(VacationData vacData)
+        {
+            VacData = vacData;
+        }
 
         public void OnStateChange(string state, int vacationID)
         {
@@ -42,24 +41,24 @@ namespace TravelClubProto.Data
         public void StartGracePeriod(int vacationID)
         {
 
-            if (FindVac(vacationID).State == "GracePeriod") 
+            if (VacData.FindVac(vacationID).State == "GracePeriod")
             {
                 AddDateTime("GracePeriodDate", vacationID);
-                GracePeriodVacations.Add(vacationID);
-                PublishedVacations.Remove(vacationID);
+                VacData.GracePeriodVacations.Add(vacationID);
+                VacData.PublishedVacations.Remove(vacationID);
                 //TODO add exceptions
             }
         }
 
         public void CompleteVacation(int vacationID)
         {
-            if (FindVac(vacationID).State == "Completed")
+            if (VacData.FindVac(vacationID).State == "Completed")
             {
                 AddDateTime("CompletionDate", vacationID);
                 //TODO tilføj til TravelBureauCompletedVacations
                 //TODO tilføj til TravelClubCompletedVacations
                 //TODO tilføj til CustomerCompletedVacations
-                GracePeriodVacations.Remove(vacationID);
+                VacData.GracePeriodVacations.Remove(vacationID);
                 //TODO add exceptions
             }
         }
@@ -69,8 +68,8 @@ namespace TravelClubProto.Data
             if (state == "Published")
             {
                 //TODO fjern fra travelbureausProposedVacations
-                PublishedVacations.Add(vacationID);
-                ProposedVacations.Remove(vacationID);
+                VacData.PublishedVacations.Add(vacationID);
+                VacData.ProposedVacations.Remove(vacationID);
                 AddDateTime("PublishDate", vacationID);
                 //Add Exceptions
             }
@@ -78,7 +77,7 @@ namespace TravelClubProto.Data
 
         public void CancelVacation(int vacationID)
         {
-            PublishedVacations.Remove(vacationID);
+            VacData.PublishedVacations.Remove(vacationID);
             AddDateTime("CancelDate", vacationID);
             //TODO fjerne joinedVacation(Customer)
             //TODO fjern fra favouritedVacation(Customer)
@@ -86,9 +85,9 @@ namespace TravelClubProto.Data
 
         public void RejectProposal(int vacationID)
         {
-            if (FindVac(vacationID).State == "Proposed")
+            if (VacData.FindVac(vacationID).State == "Proposed")
             {
-                ProposedVacations.Remove(vacationID);
+                VacData.ProposedVacations.Remove(vacationID);
                 AddDateTime("RejectionDate", vacationID);
                 //TODO Fjern fra TravelBureauProposedVacations
                 //TODO tilføj til RejectedVacations(travelbureau)
@@ -97,21 +96,10 @@ namespace TravelClubProto.Data
 
         }
 
-        private void AddDateTime (string state, int vacationID)
+        private void AddDateTime(string state, int vacationID)
         {
-            FindVac(vacationID).Dates.Add(state, DateTime.Now);
+            VacData.FindVac(vacationID).Dates.Add(state, DateTime.Now);
         }
 
-        public Vacation FindVac(int vacationID)
-        {
-            for (int i = 0; i < AllVacations.Count; i++)
-            {
-                if (AllVacations[i].ID == vacationID)
-                {
-                    return AllVacations[i];
-                }
-            }
-            return null;
-        }
     }
 }

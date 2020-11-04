@@ -16,6 +16,8 @@ namespace TravelClubProto.Data
         private int MinNumberOfUsers { get; set; }
         private bool MinNumberOfUsersExceeded { get; set; }
         private DateTime GracePeriodLength { get; set; }
+        public VacationData VacData { get; set; }
+
         public VacationAdministrator VacAdmin { get; set; }
 
         private string _state;
@@ -30,9 +32,10 @@ namespace TravelClubProto.Data
         }
 
 
-        public Vacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices, VacationAdministrator vacAdmin)
+        public Vacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices, VacationData vacData)
         {
-            VacAdmin = vacAdmin;
+            VacData = vacData;
+            VacAdmin = new VacationAdministrator(vacData);
             Dates.Add("ProposalDate", proposalDate);
             Dates.Add("Deadline", deadline);
             AddPrices(stretchGoals, prices);
@@ -41,7 +44,7 @@ namespace TravelClubProto.Data
 
         private int IncrementID()
         {
-            return VacAdmin.IDInc++;
+            return VacData.IDInc++;
         }
 
         private void AddPrices(List<int> stretchGoals, List<decimal> prices)
