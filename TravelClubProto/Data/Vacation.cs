@@ -32,16 +32,16 @@ namespace TravelClubProto.Data
 
         public Vacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices, VacationAdministrator vacAdmin)
         {
+            VacAdmin = vacAdmin;
             Dates.Add("ProposalDate", proposalDate);
             Dates.Add("Deadline", deadline);
             AddPrices(stretchGoals, prices);
             ID = IncrementID();
-            VacAdmin = vacAdmin;
         }
 
         private int IncrementID()
         {
-            return VacationAdministrator.IDInc++;
+            return VacAdmin.IDInc++;
         }
 
         private void AddPrices(List<int> stretchGoals, List<decimal> prices)

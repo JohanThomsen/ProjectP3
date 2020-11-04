@@ -13,7 +13,7 @@ namespace TravelClubProto.Data
        public List<int> PublishedVacations = new List<int>();
        public List<int> GracePeriodVacations = new List<int>();
        public List<int> RecentlyChangedVacations = new List<int>();
-       public static int IDInc = 1;
+       public int IDInc { get; set; }
 
         public void OnStateChange(string state, int vacationID)
         {
@@ -99,25 +99,19 @@ namespace TravelClubProto.Data
 
         private void AddDateTime (string state, int vacationID)
         {
-            Vacation currentVac = FindVac(vacationID);
-            currentVac.Dates.Add(state, DateTime.Now);
+            FindVac(vacationID).Dates.Add(state, DateTime.Now);
         }
 
         public Vacation FindVac(int vacationID)
         {
-            Vacation currentVac = null;
-            Console.WriteLine(AllVacations);
             for (int i = 0; i < AllVacations.Count; i++)
             {
                 if (AllVacations[i].ID == vacationID)
                 {
-                    currentVac = AllVacations[i];
-                    Console.WriteLine("In if" + currentVac.ID);
+                    return AllVacations[i];
                 }
             }
-
-            Console.WriteLine(currentVac.ID);
-            return currentVac;
+            return null;
         }
     }
 }
