@@ -13,10 +13,7 @@ namespace TravelClubProto.Data
         public VacationAdministrator vacationAdministrator { get; set; }
 
 
-        public TravelClub(string username, string password) : base(username, password)
-        {
-            
-        }
+        public TravelClub(string username, string password) : base(username, password) {}
 
         public void CreateCustomer(string username, string password)
         {
