@@ -6,16 +6,14 @@ namespace TravelClubProto.Data
 {
     class PriceAgent
     {
-        public int PriceAgentID { get; set; }
 
         private List<Vacation> DiscardedVacations;
 
         public List<string> Preferences;
 
-        public PriceAgent(List<string> IncomingPreferences, int id)
+        public PriceAgent(List<string> IncomingPreferences)
         {
             Preferences = IncomingPreferences;
-            PriceAgentID = id;
         }
 
         
