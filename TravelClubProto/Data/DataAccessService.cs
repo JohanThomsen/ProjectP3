@@ -23,13 +23,14 @@ namespace TravelClubProto.Data
                 string _database = config.GetValue<string>("DbConfig:DatabaseName");
                 string _username = config.GetValue<string>("DbConfig:UserName");
                 string _password = config.GetValue<string>("DbConfig:Password");
-                return ($"Server={_server};Database={_database};User ID={_username};Password={_password};Trusted_Connection=False;MultipleActiveResultSets=true;");
+                return $"Server={_server};Database={_database};User ID={_username};Password={_password};Trusted_Connection=False;MultipleActiveResultSets=true;";
             }
         }
 
 
         public async Task<List<DBVacation>> GetVacations()
         {
+           // Console.WriteLine(ConnectionString);
             List<DBVacation> vacations = new List<DBVacation>();
             DBVacation v;
             DataTable dt = new DataTable();
@@ -40,7 +41,7 @@ namespace TravelClubProto.Data
             foreach (DataRow row in dt.Rows)
             {
                 v = new DBVacation();
-                v.ID = Convert.ToInt32(row["StuId"]);
+                v.ID = Convert.ToInt32(row["ID"]);
                 v.Type = row["Type"] as string;
                 v.Location = row["Lokation"] as string;
                 v.Price = Convert.ToInt32(row["Price"]);
