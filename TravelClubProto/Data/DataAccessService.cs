@@ -34,6 +34,7 @@ namespace TravelClubProto.Data
             DBVacation v;
             DataTable dt = new DataTable();
             SqlConnection con = new SqlConnection(ConnectionString);
+            Console.WriteLine(con);
             SqlDataAdapter da = new SqlDataAdapter("select * from [dbo].[Vacation]", con);
             da.Fill(dt);
             foreach (DataRow row in dt.Rows)
