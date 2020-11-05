@@ -29,8 +29,9 @@ namespace TravelClubProto
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<Data.WeatherForecastService>();
-            services.AddSingleton<Data.VacationData>();
+            services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<VacationData>();
+            services.AddSingleton<DataAccessService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -17,9 +17,9 @@ namespace TravelClubProto.Data
             ID = id;
         }
 
-        public Vacation ProposeVacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices, VacationAdministrator vacAdmin)
+        public Vacation ProposeVacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices, VacationData vacData)
         {
-            return new Vacation(proposalDate, deadline, stretchGoals, prices, vacAdmin);
+            return new Vacation(proposalDate, deadline, stretchGoals, prices, vacData);
         }
 
     }

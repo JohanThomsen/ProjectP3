@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TravelClubProto", "TravelClubProto.csproj", "{F5BE9C45-BD6A-4956-A4E3-650E2434A33F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelClubProtoTests", "..\TravelClubProtoTests\TravelClubProtoTests.csproj", "{D8E80719-6D67-4D82-A008-02C01EC3F746}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TravelClubProtoTests", "..\TravelClubProtoTests\TravelClubProtoTests.csproj", "{D8E80719-6D67-4D82-A008-02C01EC3F746}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

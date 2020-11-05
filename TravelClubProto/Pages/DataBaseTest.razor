@@ -1,0 +1,29 @@
+﻿
+@page "/DBVacation"
+@using TravelClubProto.Data
+@inject DataAccessService DaService
+
+
+<h3>DataBaseTest</h3>
+
+@if (vacations == null)
+{
+    <div>There is no student added</div>
+}
+else
+{
+    foreach (DBVacation v in vacations)
+    {
+        <div style="padding:15px;border-bottom:solid 1px #0094ff;">
+            @v.Type @v.Location | @v.Price
+        </div>
+    }
+}
+
+@code {
+    private List<DBVacation> vacations;
+    protected override async Task OnInitializedAsync()
+    {
+        vacations = await DaService.GetVacations();
+    }
+}

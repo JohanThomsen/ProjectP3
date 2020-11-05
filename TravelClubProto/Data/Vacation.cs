@@ -18,6 +18,8 @@ namespace TravelClubProto.Data
         private DateTime GracePeriodLength { get; set; }
         public VacationData VacData { get; set; }
 
+        
+
         public VacationAdministrator VacAdmin { get; set; }
 
         private string _state;
