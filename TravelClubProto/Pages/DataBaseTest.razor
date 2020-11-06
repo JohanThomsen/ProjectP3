@@ -6,9 +6,12 @@
 
 <h3>DataBaseTest</h3>
 
+<button @onclick="GetAllVacs"> Get all vacations </button>
+<button @onclick="GetSkiVacs"> Get only ski vacations </button>
+
 @if (vacations == null)
 {
-    <div>There is no student added</div>
+    <div>No vacations selected</div>
 }
 else
 {
@@ -22,8 +25,18 @@ else
 
 @code {
     private List<DBVacation> vacations;
-    protected override async Task OnInitializedAsync()
+    /*protected override async Task OnInitializedAsync()
     {
         vacations = await DaService.GetVacations();
+    }*/
+
+    async public void GetAllVacs()
+    {
+        vacations = await DaService.GetAllVacations();
+    }
+
+    async public void GetSkiVacs()
+    {
+        vacations = await DaService.GetSkiVacations();
     }
 }
