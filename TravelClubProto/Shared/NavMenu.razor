@@ -46,32 +46,45 @@
 </nav>
 
 
-<div class="LoginForm" id="LoginForm">
+<!--<div class="LoginForm" id="LoginForm">
 
     <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
-        <BSFormGroup>
+        <BSFormGroup>-->
             @*Input for user email*@
-            <BSLabel for="InputEmail">Email-adresse</BSLabel>
+            <!--<BSLabel for="InputEmail">Email-adresse</BSLabel>
             <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
         </BSFormGroup>
-        <BSFormGroup>
+        <BSFormGroup>-->
             @*Input for user password*@
-            <BSLabel for="InputPassword">Kodeord</BSLabel>
+            <!--<BSLabel for="InputPassword">Kodeord</BSLabel>
             <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
         </BSFormGroup>
         <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Log ind</BSButton>
     </BSForm>
-</div>
+</div>-->
 
 @*MODAL FOR LOGIN PROMPT*@
-<BSButton Color="Color.Primary" @onclick="@onToggle">Launch demo modal</BSButton>
 <BSModal @ref="VerticallyCentered" IsCentered="true">
-    <BSModalHeader OnClick="@onToggle">Modal title</BSModalHeader>
-    <BSModalBody><p>Modal body text goes here.</p></BSModalBody>
-    <BSModalFooter>
-        <BSButton Color="Color.Secondary" @onclick="@onToggle">Close</BSButton>
-        <BSButton Color="Color.Primary" @onclick="@onToggle">Save Changes</BSButton>
-    </BSModalFooter>
+    <BSModalHeader OnClick="@onToggle">Log ind</BSModalHeader>
+    <BSModalBody><p>
+                     <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+                         <BSFormGroup>
+                             @*Input for user email*@
+                             <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                             <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                         </BSFormGroup>
+                         <BSFormGroup>
+                             @*Input for user password*@
+                             <BSLabel for="InputPassword">Kodeord</BSLabel>
+                             <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                         </BSFormGroup>
+                         <BSFormGroup IsCheck="true">
+                             <BSInput Id="ModalCheck" InputType="InputType.Checkbox" @bind-Value="formsModelVal.Valid"></BSInput>
+                             <BSLabel IsCheck="true" For="ModalCheck">Husk mig</BSLabel>
+                         </BSFormGroup>
+                         <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Log ind</BSButton>
+                     </BSForm>
+</p></BSModalBody>
 </BSModal>
 
 @code {
@@ -114,6 +127,9 @@
         [Required]
         [StringLength(20, ErrorMessage = "password too long (20 character limit).")]
         public string Password { get; set; }
+
+        [Required]
+        public Boolean Valid { get; set; }
     }
     FormsModelVal formsModelVal = new FormsModelVal();
 }
