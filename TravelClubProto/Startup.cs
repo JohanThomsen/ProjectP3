@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TravelClubProto.Data;
+using BlazorStrap;
 
 namespace TravelClubProto
 
@@ -31,6 +32,7 @@ namespace TravelClubProto
             services.AddServerSideBlazor();
             services.AddSingleton<Data.WeatherForecastService>();
             services.AddSingleton<Data.VacationData>();
+            services.AddBootstrapCss();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
