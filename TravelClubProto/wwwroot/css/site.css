@@ -7,14 +7,10 @@
     font-size: 50px;
     }
 
-a.navbar-right {
-    float: right;
+.dropdown{
+    position:relative;
 }
 
-#HambugerMenu{
-    text-align: right;
-    float: right;
-}
 /* Provide sufficient contrast against white background */
 a {
     color: #0366d6;
