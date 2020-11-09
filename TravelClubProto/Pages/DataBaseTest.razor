@@ -6,37 +6,54 @@
 
 <h3>DataBaseTest</h3>
 
-<button @onclick="GetAllVacs"> Get all vacations </button>
-<button @onclick="GetSkiVacs"> Get only ski vacations </button>
+<button @onclick="InputDestination"> Input Destination </button>
+<button @onclick="GetDestinationByID"> Get Specific Destination </button>
 
-@if (vacations == null)
+@if (destinations == null)
 {
-    <div>No vacations selected</div>
+    <div>No Destination selected</div>
 }
 else
 {
-    foreach (DBVacation v in vacations)
+    foreach (Destination d in destinations)
     {
         <div style="padding:15px;border-bottom:solid 1px #0094ff;">
-            @v.Type @v.Location | @v.Price
+            @d.ID | @d.Hotel | @d.Location
         </div>
     }
 }
 
 @code {
-    private List<DBVacation> vacations;
-    /*protected override async Task OnInitializedAsync()
+    private List<Destination> destinations = new List<Destination>();
+    protected override async Task OnInitializedAsync()
     {
-        vacations = await DaService.GetVacations();
-    }*/
-
-    async public void GetAllVacs()
-    {
-        vacations = await DaService.GetAllVacations();
+        destinations = await DaService.GetAllDestinations();
     }
 
-    async public void GetSkiVacs()
+    async public void GetAllDestinations()
     {
-        vacations = await DaService.GetSkiVacations();
+        if (destinations.Count != 0)
+        {
+            destinations.Clear();
+        }
+
+        destinations = await DaService.GetAllDestinations();
+    }
+
+    async public void GetDestinationByID()
+    {
+        if (destinations.Count != 0)
+        {
+            destinations.Clear();
+        }
+
+        Destination matchingDestination = await DaService.GetDestinationByID(12);
+
+        destinations.Add(matchingDestination);
+    }
+
+    public void InputDestination()
+    {
+        DaService.InsertNewDestination("Vinnerup Hotel", "Vinnerup");
     }
 }

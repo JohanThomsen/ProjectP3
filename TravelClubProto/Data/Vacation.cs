@@ -16,9 +16,9 @@ namespace TravelClubProto.Data
         private int MinNumberOfUsers { get; set; }
         private bool MinNumberOfUsersExceeded { get; set; }
         private DateTime GracePeriodLength { get; set; }
-        public VacationData VacData { get; set; }
 
-        
+
+        public VacationData VacData { get; set; }
 
         public VacationAdministrator VacAdmin { get; set; }
 

@@ -26,51 +26,71 @@ namespace TravelClubProto.Data
                 return $"Server={_server};Database={_database};User ID={_username};Password={_password};Trusted_Connection=False;MultipleActiveResultSets=true;";
             }
         }
-
-        public async Task<List<DBVacation>> GetAllVacations()
+        public void InsertNewDestination(string hotel, string location)
         {
-            // Console.WriteLine(ConnectionString);
-            List<DBVacation> vacations = new List<DBVacation>();
-            DBVacation v;
+            SqlConnection con = new SqlConnection(ConnectionString);
+            try
+            {
+                string query = "INSERT INTO [dbo].[Destination] (Hotel, Location) VALUES(@Hotel, @Location)";
+                SqlCommand sqlCommand = new SqlCommand(query, con);
+                con.Open();
+                sqlCommand.Parameters.AddWithValue("@Hotel", hotel);
+                sqlCommand.Parameters.AddWithValue("@Location", location);
+                sqlCommand.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        public async Task<Destination> GetDestinationByID(int ID)
+        {
+            Destination matchingDestination = new Destination();
+            using (SqlConnection myConnection = new SqlConnection(ConnectionString))
+            {
+                string query = "SELECT * FROM [dbo].[Destination] WHERE DestinationID=@DestinationID";
+                SqlCommand sqlCommand = new SqlCommand(query, myConnection);
+                sqlCommand.Parameters.AddWithValue("@DestinationID", ID);
+                myConnection.Open();
+                using (SqlDataReader oReader = sqlCommand.ExecuteReader())
+                {
+                    while (oReader.Read())
+                    {
+                        matchingDestination.ID = Convert.ToInt32(oReader["DestinationID"]);
+                        matchingDestination.Hotel = oReader["Hotel"] as string;
+                        matchingDestination.Location = oReader["Location"] as string;
+                    }
+
+                    myConnection.Close();
+                }
+            }
+            return matchingDestination;
+        }
+
+        public async Task<List<Destination>> GetAllDestinations() 
+        {
+            List<Destination> Destinations = new List<Destination>();
+            Destination d;
             DataTable dt = new DataTable();
             SqlConnection con = new SqlConnection(ConnectionString);
-            Console.WriteLine(con);
-            SqlDataAdapter da = new SqlDataAdapter("select * from [dbo].[Vacation]", con);
+            SqlDataAdapter da = new SqlDataAdapter("select * from [dbo].Destination", con);
             da.Fill(dt);
             foreach (DataRow row in dt.Rows)
             {
-                v = new DBVacation();
-                v.ID = Convert.ToInt32(row["ID"]);
-                v.Type = row["Type"] as string;
-                v.Location = row["Lokation"] as string;
-                v.Price = Convert.ToInt32(row["Price"]);
-                vacations.Add(v);
+                d = new Destination();
+                d.ID = Convert.ToInt32(row["DestinationID"]);
+                d.Hotel = row["Hotel"] as string;
+                d.Location = row["Location"] as string;
+                Destinations.Add(d);
             }
-            return await Task.FromResult(vacations);
+            return await Task.FromResult(Destinations);
         }
 
-
-        public async Task<List<DBVacation>> GetSkiVacations()
-        {
-           // Console.WriteLine(ConnectionString);
-            List<DBVacation> vacations = new List<DBVacation>();
-            DBVacation v;
-            DataTable dt = new DataTable();
-            SqlConnection con = new SqlConnection(ConnectionString);
-            Console.WriteLine(con);
-            SqlDataAdapter da = new SqlDataAdapter("select * from [dbo].[Vacation] where Type='Ski' ", con);
-            da.Fill(dt);
-            foreach (DataRow row in dt.Rows)
-            {
-                v = new DBVacation();
-                v.ID = Convert.ToInt32(row["ID"]);
-                v.Type = row["Type"] as string;
-                v.Location = row["Lokation"] as string;
-                v.Price = Convert.ToInt32(row["Price"]);
-                vacations.Add(v);
-            }
-            return await Task.FromResult(vacations);
-        }
 
     }
 }
