@@ -30,24 +30,58 @@
         </div>
 
     </div>
+
     <div class="dropdown">
         <div class="HamburgerMenu">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Dropdown button
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-            </div>
+            <BSDropdown>
+                <BSDropdownToggle Class="oi oi-menu">
+                    <BSDropdownMenu Right="true">
+                        <BSDropdownItem Href="javascript:void(0);" @onclick="PromptLogin">Log ind</BSDropdownItem>
+                        <BSDropdownItem Href="javascript:void(0);" @onclick="CreateProfile">Opret Profil</BSDropdownItem>
+                    </BSDropdownMenu>
+                </BSDropdownToggle>
+            </BSDropdown>
         </div>
-        @*<NavLink class="nav-link text-dark" href="HamburgerMenu">
-            
-        </NavLink>*@
     </div>
 </nav>
 
+
+<div class="LoginForm" id="LoginForm">
+
+    <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+        <BSFormGroup>
+            @*Input for user email*@
+            <BSLabel for="InputEmail">Email-adresse</BSLabel>
+            <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+        </BSFormGroup>
+        <BSFormGroup>
+            @*Input for user password*@
+            <BSLabel for="InputPassword">Kodeord</BSLabel>
+            <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+        </BSFormGroup>
+        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Log ind</BSButton>
+    </BSForm>
+</div>
+
+@*MODAL FOR LOGIN PROMPT*@
+<BSButton Color="Color.Primary" @onclick="@onToggle">Launch demo modal</BSButton>
+<BSModal @ref="VerticallyCentered" IsCentered="true">
+    <BSModalHeader OnClick="@onToggle">Modal title</BSModalHeader>
+    <BSModalBody><p>Modal body text goes here.</p></BSModalBody>
+    <BSModalFooter>
+        <BSButton Color="Color.Secondary" @onclick="@onToggle">Close</BSButton>
+        <BSButton Color="Color.Primary" @onclick="@onToggle">Save Changes</BSButton>
+    </BSModalFooter>
+</BSModal>
+
 @code {
+    BSModal VerticallyCentered;
+
+    void onToggle(MouseEventArgs e)
+    {
+        VerticallyCentered.Toggle();
+    }
+
     bool collapseNavMenu = true;
 
     string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
@@ -58,4 +92,28 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+    void PromptLogin(MouseEventArgs e)
+    {
+        onToggle(e);
+    }
+    void CreateProfile()
+    {
+
+    }
+    void ConsoleWrite()
+    {
+        Console.WriteLine(" Valid");
+    }
+
+    public class FormsModelVal
+    {
+        [Required]
+        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(20, ErrorMessage = "password too long (20 character limit).")]
+        public string Password { get; set; }
+    }
+    FormsModelVal formsModelVal = new FormsModelVal();
 }
