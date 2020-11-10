@@ -51,23 +51,29 @@ namespace TravelClubProto.Data
         public async Task<Destination> GetDestinationByID(int ID)
         {
             Destination matchingDestination = new Destination();
-            using (SqlConnection myConnection = new SqlConnection(ConnectionString))
+            try
             {
-                string query = "SELECT * FROM [dbo].[Destination] WHERE DestinationID=@DestinationID";
-                SqlCommand sqlCommand = new SqlCommand(query, myConnection);
-                sqlCommand.Parameters.AddWithValue("@DestinationID", ID);
-                myConnection.Open();
-                using (SqlDataReader oReader = sqlCommand.ExecuteReader())
+                using (SqlConnection myConnection = new SqlConnection(ConnectionString))
                 {
-                    while (oReader.Read())
+                    string query = "SELECT * FROM [dbo].[Destination] WHERE DestinationID=@DestinationID";
+                    SqlCommand sqlCommand = new SqlCommand(query, myConnection);
+                    sqlCommand.Parameters.AddWithValue("@DestinationID", ID);
+                    myConnection.Open();
+                    using (SqlDataReader oReader = sqlCommand.ExecuteReader())
                     {
-                        matchingDestination.ID = Convert.ToInt32(oReader["DestinationID"]);
-                        matchingDestination.Hotel = oReader["Hotel"] as string;
-                        matchingDestination.Location = oReader["Location"] as string;
+                        while (oReader.Read())
+                        {
+                            matchingDestination.ID = Convert.ToInt32(oReader["DestinationID"]);
+                            matchingDestination.Hotel = oReader["Hotel"] as string;
+                            matchingDestination.Location = oReader["Location"] as string;
+                        }
+                        myConnection.Close();
                     }
-
-                    myConnection.Close();
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
             return matchingDestination;
         }
@@ -76,18 +82,26 @@ namespace TravelClubProto.Data
         {
             List<Destination> Destinations = new List<Destination>();
             Destination d;
-            DataTable dt = new DataTable();
-            SqlConnection con = new SqlConnection(ConnectionString);
-            SqlDataAdapter da = new SqlDataAdapter("select * from [dbo].Destination", con);
-            da.Fill(dt);
-            foreach (DataRow row in dt.Rows)
+            try
             {
-                d = new Destination();
-                d.ID = Convert.ToInt32(row["DestinationID"]);
-                d.Hotel = row["Hotel"] as string;
-                d.Location = row["Location"] as string;
-                Destinations.Add(d);
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(ConnectionString);
+                SqlDataAdapter da = new SqlDataAdapter("select * from [dbo].Destination", con);
+                da.Fill(dt);
+                foreach (DataRow row in dt.Rows)
+                {
+                    d = new Destination();
+                    d.ID = Convert.ToInt32(row["DestinationID"]);
+                    d.Hotel = row["Hotel"] as string;
+                    d.Location = row["Location"] as string;
+                    Destinations.Add(d);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
             return await Task.FromResult(Destinations);
         }
 
