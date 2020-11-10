@@ -13,8 +13,8 @@ namespace TravelClubProto.Data
         private Dictionary<int, decimal> Prices = new Dictionary<int, decimal>();
         private Destination Destination { get; set; }
         public int ID { get; set; }
-        private int MinNumberOfUsers { get; set; }
-        private bool MinNumberOfUsersExceeded { get; set; }
+        public int MinNumberOfUsers { get; set; }
+        public bool MinNumberOfUsersExceeded { get; set; }
         private DateTime GracePeriodLength { get; set; }
 
 
@@ -41,12 +41,11 @@ namespace TravelClubProto.Data
             Dates.Add("ProposalDate", proposalDate);
             Dates.Add("Deadline", deadline);
             AddPrices(stretchGoals, prices);
-            ID = IncrementID();
         }
 
-        private int IncrementID()
+        public Vacation()
         {
-            return VacData.IDInc++;
+
         }
 
         private void AddPrices(List<int> stretchGoals, List<decimal> prices)

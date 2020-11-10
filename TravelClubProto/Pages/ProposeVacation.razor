@@ -1,0 +1,97 @@
+﻿@page "/ProposeVacation"
+@using TravelClubProto.Data
+@inject DataAccessService DaService
+@inject VacationData VacData
+
+<h3>ProposeVacation</h3>
+
+<BSForm Model="formsModelVal" OnValidSubmit="ValidFormSubmitted">
+    <BSFormGroup>
+        <BSLabel For="minNumberOfUsers">minNumberOfUsers</BSLabel>
+        <BSInput Id="minNumberOfUsers" InputType="InputType.Number" PlaceHolder="0" @bind-Value="formsModelVal.minNumberOfUsers"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="Hotel">Hotel</BSLabel>
+        <BSInput Id="Hotel" InputType="InputType.Text" PlaceHolder="Enter Hotel" @bind-Value="formsModelVal.Hotel"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="Deadline">Join Deadline</BSLabel>
+        <BSInput InputType="InputType.Date" Id="Deadline" @bind-Value="@formsModelVal.Deadline"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="GraceperiodLength">GraceperiodLength in days</BSLabel>
+        <BSInput Id="GraceperiodLength" InputType="InputType.Number" PlaceHolder="Length in days" @bind-Value="formsModelVal.GraceperiodLength"></BSInput>
+    </BSFormGroup>
+    <BSDropdown IsOpen="@IsOpen1">
+        <BSDropdownToggle Color="Color.Secondary" @onclick="onClick1">Destinations</BSDropdownToggle>
+        <BSDropdownMenu @bind-IsOpen="@IsOpen1">
+            @foreach (Destination destination in destinations)
+            {
+                <BSDropdownItem IsButton="true" @onclick="@menuButtonClick">Location : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
+                <BSDropdownItem IsDivider="true"></BSDropdownItem>
+            }
+        </BSDropdownMenu>
+    </BSDropdown>
+    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
+</BSForm>
+
+@code {
+
+    public List<Destination> destinations = new List<Destination>();
+    protected override async Task OnInitializedAsync()
+    {
+        destinations = await DaService.GetAllDestinations();
+    }
+
+    public void ValidFormSubmitted()
+    {
+        Vacation v = new Vacation();
+        v.State = "Proposed";
+        v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
+        v.MinNumberOfUsersExceeded = false;
+        v.Dates.Add("ProposalDate", DateTime.Now);
+        v.Dates.Add("GracePeriodDate", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
+    }
+
+    public bool IsOpen1 = false;
+
+    public void menuButtonClick()
+    {
+        Console.WriteLine("We in");
+    }
+
+    public void onClick1()
+    {
+        if (IsOpen1 == false)
+        {
+            IsOpen1 = true;
+        }
+        else
+        {
+            IsOpen1 = false;
+        }
+    }
+
+    public class FormsModelVal
+    {
+        [Required]
+        //TODO add more constraints.
+        public int GraceperiodLength { get; set; }
+
+        [Required]
+        public DateTime Deadline { get; set; }
+
+        [Required]
+        public int minNumberOfUsers { get; set; }
+
+        [Required]
+        [StringLength(30, ErrorMessage = "Hotel name too long (30 character limit).")]
+        public string Hotel { get; set; }
+
+        [Required]
+        public Boolean Valid { get; set; }
+    }
+    FormsModelVal formsModelVal = new FormsModelVal();
+
+
+}

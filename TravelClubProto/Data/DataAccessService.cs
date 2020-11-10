@@ -18,7 +18,7 @@ namespace TravelClubProto.Data
         }
 
         //ConnectionString uses the data received from "Iconfiguration config" above which will be used to connect the project code with the azure sql database
-        private string ConnectionString
+        public string ConnectionString
         {
             get
             {
@@ -92,7 +92,7 @@ namespace TravelClubProto.Data
             return matchingDestination;
         }
 
-        public async Task<List<Destination>> GetAllDestinations() 
+        public async Task<List<Destination>> GetAllDestinations()
         {
             List<Destination> Destinations = new List<Destination>();
             Destination d;
@@ -141,6 +141,34 @@ namespace TravelClubProto.Data
                 Console.WriteLine(e);
             }
         }
-
+        public async Task<List<Activity>> GetAllActivities()
+        {
+            List<Activity> activities = new List<Activity>();
+            Activity a;
+            try
+            {
+                //Creates a table
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(ConnectionString);
+                //Gets data from the sql database
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM [dbo].Activities", con);
+                //Structures the data such that it can be read 
+                da.Fill(dt);
+                //Reads data into designated class
+                foreach (DataRow row in dt.Rows)
+                {
+                    a = new Activity();
+                    a.ID = Convert.ToInt32(row["ActivityID"]);
+                    a.Type = row["Type"] as string;
+                    activities.Add(a);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            //Waits for Task to be finished and then returns the list of Destinations
+            return await Task.FromResult(activities);
+        }
     }
 }

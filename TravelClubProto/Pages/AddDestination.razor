@@ -1,0 +1,59 @@
+﻿@page "/AddDestination"
+@using TravelClubProto.Data
+@inject DataAccessService DaService
+@inject VacationData VacData
+
+<h3>AddDestination</h3>
+<h2>
+    Hotel:  @formsModelVal.Location || Location:  @formsModelVal.Hotel. @added
+</h2>
+
+
+<BSForm Model="formsModelVal" OnValidSubmit="ValidFormSubmitted">
+    <BSFormGroup>
+        <BSLabel For="Location">Location</BSLabel>
+        <BSInput Id="Location" InputType="InputType.Text" PlaceHolder="Enter Location" @bind-Value="formsModelVal.Location"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="Hotel">Hotel</BSLabel>
+        <BSInput Id="Hotel" InputType="InputType.Text" PlaceHolder="Enter Hotel" @bind-Value="formsModelVal.Hotel"></BSInput>
+    </BSFormGroup>
+    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
+</BSForm>
+
+@code {
+    public List<string> Activities = new List<string>();
+
+    Destination destination = new Destination();
+    public bool IsOpen1 = false;
+    string added = "not added";
+
+    public void ValidFormSubmitted()
+    {
+        added = "Is added";
+        Destination d = new Destination(DaService);
+        d.Location = formsModelVal.Location;
+        d.Hotel = formsModelVal.Hotel;
+        d.InsertDestinationIntoDataBase();
+    }
+
+    
+
+
+
+    public class FormsModelVal
+    {
+
+        [Required]
+        [StringLength(50, ErrorMessage = "Location too long (50 character limit).")]
+        public string Location { get; set; }
+
+        [Required]
+        [StringLength(30, ErrorMessage = "Hotel name too long (30 character limit).")]
+        public string Hotel { get; set; }
+
+        [Required]
+        public Boolean Valid { get; set; }
+    }
+    FormsModelVal formsModelVal = new FormsModelVal();
+}
