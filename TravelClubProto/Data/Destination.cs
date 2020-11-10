@@ -8,8 +8,8 @@ namespace TravelClubProto
 {
     public class Destination
     {
+        public int ID { get; set; }
         public string Location { get; set; }
         public string Hotel { get; set; }
-        public List<Activity> Activities;
     }
 }
