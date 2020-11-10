@@ -32,66 +32,97 @@
             }
         </BSDropdownMenu>
     </BSDropdown>
-    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
+    <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm" IsInline="true">
+            <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                <BSLabel For="Price">Price number </BSLabel>
+                <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Price" @bind-Value="formsModelPrices.price"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                <BSLabel For="Break">Breakpoint number </BSLabel>
+                <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Break" @bind-Value="formsModelPrices.breakPoint"></BSInput>
+            </BSFormGroup>
+            <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Add Price</BSButton>
+            <pre>@priceFeedback</pre>
+    </BSForm>
+        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
 </BSForm>
 
-@code {
-
-    public List<Destination> destinations = new List<Destination>();
-    protected override async Task OnInitializedAsync()
-    {
-        destinations = await DaService.GetAllDestinations();
-    }
-
-    public void ValidFormSubmitted()
-    {
-        Vacation v = new Vacation();
-        v.State = "Proposed";
-        v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
-        v.MinNumberOfUsersExceeded = false;
-        v.Dates.Add("ProposalDate", DateTime.Now);
-        v.Dates.Add("GracePeriodDate", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
-    }
-
-    public bool IsOpen1 = false;
-
-    public void menuButtonClick()
-    {
-        Console.WriteLine("We in");
-    }
-
-    public void onClick1()
-    {
-        if (IsOpen1 == false)
+    @code {
+        public string priceFeedback;
+        public List<decimal> Prices = new List<decimal>();
+        public List<int> Breaks = new List<int>();
+        public List<Destination> destinations = new List<Destination>();
+        protected override async Task OnInitializedAsync()
         {
-            IsOpen1 = true;
+            destinations = await DaService.GetAllDestinations();
         }
-        else
+
+        public void ValidFormSubmitted()
         {
-            IsOpen1 = false;
+            Vacation v = new Vacation(VacData, Breaks, Prices);
+            v.State = "Proposed";
+            v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
+            v.MinNumberOfUsersExceeded = false;
+            v.Dates.Add("ProposalDate", DateTime.Now);
+            v.Dates.Add("GracePeriodDate", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
         }
+
+        public bool IsOpen1 = false;
+
+        public void menuButtonClick()
+        {
+            Console.WriteLine("We in");
+        }
+
+        public void onClick1()
+        {
+            if (IsOpen1 == false)
+            {
+                IsOpen1 = true;
+            }
+            else
+            {
+                IsOpen1 = false;
+            }
+        }
+
+        public class FormsModelVal
+        {
+            [Required]
+            //TODO add more constraints.
+            public int GraceperiodLength { get; set; }
+
+            [Required]
+            public DateTime Deadline { get; set; } = DateTime.Now;
+
+            [Required]
+            public int minNumberOfUsers { get; set; }
+
+            [Required]
+            [StringLength(30, ErrorMessage = "Hotel name too long (30 character limit).")]
+            public string Hotel { get; set; }
+
+            [Required]
+            public Boolean Valid { get; set; }
+        }
+        FormsModelVal formsModelVal = new FormsModelVal();
+
+        public void PriceSubmitted()
+        {
+            Prices.Add(formsModelPrices.price);
+            Breaks.Add(formsModelPrices.breakPoint);
+
+            priceFeedback += "Price: " + formsModelPrices.price + ". Breakpoint: " + formsModelPrices.breakPoint + ".\n";
+        }
+
+        public class FormsModelPrices
+        {
+            [Required]
+            public decimal price { get; set; }
+            [Required]
+            public int breakPoint { get; set; }
+        }
+        FormsModelPrices formsModelPrices = new FormsModelPrices();
+
+
     }
-
-    public class FormsModelVal
-    {
-        [Required]
-        //TODO add more constraints.
-        public int GraceperiodLength { get; set; }
-
-        [Required]
-        public DateTime Deadline { get; set; }
-
-        [Required]
-        public int minNumberOfUsers { get; set; }
-
-        [Required]
-        [StringLength(30, ErrorMessage = "Hotel name too long (30 character limit).")]
-        public string Hotel { get; set; }
-
-        [Required]
-        public Boolean Valid { get; set; }
-    }
-    FormsModelVal formsModelVal = new FormsModelVal();
-
-
-}

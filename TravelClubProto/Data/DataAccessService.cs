@@ -89,7 +89,7 @@ namespace TravelClubProto.Data
             {
                 Console.WriteLine(e);
             }
-            return matchingDestination;
+            return await Task.FromResult(matchingDestination);
         }
 
         public async Task<List<Destination>> GetAllDestinations()

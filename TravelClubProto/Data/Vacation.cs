@@ -43,9 +43,11 @@ namespace TravelClubProto.Data
             AddPrices(stretchGoals, prices);
         }
 
-        public Vacation()
+        public Vacation(VacationData vacData, List<int> stretchGoals, List<decimal> prices)
         {
-
+            VacData = vacData;
+            VacAdmin = new VacationAdministrator(vacData);
+            AddPrices(stretchGoals, prices);
         }
 
         private void AddPrices(List<int> stretchGoals, List<decimal> prices)
