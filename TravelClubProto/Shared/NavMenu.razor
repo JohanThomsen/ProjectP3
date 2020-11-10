@@ -28,7 +28,6 @@
                 </li>
             </ul>
         </div>
-
     </div>
 
     <div class="dropdown">
@@ -37,7 +36,7 @@
                 <BSDropdownToggle Class="oi oi-menu">
                     <BSDropdownMenu Right="true">
                         <BSDropdownItem Href="javascript:void(0);" @onclick="PromptLogin">Log ind</BSDropdownItem>
-                        <BSDropdownItem Href="javascript:void(0);" @onclick="CreateProfile">Opret Profil</BSDropdownItem>
+                        <BSDropdownItem Href="javascript:void(0);" @onclick="CreateProfile">Opret Bruger</BSDropdownItem>
                     </BSDropdownMenu>
                 </BSDropdownToggle>
             </BSDropdown>
@@ -45,55 +44,81 @@
     </div>
 </nav>
 
-
-<!--<div class="LoginForm" id="LoginForm">
-
-    <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
-        <BSFormGroup>-->
-            @*Input for user email*@
-            <!--<BSLabel for="InputEmail">Email-adresse</BSLabel>
-            <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
-        </BSFormGroup>
-        <BSFormGroup>-->
-            @*Input for user password*@
-            <!--<BSLabel for="InputPassword">Kodeord</BSLabel>
-            <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
-        </BSFormGroup>
-        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Log ind</BSButton>
-    </BSForm>
-</div>-->
-
 @*MODAL FOR LOGIN PROMPT*@
-<BSModal @ref="VerticallyCentered" IsCentered="true">
-    <BSModalHeader OnClick="@onToggle">Log ind</BSModalHeader>
-    <BSModalBody><p>
-                     <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
-                         <BSFormGroup>
-                             @*Input for user email*@
-                             <BSLabel for="InputEmail">Email-adresse</BSLabel>
-                             <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
-                         </BSFormGroup>
-                         <BSFormGroup>
-                             @*Input for user password*@
-                             <BSLabel for="InputPassword">Kodeord</BSLabel>
-                             <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
-                         </BSFormGroup>
-                         <BSFormGroup IsCheck="true">
-                             <BSInput Id="ModalCheck" InputType="InputType.Checkbox" @bind-Value="formsModelVal.Valid"></BSInput>
-                             <BSLabel IsCheck="true" For="ModalCheck">Husk mig</BSLabel>
-                         </BSFormGroup>
-                         <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Log ind</BSButton>
-                     </BSForm>
-</p></BSModalBody>
+<BSModal @ref="LoginModal" IsCentered="true">
+    <BSModalHeader OnClick="@onToggleLogin">Log ind</BSModalHeader>
+    <BSModalBody>
+        <p>
+            <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+
+                <BSFormGroup>
+                    @*Input for user email*@
+                    <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                    <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                </BSFormGroup>
+
+                <BSFormGroup>
+                    @*Input for user password*@
+                    <BSLabel for="InputPassword">Kodeord</BSLabel>
+                    <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                </BSFormGroup>
+
+                <BSFormGroup IsCheck="true">
+                    @*Remember me check box*@
+                    <BSInput Id="ModalCheck" InputType="InputType.Checkbox" @bind-Value="formsModelVal.Valid"></BSInput>
+                    <BSLabel IsCheck="true" For="ModalCheck">Husk mig</BSLabel>
+                </BSFormGroup>
+
+                @*Submit Button*@
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Log ind</BSButton>
+
+            </BSForm>
+        </p>
+    </BSModalBody>
 </BSModal>
 
-@code {
-    BSModal VerticallyCentered;
+@*MODAL FOR CREATEPROFILE PROMPT*@
+<BSModal @ref="CreateProfileModal" IsCentered="true">
+    <BSModalHeader OnClick="@onToggleCreateProfile">Opret Bruger</BSModalHeader>
+    <BSModalBody>
+        <p>
+            <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
 
-    void onToggle(MouseEventArgs e)
+                <BSFormGroup>
+                    @*Input for user email*@
+                    <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                    <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                </BSFormGroup>
+
+                <BSFormGroup>
+                    @*Input for user password*@
+                    <BSLabel for="InputPassword">Kodeord</BSLabel>
+                    <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                </BSFormGroup>
+
+                @*Submit Button*@
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Opret Bruger</BSButton>
+
+            </BSForm>
+        </p>
+    </BSModalBody>
+</BSModal>
+@code {
+    BSModal LoginModal;
+
+    BSModal CreateProfileModal;
+
+
+    void onToggleLogin(MouseEventArgs e)
     {
-        VerticallyCentered.Toggle();
+        LoginModal.Toggle();
     }
+
+    void onToggleCreateProfile(MouseEventArgs e)
+    {
+        CreateProfileModal.Toggle();
+    }
+
 
     bool collapseNavMenu = true;
 
@@ -107,11 +132,11 @@
     }
     void PromptLogin(MouseEventArgs e)
     {
-        onToggle(e);
+        onToggleLogin(e);
     }
-    void CreateProfile()
+    void CreateProfile(MouseEventArgs e)
     {
-
+        onToggleCreateProfile(e);
     }
     void ConsoleWrite()
     {
@@ -132,4 +157,5 @@
         public Boolean Valid { get; set; }
     }
     FormsModelVal formsModelVal = new FormsModelVal();
+
 }
