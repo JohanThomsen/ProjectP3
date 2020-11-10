@@ -18,7 +18,7 @@ namespace TravelClubProto.Data
         }
 
         //ConnectionString uses the data received from "Iconfiguration config" above which will be used to connect the project code with the azure sql database
-        private string ConnectionString
+        public string ConnectionString
         {
             get
             {

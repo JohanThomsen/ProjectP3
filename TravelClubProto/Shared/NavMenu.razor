@@ -1,4 +1,13 @@
-﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+﻿@using Microsoft.Extensions.Configuration;
+@using System.Collections.Generic;
+@using System.Data;
+@using Microsoft.Data.SqlClient;
+@using System.Threading.Tasks;
+@using Microsoft.EntityFrameworkCore.Migrations.Operations;
+@using TravelClubProto.Data;
+@inject DataAccessService DaService
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container" style="float:right;">
         <a class="navbar-brand" href="">TravelClub</a>
         <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
@@ -51,7 +60,7 @@
 
 @*MODAL FOR LOGIN PROMPT*@
 <BSModal @ref="LoginModal" IsCentered="true">
-    <BSModalHeader OnClick="@onToggleLogin">Log ind</BSModalHeader>
+    <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
     <BSModalBody>
         <p>
             <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
@@ -75,7 +84,7 @@
                 </BSFormGroup>
 
                 @*Submit Button*@
-                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Log ind</BSButton>
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
 
             </BSForm>
         </p>
@@ -84,7 +93,7 @@
 
 @*MODAL FOR CREATEPROFILE PROMPT*@
 <BSModal @ref="CreateProfileModal" IsCentered="true">
-    <BSModalHeader OnClick="@onToggleCreateProfile">Opret Bruger</BSModalHeader>
+    <BSModalHeader OnClick="@OnToggleCreateProfile">Opret Bruger</BSModalHeader>
     <BSModalBody>
         <p>
             <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
@@ -102,28 +111,44 @@
                 </BSFormGroup>
 
                 @*Submit Button*@
-                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Opret Bruger</BSButton>
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick = "SaveProfileToTables">Opret Bruger</BSButton>
 
             </BSForm>
         </p>
     </BSModalBody>
 </BSModal>
+
+
 @code {
+
     BSModal LoginModal;
 
     BSModal CreateProfileModal;
 
 
-    void onToggleLogin(MouseEventArgs e)
+
+    void OnToggleLogin(MouseEventArgs e)
     {
         LoginModal.Toggle();
     }
 
-    void onToggleCreateProfile(MouseEventArgs e)
+    void OnToggleCreateProfile(MouseEventArgs e)
     {
         CreateProfileModal.Toggle();
     }
 
+    async void LogInToProfile(MouseEventArgs e)
+    {
+        await Account.FindAccountInDatabase(DaService, formsModelVal.Email, formsModelVal.Password);   
+        LoginModal.Toggle();
+    }
+
+    void SaveProfileToTables(MouseEventArgs e)
+    {
+        Customer newUser = new Customer(formsModelVal.Email, formsModelVal.Password, DaService);
+        newUser.InsertIntoDatabase();
+        CreateProfileModal.Toggle();
+    }
 
     bool collapseNavMenu = true;
 
@@ -137,16 +162,19 @@
     }
     void PromptLogin(MouseEventArgs e)
     {
-        onToggleLogin(e);
+        OnToggleLogin(e);
     }
     void CreateProfile(MouseEventArgs e)
     {
-        onToggleCreateProfile(e);
+        OnToggleCreateProfile(e);
     }
+
+
     void ConsoleWrite()
     {
-        Console.WriteLine(" Valid");
+        Console.WriteLine("Form succesfully submitted");
     }
+
 
     public class FormsModelVal
     {
@@ -162,5 +190,9 @@
         public Boolean Valid { get; set; }
     }
     FormsModelVal formsModelVal = new FormsModelVal();
+
+
+
+
 
 }

@@ -37,7 +37,7 @@ namespace TravelClubProto.Data
         public Vacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices, VacationData vacData)
         {
             VacData = vacData;
-            VacAdmin = new VacationAdministrator(vacData);
+            VacAdmin =new VacationAdministrator(vacData);
             Dates.Add("ProposalDate", proposalDate);
             Dates.Add("Deadline", deadline);
             AddPrices(stretchGoals, prices);

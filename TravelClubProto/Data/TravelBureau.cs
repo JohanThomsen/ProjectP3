@@ -7,16 +7,14 @@ namespace TravelClubProto.Data
 {
     public class TravelBureau : Account
     {
-        public string    Name                             { get; set; }
-        public List<int> TravelBureauCompletedVacations = new List<int>();
-        public List<int> RejectedVacations              = new List<int>();
-        public List<int> TravelBureauProposedVacations  = new List<int>();
+        public string Name { get; set; }
 
-        TravelBureau(string username, string password, int id) : base(username, password) 
+        TravelBureau(string email, string password, DataAccessService daService) : base(email, password, daService) 
         {
-            ID = id;
+            Type = "TravelBureau";
         }
 
+        //SKAL OPDATERES
         public Vacation ProposeVacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices, VacationData vacData)
         {
             return new Vacation(proposalDate, deadline, stretchGoals, prices, vacData);
