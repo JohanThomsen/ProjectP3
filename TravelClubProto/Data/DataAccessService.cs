@@ -91,6 +91,24 @@ namespace TravelClubProto.Data
             return await Task.FromResult(Destinations);
         }
 
+        public void DeleteVinnerup(string location)
+        {
+            try
+            {
+                using (var sc = new SqlConnection(ConnectionString))
+                using (var cmd = sc.CreateCommand())
+                {
+                    sc.Open();
+                    cmd.CommandText = "DELETE FROM [dbo].Destination WHERE Location=@location";
+                    cmd.Parameters.AddWithValue("@location", location);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
 
     }
 }
