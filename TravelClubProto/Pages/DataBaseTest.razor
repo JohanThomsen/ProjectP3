@@ -8,6 +8,7 @@
 
 <button @onclick="InputDestination"> Input Destination </button>
 <button @onclick="GetDestinationByID"> Get Specific Destination </button>
+<button @onclick="DeleteVinnerup"> Delete Vinnerup </button>
 
 @if (destinations == null)
 {
@@ -55,5 +56,10 @@ else
     public void InputDestination()
     {
         DaService.InsertNewDestination("Vinnerup Hotel", "Vinnerup");
+    }
+
+    public void DeleteVinnerup()
+    {
+        DaService.DeleteVinnerup("Vinnerup");
     }
 }
