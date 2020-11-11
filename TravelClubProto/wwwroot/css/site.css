@@ -36,7 +36,10 @@ a {
         color: white;
     }
 
-
+    #TravelClubInfo {
+    vertical-align: text-top;
+    text-align: left;
+    }
 
 /* Sticky footer styles
 -------------------------------------------------- */
