@@ -65,7 +65,6 @@ namespace TravelClubProto.Data
             }
         }
 
-        //Kommer kun ned i OH NO!
         public async static Task<int> FindAccountInDatabase(string email, string password, DataAccessService daService)
         {
 
@@ -79,7 +78,6 @@ namespace TravelClubProto.Data
                     SqlCommand sqlCommand = new SqlCommand(query, myConnection);
                     sqlCommand.Parameters.AddWithValue("@Email", email);
                     sqlCommand.Parameters.AddWithValue("@Password", password);
-                   /* sqlCommand.Parameters.AddWithValue("@AccountID", 0);*/
                     myConnection.Open();
                     //Reads all the executed sql commands
                     using (SqlDataReader Reader = sqlCommand.ExecuteReader())
@@ -90,10 +88,6 @@ namespace TravelClubProto.Data
                             user.Email = Reader["Email"] as string;
                             user.Password = Reader["Password"] as string;
                             user.ID = Convert.ToInt32(Reader["AccountID"]);
-
-                            Console.WriteLine(user.Email);
-                            Console.WriteLine(user.Password);
-                            Console.WriteLine(user.ID);
                             if (user.Email == email && user.Password == password)
                             {
                                 return await Task.FromResult(user.ID);
@@ -105,10 +99,8 @@ namespace TravelClubProto.Data
             }
             catch (Exception e)
             {
-                Console.WriteLine("OH nooooo!");
                 Console.WriteLine(e);
             }
-            Console.WriteLine(user);
             return await Task.FromResult(-1);
         }
 
