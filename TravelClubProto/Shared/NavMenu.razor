@@ -139,7 +139,7 @@
 
     async void LogInToProfile(MouseEventArgs e)
     {
-        await Account.FindAccountInDatabase(DaService, formsModelVal.Email, formsModelVal.Password);   
+        Account.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
         LoginModal.Toggle();
     }
 
@@ -191,7 +191,10 @@
     }
     FormsModelVal formsModelVal = new FormsModelVal();
 
-
+   @* public bool ExistInDB()
+    {
+       
+    }*@
 
 
 

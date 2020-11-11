@@ -66,36 +66,52 @@ namespace TravelClubProto.Data
         }
 
         //Kommer kun ned i OH NO!
-        public async static Task<int> FindAccountInDatabase(DataAccessService daService, string email, string password)
-        {     
+        public async static Task<int> FindAccountInDatabase(string email, string password, DataAccessService daService)
+        {
+
+            Account user = new Customer(email, password, daService);
             try
             {
-                using SqlConnection myConnection = new SqlConnection(daService.ConnectionString);
-                //The * means all. So data from [dbo].[Destination] table are selected by the database
-                string query = "SELECT * FROM [dbo].[Account] WHERE Email = @Email";
-                SqlCommand sqlCommand = new SqlCommand(query, myConnection);
-                myConnection.Open();
-                //Reads all the executed sql commands
-                using SqlDataReader Reader = sqlCommand.ExecuteReader();
-                // Reads all data and converts to object and type matches
-                while (Reader.Read())
+                using (SqlConnection myConnection = new SqlConnection(daService.ConnectionString))
                 {
-                    Console.WriteLine(Reader["Email"] as string," " , Reader["Password"] as string);
-                    if (email == Reader["Email"] as string && password == Reader["Password"] as string)
-                    { 
-                        Console.WriteLine("Succes!!!");
-                        return await Task.FromResult((int)Reader["AccountID"]);
+                    //The * means all. So data from [dbo].[Destination] table are selected by the database
+                    string query = "SELECT * FROM [dbo].[Account] WHERE Email=@Email AND Password=@Password";
+                    SqlCommand sqlCommand = new SqlCommand(query, myConnection);
+                    sqlCommand.Parameters.AddWithValue("@Email", email);
+                    sqlCommand.Parameters.AddWithValue("@Password", password);
+                   /* sqlCommand.Parameters.AddWithValue("@AccountID", 0);*/
+                    myConnection.Open();
+                    //Reads all the executed sql commands
+                    using (SqlDataReader Reader = sqlCommand.ExecuteReader())
+                    {
+                        // Reads all data and converts to object and type matches
+                        while (Reader.Read())
+                        {
+                            user.Email = Reader["Email"] as string;
+                            user.Password = Reader["Password"] as string;
+                            user.ID = Convert.ToInt32(Reader["AccountID"]);
+
+                            Console.WriteLine(user.Email);
+                            Console.WriteLine(user.Password);
+                            Console.WriteLine(user.ID);
+                            if (user.Email == email && user.Password == password)
+                            {
+                                return await Task.FromResult(user.ID);
+                            }
+                        }
+                        myConnection.Close();
                     }
                 }
-                myConnection.Close();
             }
             catch (Exception e)
             {
+                Console.WriteLine("OH nooooo!");
                 Console.WriteLine(e);
             }
-            Console.WriteLine("OH NO!");
+            Console.WriteLine(user);
             return await Task.FromResult(-1);
         }
+
 
     }
 }
