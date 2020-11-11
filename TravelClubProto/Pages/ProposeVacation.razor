@@ -1,5 +1,6 @@
 ﻿@page "/ProposeVacation"
 @using TravelClubProto.Data
+@using BlazorStrap
 @inject DataAccessService DaService
 @inject VacationData VacData
 
@@ -27,102 +28,115 @@
         <BSDropdownMenu @bind-IsOpen="@IsOpen1">
             @foreach (Destination destination in destinations)
             {
-                <BSDropdownItem IsButton="true" @onclick="@menuButtonClick">Location : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
+                <BSDropdownItem IsButton="true" @bind="@destinationID" @value="destination.ID" @onclick="@menuButtonClick">Location : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
                 <BSDropdownItem IsDivider="true"></BSDropdownItem>
             }
         </BSDropdownMenu>
+        <pre>@destinationFeedback</pre>
     </BSDropdown>
+
     <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm" IsInline="true">
-            <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                <BSLabel For="Price">Price number </BSLabel>
-                <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Price" @bind-Value="formsModelPrices.price"></BSInput>
-            </BSFormGroup>
-            <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                <BSLabel For="Break">Breakpoint number </BSLabel>
-                <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Break" @bind-Value="formsModelPrices.breakPoint"></BSInput>
-            </BSFormGroup>
-            <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Add Price</BSButton>
-            <pre>@priceFeedback</pre>
+        <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+            <BSLabel For="Price">Price number </BSLabel>
+            <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Price" @bind-Value="formsModelPrices.price"></BSInput>
+        </BSFormGroup>
+        <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+            <BSLabel For="Break">Breakpoint number </BSLabel>
+            <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Break" @bind-Value="formsModelPrices.breakPoint"></BSInput>
+        </BSFormGroup>
+        <BSButton Color="Color.Secondary" ButtonType="BlazorStrap.ButtonType.Submit">Add Price</BSButton>
+        <pre>@priceFeedback</pre>
     </BSForm>
-        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
+    <BSButton Color="Color.Primary" ButtonType="BlazorStrap.ButtonType.Submit">Submit</BSButton>
 </BSForm>
 
-    @code {
-        public string priceFeedback;
-        public List<decimal> Prices = new List<decimal>();
-        public List<int> Breaks = new List<int>();
-        public List<Destination> destinations = new List<Destination>();
-        protected override async Task OnInitializedAsync()
-        {
-            destinations = await DaService.GetAllDestinations();
-        }
+@code {
+    public int destinationID;
+    public string destinationFeedback = "";
+    public string priceFeedback = "";
+    public List<decimal> Prices = new List<decimal>();
+    public List<int> Breaks = new List<int>();
+    public List<Destination> destinations = new List<Destination>();
+    protected override async Task OnInitializedAsync()
+    {
+        destinations = await DaService.GetAllDestinations();
+    }
 
-        public void ValidFormSubmitted()
-        {
-            Vacation v = new Vacation(VacData, Breaks, Prices);
-            v.State = "Proposed";
-            v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
-            v.MinNumberOfUsersExceeded = false;
-            v.Dates.Add("ProposalDate", DateTime.Now);
-            v.Dates.Add("GracePeriodDate", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
-        }
+    public void ValidFormSubmitted()
+    {
+        Vacation v = new Vacation(VacData, Breaks, Prices);
+        v.State = "Proposed";
+        v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
+        v.MinNumberOfUsersExceeded = false;
+        v.Dates.Add("ProposalDate", DateTime.Now);
+        v.Dates.Add("Deadline", formsModelVal.Deadline);
+        v.Dates.Add("GracePeriodDate", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
+    }
 
-        public bool IsOpen1 = false;
+    void Change(object value, string name)
+    {
+        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
 
-        public void menuButtonClick()
-        {
-            Console.WriteLine("We in");
-        }
+        StateHasChanged();
+    }
 
-        public void onClick1()
-        {
-            if (IsOpen1 == false)
-            {
-                IsOpen1 = true;
-            }
-            else
-            {
-                IsOpen1 = false;
-            }
-        }
 
-        public class FormsModelVal
-        {
-            [Required]
-            //TODO add more constraints.
-            public int GraceperiodLength { get; set; }
+    public bool IsOpen1 = false;
 
-            [Required]
-            public DateTime Deadline { get; set; } = DateTime.Now;
-
-            [Required]
-            public int minNumberOfUsers { get; set; }
-
-            [Required]
-            [StringLength(30, ErrorMessage = "Hotel name too long (30 character limit).")]
-            public string Hotel { get; set; }
-
-            [Required]
-            public Boolean Valid { get; set; }
-        }
-        FormsModelVal formsModelVal = new FormsModelVal();
-
-        public void PriceSubmitted()
-        {
-            Prices.Add(formsModelPrices.price);
-            Breaks.Add(formsModelPrices.breakPoint);
-
-            priceFeedback += "Price: " + formsModelPrices.price + ". Breakpoint: " + formsModelPrices.breakPoint + ".\n";
-        }
-
-        public class FormsModelPrices
-        {
-            [Required]
-            public decimal price { get; set; }
-            [Required]
-            public int breakPoint { get; set; }
-        }
-        FormsModelPrices formsModelPrices = new FormsModelPrices();
-
+    public void menuButtonClick()
+    {
 
     }
+
+    public void onClick1()
+    {
+        if (IsOpen1 == false)
+        {
+            IsOpen1 = true;
+        }
+        else
+        {
+            IsOpen1 = false;
+        }
+    }
+
+    public class FormsModelVal
+    {
+        [Required]
+        //TODO add more constraints.
+        public int GraceperiodLength { get; set; }
+
+        [Required]
+        public DateTime Deadline { get; set; } = DateTime.Now;
+
+        [Required]
+        public int minNumberOfUsers { get; set; }
+
+        [Required]
+        [StringLength(30, ErrorMessage = "Hotel name too long (30 character limit).")]
+        public string Hotel { get; set; }
+
+        [Required]
+        public Boolean Valid { get; set; }
+    }
+    FormsModelVal formsModelVal = new FormsModelVal();
+
+    public void PriceSubmitted()
+    {
+        Prices.Add(formsModelPrices.price);
+        Breaks.Add(formsModelPrices.breakPoint);
+
+        priceFeedback += "Price: " + formsModelPrices.price + ". Breakpoint: " + formsModelPrices.breakPoint + ".\n";
+    }
+
+    public class FormsModelPrices
+    {
+        [Required]
+        public decimal price { get; set; }
+        [Required]
+        public int breakPoint { get; set; }
+    }
+    FormsModelPrices formsModelPrices = new FormsModelPrices();
+
+
+}
