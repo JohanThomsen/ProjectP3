@@ -5,6 +5,7 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 namespace TravelClubProto.Data
 {
@@ -59,6 +60,8 @@ namespace TravelClubProto.Data
             }
         }
 
+
+        //Kan Slettes er flyttet
         public async Task<Destination> GetDestinationByID(int ID)
         {
             Destination matchingDestination = new Destination();
@@ -170,5 +173,57 @@ namespace TravelClubProto.Data
             //Waits for Task to be finished and then returns the list of Destinations
             return await Task.FromResult(activities);
         }
+
+        public async Task<List<Vacation>> GetAllVacations(DataAccessService DaService)
+        {
+            List<Vacation> vacations = new List<Vacation>();
+            try
+            {
+                //Creates a table
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(ConnectionString);
+                //Gets data from the sql database
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM [dbo].Vacation", con);
+                //Structures the data such that it can be read 
+                da.Fill(dt);
+                //Reads data into designated class
+                vacations = FillVacationList(dt, DaService);
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            //Waits for Task to be finished and then returns the list of Destinations
+            return await Task.FromResult(vacations);
+        }
+
+        private List<Vacation> FillVacationList(DataTable dt, DataAccessService DaService)
+        {
+            List<Vacation> vacations = new List<Vacation>();
+            Vacation v;
+            foreach (DataRow row in dt.Rows)
+            {
+                v = new Vacation(DaService, Convert.ToInt32(row["ID"]), Convert.ToInt32(row["FK_DestinationID"]));
+                v.State = row["State"] as string;
+                v.MinNumberOfUsers = Convert.ToInt32(row["MinNumberOfUsers"]);
+                v.MinNumberOfUsersExceeded = Convert.ToInt32(row["MinNumberOfUsersExceeded"]);
+                v.Dates.Add("ProposalDate", Convert.ToDateTime(row["ProposalDate"]));
+                if (!(row["PublishDate"] is DBNull)) v.Dates.Add("PublishDate", Convert.ToDateTime(row["PublishDate"]));
+                if (!(row["GracePeriodDate"] is DBNull)) v.Dates.Add("GracePeriodDate", Convert.ToDateTime(row["GracePeriodDate"]));
+                if (!(row["CancelDate"] is DBNull)) v.Dates.Add("CancelDate", Convert.ToDateTime(row["CancelDate"]));
+                if (!(row["CompletionDate"] is DBNull)) v.Dates.Add("CompletionDate", Convert.ToDateTime(row["CompletionDate"]));
+                if (!(row["Deadline"] is DBNull)) v.Dates.Add("Deadline", Convert.ToDateTime(row["Deadline"]));
+                if (!(row["GracePeriodLength"] is DBNull)) v.Dates.Add("GracePeriodLength", Convert.ToDateTime(row["GracePeriodLength"]));
+                if (!(row["RejectionDate"] is DBNull)) v.Dates.Add("RejectionDate", Convert.ToDateTime(row["RejectionDate"]));
+                v.Dates.Add("PriceChangeDate", Convert.ToDateTime(row["PriceChangeDate"]));
+                v.FK_DestinationID = Convert.ToInt32(row["FK_DestinationID"]);
+                v.Description = row["Description"] as string;
+                vacations.Add(v);
+            }
+            return vacations;
+        }
     }
+
+   
 }

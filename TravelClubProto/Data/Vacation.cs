@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
@@ -11,18 +12,18 @@ namespace TravelClubProto.Data
     {
         public Dictionary<string, DateTime> Dates = new Dictionary<string, DateTime>();
 
-        private Dictionary<int, decimal> Prices = new Dictionary<int, decimal>();
-        private Destination Destination { get; set; }
+        //public Dictionary<int, decimal> Prices = new Dictionary<int, decimal>();
+
+        public List<int> StretchGoals = new List<int>();
+        public List<decimal> Prices = new List<decimal>();
+        public Destination Destination { get; set; }
         public int ID { get; set; }
         public int MinNumberOfUsers { get; set; }
         public int MinNumberOfUsersExceeded { get; set; }
-        private DateTime GracePeriodLength { get; set; }
-
-        public DataAccessService DaService { get; set; }
-        public int FK_DestinationID { get; set; }
-        public VacationData VacData { get; set; }
-
         public string Description { get; set; }
+        public int FK_DestinationID { get; set; }
+        public DateTime GracePeriodLength { get; set; }
+        public DataAccessService DaService { get; set; }
         public VacationAdministrator VacAdmin { get; set; }
 
         private string _state;
@@ -36,29 +37,87 @@ namespace TravelClubProto.Data
             }
         }
 
-
-        public Vacation(DateTime proposalDate, DateTime deadline, List<int> stretchGoals, List<decimal> prices, VacationData vacData)
+        public Vacation(List<int> stretchGoals, List<decimal> prices, DataAccessService daService)
         {
-            VacData = vacData;
-            VacAdmin = new VacationAdministrator(vacData);
-            Dates.Add("ProposalDate", proposalDate);
-            Dates.Add("Deadline", deadline);
-            AddPrices(stretchGoals, prices);
-        }
-
-        public Vacation(VacationData vacData, List<int> stretchGoals, List<decimal> prices, DataAccessService daService)
-        {
-            VacData = vacData;
-            VacAdmin = new VacationAdministrator(vacData);
+            VacAdmin = new VacationAdministrator();
             AddPrices(stretchGoals, prices);
             DaService = daService;
+        }
+
+        public Vacation(DataAccessService daService, int id, int destinationID)
+        {
+            ID = id;
+            FK_DestinationID = destinationID;
+            DaService = daService;
+            VacAdmin = new VacationAdministrator();
+            Destination = getDestination(daService);
+            getPrices();
+        }
+
+        private void getPrices()
+        {
+            Dictionary<int, decimal> prices = new Dictionary<int, decimal>();
+            try
+            {
+                //Creates a table
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(DaService.ConnectionString);
+                //Gets data from the sql database
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].Prices WHERE FK_VacationID='{ID}'", con);
+                //Structures the data such that it can be read 
+                da.Fill(dt);
+                //Reads data into designated class
+                foreach (DataRow row in dt.Rows)
+                {
+                    Prices.Add(Convert.ToDecimal(row["Price"]));
+                    StretchGoals.Add(Convert.ToInt32(row["JoinAmount"]));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private Destination getDestination(DataAccessService daService)
+        {
+            Destination matchingDestination = new Destination(daService);
+            try
+            {
+                using (SqlConnection myConnection = new SqlConnection(DaService.ConnectionString))
+                {
+                    //The * means all. So data from [dbo].[Destination] table are selected by the database
+                    string query = "SELECT * FROM [dbo].[Destination] WHERE DestinationID=@DestinationID";
+                    SqlCommand sqlCommand = new SqlCommand(query, myConnection);
+                    sqlCommand.Parameters.AddWithValue("@DestinationID", FK_DestinationID);
+                    myConnection.Open();
+                    //Reads all the executed sql commands
+                    using (SqlDataReader Reader = sqlCommand.ExecuteReader())
+                    {
+                        // Reads all data and converts to object and type matches
+                        while (Reader.Read())
+                        {
+                            matchingDestination.ID = Convert.ToInt32(Reader["DestinationID"]);
+                            matchingDestination.Hotel = Reader["Hotel"] as string;
+                            matchingDestination.Location = Reader["Location"] as string;
+                        }
+                        myConnection.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return matchingDestination;
         }
 
         private void AddPrices(List<int> stretchGoals, List<decimal> prices)
         {
             for (int i = 0; i < stretchGoals.Count; i++)
             {
-                Prices.Add(stretchGoals[i], prices[i]);
+                Prices.Add(prices[i]);
+                StretchGoals.Add(stretchGoals[i]);
             }
         }
 
@@ -70,8 +129,8 @@ namespace TravelClubProto.Data
             try
             {
                 //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string query = "INSERT INTO [dbo].[Vacation] (State, MinNumberOfusers, MinNumberOfUsersExceeded, ProposalDate, Deadline, GracePeriodLength, PriceChangeDate, FK_DestinationID)" +
-                               " VALUES(@State, @MinNumberOfusers, @MinNumberOfUsersExceeded, @ProposalDate, @Deadline, @GracePeriodLength, @PriceChangeDate, @FK_DestinationID)";
+                string query = "INSERT INTO [dbo].[Vacation] (State, MinNumberOfusers, MinNumberOfUsersExceeded, ProposalDate, Deadline, GracePeriodLength, PriceChangeDate, FK_DestinationID, Description)" +
+                               " VALUES(@State, @MinNumberOfusers, @MinNumberOfUsersExceeded, @ProposalDate, @Deadline, @GracePeriodLength, @PriceChangeDate, @FK_DestinationID, @Description)";
                 //SqlCommand is used to build up commands
                 SqlCommand sqlCommand = new SqlCommand(query, con);
                 con.Open();
@@ -83,6 +142,7 @@ namespace TravelClubProto.Data
                 sqlCommand.Parameters.AddWithValue("@GracePeriodLength", Dates["GracePeriodLength"]);
                 sqlCommand.Parameters.AddWithValue("@PriceChangeDate", Dates["PriceChangeDate"]);
                 sqlCommand.Parameters.AddWithValue("@FK_DestinationID", FK_DestinationID);
+                sqlCommand.Parameters.AddWithValue("@Description", Description);
                 //The built commands are executed
                 sqlCommand.ExecuteNonQuery();
             }
@@ -159,7 +219,7 @@ namespace TravelClubProto.Data
             //Connects to the azure sql database
             SqlConnection con = new SqlConnection(DaService.ConnectionString);
 
-            foreach (KeyValuePair<int, decimal> pricePair in Prices)
+            for (int i = 0; i < Prices.Count; i++)
             {
                 try
                 {
@@ -168,8 +228,8 @@ namespace TravelClubProto.Data
                     //SqlCommand is used to build up commands
                     SqlCommand sqlCommand = new SqlCommand(query, con);
                     con.Open();
-                    sqlCommand.Parameters.AddWithValue("@Price", pricePair.Value);
-                    sqlCommand.Parameters.AddWithValue("@JoinAmount", pricePair.Key);
+                    sqlCommand.Parameters.AddWithValue("@Price", Prices[i]);
+                    sqlCommand.Parameters.AddWithValue("@JoinAmount", StretchGoals[i]);
                     sqlCommand.Parameters.AddWithValue("@FK_VacationID", ID);
                     //The built commands are executed
                     sqlCommand.ExecuteNonQuery();
@@ -183,7 +243,7 @@ namespace TravelClubProto.Data
                 {
                     con.Close();
                 }
-            }  
+            }
         }
     }
 }

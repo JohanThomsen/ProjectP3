@@ -32,7 +32,6 @@ namespace TravelClubProto
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddSingleton<VacationData>();
             services.AddSingleton<DataAccessService>();
             services.AddBootstrapCss();
             services.AddBlazoredLocalStorage();

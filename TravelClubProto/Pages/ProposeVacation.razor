@@ -1,8 +1,6 @@
 ﻿@page "/ProposeVacation"
 @using TravelClubProto.Data
 @inject DataAccessService DaService
-@inject VacationData VacData
-
 <h3>ProposeVacation</h3>
 
 <BSForm Model="formsModelVal" OnValidSubmit="ValidFormSubmitted">
@@ -62,7 +60,7 @@
 
         public void ValidFormSubmitted()
         {
-            Vacation v = new Vacation(VacData, Breaks, Prices, DaService);
+            Vacation v = new Vacation(Breaks, Prices, DaService);
             v.State = "Proposed";
             v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
             v.MinNumberOfUsersExceeded = 0;

@@ -1,66 +1,21 @@
 ﻿@page "/vacationView"
 
 @using TravelClubProto.Data
-@inject VacationData VacData
-
+@inject DataAccessService DaService
 <h3>View Vacations</h3>
 
-<button @onclick="Add"> Add </button>
-<button @onclick="PublishedVac"> Publish </button>
-
-<button @onclick="StartGracePeriod"> StartGrace </button>
-
-@foreach (var item in VacData.AllVacations)
+@foreach (Vacation vac in vacations)
 {
-    <p>
-        ALL
-        @item.State
-        @item.ID
-    </p> <br/>
+    <p> @vac.Description </p>
+    <p> @vac.ID </p>
+    <p> @vac.Destination.Location</p>
+    <p> First price: @vac.Prices[0]</p>
 }
-
-@foreach (var item in VacData.PublishedVacations)
-{
-    <p>
-        Published
-        @item
-    </p> <br />
-}
-
-@foreach (var item in VacData.GracePeriodVacations)
-{
-    <p>
-        Grace
-        @item
-    </p> <br />
-}
-
 
 @code {
-
-    public void Add()
+    public List<Vacation> vacations;
+    protected override async Task OnInitializedAsync()
     {
-        VacData.AllVacations.Add(new Vacation(DateTime.Now,
-                               DateTime.Now.AddDays(1),
-                               new List<int> { 2, 6, 10 },
-                               new List<decimal> { 4000, 3500, 3000 },
-                               VacData));
-        Console.WriteLine("Add");
+        vacations = await DaService.GetAllVacations(DaService);
     }
-
-    public void PublishedVac()
-    {
-        Console.WriteLine("Publish");
-        Vacation currentVac = VacData.FindVac(1);
-        currentVac.State = "Published";
-
-    }
-
-    public void StartGracePeriod()
-    {
-        Vacation currentVac = VacData.FindVac(1);
-        currentVac.State = "GracePeriod";
-
-    }
-
 }

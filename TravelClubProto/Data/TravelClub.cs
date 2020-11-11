@@ -10,7 +10,6 @@ namespace TravelClubProto.Data
         private string Type = "TravelClub";
         public List<Vacation> TravelClubCompletedVacations = new List<Vacation>();
         public List<Customer> CustomerList = new List<Customer>();
-        public VacationData vacationAdministrator { get; set; }
 
 
         public TravelClub(string username, string password) : base(username, password) {}
