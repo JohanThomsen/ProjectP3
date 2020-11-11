@@ -6,46 +6,46 @@
 <h3>ProposeVacation</h3>
 
 <BSForm Model="formsModelVal" OnValidSubmit="ValidFormSubmitted">
-    <BSFormGroup>
-        <BSLabel For="minNumberOfUsers">minNumberOfUsers</BSLabel>
-        <BSInput Id="minNumberOfUsers" InputType="InputType.Number" PlaceHolder="0" @bind-Value="formsModelVal.minNumberOfUsers"></BSInput>
-    </BSFormGroup>
-    <BSFormGroup>
-        <BSLabel For="Description">Description</BSLabel>
-        <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Enter Hotel" @bind-Value="formsModelVal.Description"></BSInput>
-    </BSFormGroup>
-    <BSFormGroup>
-        <BSLabel For="Deadline">Join Deadline</BSLabel>
-        <BSInput InputType="InputType.Date" Id="Deadline" @bind-Value="@formsModelVal.Deadline"></BSInput>
-    </BSFormGroup>
-    <BSFormGroup>
-        <BSLabel For="GraceperiodLength">GraceperiodLength in days</BSLabel>
-        <BSInput Id="GraceperiodLength" InputType="InputType.Number" PlaceHolder="Length in days" @bind-Value="formsModelVal.GraceperiodLength"></BSInput>
-    </BSFormGroup>
     <BSDropdown IsOpen="@IsOpen1">
-        <BSDropdownToggle Color="Color.Secondary" @onclick="onClick1">Destinations</BSDropdownToggle>
+        <BSDropdownToggle Color="Color.Secondary" @onclick="onClick1">Destination</BSDropdownToggle>
         <BSDropdownMenu @bind-IsOpen="@IsOpen1">
             @foreach (Destination destination in destinations)
             {
-                <BSDropdownItem IsButton="true" @onclick="@(e => getDestinationInfo(destination))">Location : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
-                <BSDropdownItem IsDivider="true"></BSDropdownItem>
+               <BSDropdownItem IsButton="true" @onclick="@(e => getDestinationInfo(destination))">Location : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
+               <BSDropdownItem IsDivider="true"></BSDropdownItem>
             }
-        </BSDropdownMenu>
-        <pre> @destinationFeedback</pre>
+       </BSDropdownMenu>
+    <pre> @destinationFeedback</pre>
     </BSDropdown>
+    <BSFormGroup>
+        <BSLabel For="Description">Beskrivelse</BSLabel>
+        <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="Deadline">Tilmeldingsfrist</BSLabel>
+        <BSInput InputType="InputType.Date" Id="Deadline" @bind-Value="@formsModelVal.Deadline"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="GraceperiodLength">Betalingsperiode</BSLabel>
+        <BSInput Id="GraceperiodLength" InputType="InputType.Number" PlaceHolder="Længde i dage" @bind-Value="formsModelVal.GraceperiodLength"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="minNumberOfUsers">Minimum antal deltagere</BSLabel>
+        <BSInput Id="minNumberOfUsers" InputType="InputType.Number" PlaceHolder="0" @bind-Value="formsModelVal.minNumberOfUsers"></BSInput>
+    </BSFormGroup>
     <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm" IsInline="true">
             <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                <BSLabel For="Price">Price number </BSLabel>
-                <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Price" @bind-Value="formsModelPrices.price"></BSInput>
+                <BSLabel For="Price">Pris </BSLabel>
+                <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Pris" @bind-Value="formsModelPrices.price"></BSInput>
             </BSFormGroup>
             <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                <BSLabel For="Break">Breakpoint number </BSLabel>
-                <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Break" @bind-Value="formsModelPrices.breakPoint"></BSInput>
+                <BSLabel For="Break">Interval pris  </BSLabel>
+                <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Interval pris" @bind-Value="formsModelPrices.breakPoint"></BSInput>
             </BSFormGroup>
-            <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Add Price</BSButton>
+            <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
             <pre>@priceFeedback</pre>
     </BSForm>
-        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
+        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilføj ferie</BSButton>
 </BSForm>
 
     @code {
