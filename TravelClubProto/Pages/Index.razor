@@ -1,5 +1,90 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<div class="docs-example">
+    <BSJumbotron IsFluid="true">
+        <BSContainer>
+            <BSForm Model="@formsModelVal">
+                <BSBasicForm IsInline="true">
+                    <BSFormGroup>
+                        <BSLabel for="InputEmail"></BSLabel>
+                        <BSInput id="InputEmail" InputType="InputType.Text" PlaceHolder="Afrejselufthavn" @bind-Value="formsModelVal.Afrejselufthavn"></BSInput>
+                    </BSFormGroup>
 
-Welcome to your new app.
+                    <BSFormGroup>
+                        <BSLabel for="InputPassword"></BSLabel>
+                        <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Rejsemål" @bind-Value="formsModelVal.Rejsemål"></BSInput>
+                    </BSFormGroup>
+
+                    <BSFormGroup>
+                        <BSLabel for="InputEmail"></BSLabel>
+                        <BSInput id="InputEmail" InputType="InputType.Text" PlaceHolder="Afrejse dato" @bind-Value="formsModelVal.AfrejseDato"></BSInput>
+                    </BSFormGroup>
+
+                    <BSFormGroup>
+                        <BSLabel for="InputPassword"></BSLabel>
+                        <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Hjemrejse dato" @bind-Value="formsModelVal.HjemrejseDato"></BSInput>
+                    </BSFormGroup>
+
+                    <BSFormGroup>
+                        <BSLabel for="InputPassword"></BSLabel>
+                        <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Antal deltagere" @bind-Value="formsModelVal.AntalDeltagere"></BSInput>
+                    </BSFormGroup>
+
+                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Søg</BSButton>
+                </BSBasicForm>
+            </BSForm>
+            <h1 class=""></h1>
+            <p class=""></p>
+        </BSContainer>
+    </BSJumbotron>
+</div>
+
+<div class="TravelClubInfo">
+    <BSJumbotron IsFluid="true">
+        <BSContainer>
+            <h2 class="InfoOverskrift">Hvad er TravelClub</h2>
+            <p class="">Beskrivelsen omkring formålet med TravelClub</p>
+        </BSContainer>
+    </BSJumbotron>
+</div>
+
+<div class="docs-example">
+    <BSJumbotron IsFluid="true">
+        <BSContainer>
+
+
+        </BSContainer>
+    </BSJumbotron>
+</div>
+
+
+
+
+
+@code
+{
+    public class FormsModelVal
+    {
+        
+        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
+        public string Afrejselufthavn { get; set; }
+
+        
+        [StringLength(50, ErrorMessage = "password too long (20 character limit).")]
+        public string Rejsemål { get; set; }
+
+        
+        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
+        public string AfrejseDato { get; set; }
+
+        
+        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
+        public string HjemrejseDato { get; set; }
+
+       
+        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
+        public int AntalDeltagere { get; set; }
+
+    }
+    FormsModelVal formsModelVal = new FormsModelVal();
+}
