@@ -85,11 +85,10 @@ namespace TravelClubProto.Data
                         // Reads all data and converts to object and type matches
                         while (Reader.Read())
                         {
-                            user.Email = Reader["Email"] as string;
-                            user.Password = Reader["Password"] as string;
                             user.ID = Convert.ToInt32(Reader["AccountID"]);
-                            if (user.Email == email && user.Password == password)
+                            if (Reader["Email"] as string == user.Email && Reader["Password"] as string == user.Password)
                             {
+                                Console.WriteLine(user.ID);
                                 return await Task.FromResult(user.ID);
                             }
                         }
