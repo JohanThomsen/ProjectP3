@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TravelClubProto.Data;
 using BlazorStrap;
+using Blazored.LocalStorage;
 
 namespace TravelClubProto
 
@@ -34,6 +35,7 @@ namespace TravelClubProto
             services.AddSingleton<VacationData>();
             services.AddSingleton<DataAccessService>();
             services.AddBootstrapCss();
+            services.AddBlazoredLocalStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,6 +7,7 @@ namespace TravelClubProto.Data
 {
     public class Activity
     {
-        public string ActivityType { get; set; }
+        public string Type { get; set; }
+        public int ID { get; set; }
     }
 }
