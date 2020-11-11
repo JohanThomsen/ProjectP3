@@ -11,8 +11,8 @@
         <BSInput Id="minNumberOfUsers" InputType="InputType.Number" PlaceHolder="0" @bind-Value="formsModelVal.minNumberOfUsers"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
-        <BSLabel For="Hotel">Hotel</BSLabel>
-        <BSInput Id="Hotel" InputType="InputType.Text" PlaceHolder="Enter Hotel" @bind-Value="formsModelVal.Hotel"></BSInput>
+        <BSLabel For="Description">Description</BSLabel>
+        <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Enter Hotel" @bind-Value="formsModelVal.Description"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
         <BSLabel For="Deadline">Join Deadline</BSLabel>
@@ -27,10 +27,11 @@
         <BSDropdownMenu @bind-IsOpen="@IsOpen1">
             @foreach (Destination destination in destinations)
             {
-                <BSDropdownItem IsButton="true" @onclick="@(e => activeDestination = destination.ID)">Location : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
+                <BSDropdownItem IsButton="true" @onclick="@(e => getDestinationInfo(destination))">Location : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
                 <BSDropdownItem IsDivider="true"></BSDropdownItem>
             }
         </BSDropdownMenu>
+        <pre> @destinationFeedback</pre>
     </BSDropdown>
     <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm" IsInline="true">
             <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
@@ -48,7 +49,7 @@
 </BSForm>
 
     @code {
-
+        public string destinationFeedback;
         public int activeDestination;
         public string priceFeedback;
         public List<decimal> Prices = new List<decimal>();
@@ -61,20 +62,27 @@
 
         public void ValidFormSubmitted()
         {
-            Vacation v = new Vacation(VacData, Breaks, Prices);
+            Vacation v = new Vacation(VacData, Breaks, Prices, DaService);
             v.State = "Proposed";
             v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
-            v.MinNumberOfUsersExceeded = false;
+            v.MinNumberOfUsersExceeded = 0;
             v.Dates.Add("ProposalDate", DateTime.Now);
-            v.Dates.Add("GracePeriodDate", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
+            v.Dates.Add("Deadline", formsModelVal.Deadline);
+            v.Dates.Add("GracePeriodLength", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
+            v.Dates.Add("PriceChangeDate", DateTime.Now);
+            v.Description = formsModelVal.Description;
+            v.FK_DestinationID = activeDestination;
+            v.InsertVacationToDatabase();
         }
 
         public bool IsOpen1 = false;
 
-        //public  getDestinationInfo(Destination dest)
-        //{
-        //    Console.WriteLine(dest.ID);
-        //}
+        public void getDestinationInfo(Destination dest)
+        {
+            activeDestination = dest.ID;
+            IsOpen1 = false;
+            destinationFeedback = $"\nSelected Hotel: {dest.Hotel}, Location {dest.Location}";
+        }
 
         public void onClick1()
         {
@@ -101,8 +109,8 @@
             public int minNumberOfUsers { get; set; }
 
             [Required]
-            [StringLength(30, ErrorMessage = "Hotel name too long (30 character limit).")]
-            public string Hotel { get; set; }
+            [StringLength(1000, ErrorMessage = "Hotel name too long (1000 character limit).")]
+            public string Description { get; set; }
 
             [Required]
             public Boolean Valid { get; set; }
@@ -125,6 +133,4 @@
             public int breakPoint { get; set; }
         }
         FormsModelPrices formsModelPrices = new FormsModelPrices();
-
-
     }
