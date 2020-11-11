@@ -27,7 +27,7 @@
         <BSDropdownMenu @bind-IsOpen="@IsOpen1">
             @foreach (Destination destination in destinations)
             {
-                <BSDropdownItem IsButton="true" @onclick="@menuButtonClick">Location : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
+                <BSDropdownItem IsButton="true" @onclick="@(e => activeDestination = destination.ID)">Location : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
                 <BSDropdownItem IsDivider="true"></BSDropdownItem>
             }
         </BSDropdownMenu>
@@ -48,6 +48,8 @@
 </BSForm>
 
     @code {
+
+        public int activeDestination;
         public string priceFeedback;
         public List<decimal> Prices = new List<decimal>();
         public List<int> Breaks = new List<int>();
@@ -69,10 +71,10 @@
 
         public bool IsOpen1 = false;
 
-        public void menuButtonClick()
-        {
-            Console.WriteLine("We in");
-        }
+        //public  getDestinationInfo(Destination dest)
+        //{
+        //    Console.WriteLine(dest.ID);
+        //}
 
         public void onClick1()
         {
