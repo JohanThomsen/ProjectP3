@@ -15,6 +15,7 @@ namespace TravelClubProto
         public string Hotel { get; set; }
         public DateTime AddDate { get; set; }
 
+        public string Country { get; set; }
         public DataAccessService DaService;
 
         public Destination(DataAccessService daService)
@@ -30,12 +31,13 @@ namespace TravelClubProto
             try
             {
                 //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string query = "INSERT INTO [dbo].[Destination] (Hotel, Location, AddDate) VALUES(@Hotel, @Location, @AddDate)";
+                string query = "INSERT INTO [dbo].[Destination] (Hotel, Location, AddDate, Country) VALUES(@Hotel, @Location, @AddDate, @Country)";
                 //SqlCommand is used to build up commands
                 SqlCommand sqlCommand = new SqlCommand(query, con);
                 con.Open();
                 sqlCommand.Parameters.AddWithValue("@Hotel", Hotel);
                 sqlCommand.Parameters.AddWithValue("@Location", Location);
+                sqlCommand.Parameters.AddWithValue("@Country", Country);
                 sqlCommand.Parameters.AddWithValue("@AddDate", AddDate);
                 //The built commands are executed
                 sqlCommand.ExecuteNonQuery();

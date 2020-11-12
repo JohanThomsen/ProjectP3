@@ -9,19 +9,23 @@
 
 <BSForm Model="formsModelVal" OnValidSubmit="ValidFormSubmitted">
     <BSFormGroup>
+        <BSLabel For="Country">Land</BSLabel>
+        <BSInput Id="Country" InputType="InputType.Text" PlaceHolder="Indtast Land" @bind-Value="formsModelVal.Country"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
         <BSLabel For="Location">Location</BSLabel>
-        <BSInput Id="Location" InputType="InputType.Text" PlaceHolder="Enter Location" @bind-Value="formsModelVal.Location"></BSInput>
+        <BSInput Id="Location" InputType="InputType.Text" PlaceHolder="Indtast Lokation" @bind-Value="formsModelVal.Location"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
         <BSLabel For="Hotel">Hotel</BSLabel>
-        <BSInput Id="Hotel" InputType="InputType.Text" PlaceHolder="Enter Hotel" @bind-Value="formsModelVal.Hotel"></BSInput>
+        <BSInput Id="Hotel" InputType="InputType.Text" PlaceHolder="Indtast Hotel" @bind-Value="formsModelVal.Hotel"></BSInput>
     </BSFormGroup>
     <BSForm Model="formsModelAct" OnValidSubmit="ActivitySubmitted" Context="PricesForm" IsInline="true">
         <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
             <BSLabel For="Activity">Tilføj Aktivitet </BSLabel>
             <BSInput Id="Activity" InputType="InputType.Text" PlaceHolder="Aktivitet" @bind-Value="formsModelAct.Type"></BSInput>
         </BSFormGroup>
-        <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
+        <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj Aktivitet  </BSButton>
         <pre>@activityFeedback</pre>
     </BSForm>
     <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
@@ -42,6 +46,7 @@
         d.Location = formsModelVal.Location;
         d.Hotel = formsModelVal.Hotel;
         d.AddDate = DateTime.Now;
+        d.Country = formsModelVal.Country;
         d.InsertDestinationIntoDataBase();
         int destID = d.GetID();
         foreach (Activity activity in Activities)
@@ -52,6 +57,10 @@
 
     public class FormsModelVal
     {
+
+        [Required]
+        [StringLength(50, ErrorMessage = "Country Name too long (50 character limit).")]
+        public string Country { get; set; }
 
         [Required]
         [StringLength(50, ErrorMessage = "Location too long (50 character limit).")]
@@ -83,7 +92,7 @@
     {
         Activities.Add(new Activity(DaService, formsModelAct.Type));
 
-        activityFeedback += "Activity Added: " + formsModelAct.Type + ".\n";
+        activityFeedback += "Aktivitet tilføjet: " + formsModelAct.Type + ".\n";
         formsModelAct.Type = "";
     }
 }

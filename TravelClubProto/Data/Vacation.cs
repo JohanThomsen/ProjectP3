@@ -23,6 +23,8 @@ namespace TravelClubProto.Data
         public string Description { get; set; }
         public int FK_DestinationID { get; set; }
         public DateTime GracePeriodLength { get; set; }
+        public string ImageLink { get; set; }
+        public string DepartureAirport { get; set; }
         public DataAccessService DaService { get; set; }
         public VacationAdministrator VacAdmin { get; set; }
 
@@ -129,8 +131,8 @@ namespace TravelClubProto.Data
             try
             {
                 //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string query = "INSERT INTO [dbo].[Vacation] (State, MinNumberOfusers, MinNumberOfUsersExceeded, ProposalDate, Deadline, GracePeriodLength, PriceChangeDate, FK_DestinationID, Description)" +
-                               " VALUES(@State, @MinNumberOfusers, @MinNumberOfUsersExceeded, @ProposalDate, @Deadline, @GracePeriodLength, @PriceChangeDate, @FK_DestinationID, @Description)";
+                string query = "INSERT INTO [dbo].[Vacation] (State, MinNumberOfusers, MinNumberOfUsersExceeded, ProposalDate, Deadline, GracePeriodLength, PriceChangeDate, FK_DestinationID, Description, TravelDate, LeaveDate, ImageLink, DepartureAirport)" +
+                               " VALUES(@State, @MinNumberOfusers, @MinNumberOfUsersExceeded, @ProposalDate, @Deadline, @GracePeriodLength, @PriceChangeDate, @FK_DestinationID, @Description, @TravelDate, @LeaveDate, @ImageLink, @DepartureAirport)";
                 //SqlCommand is used to build up commands
                 SqlCommand sqlCommand = new SqlCommand(query, con);
                 con.Open();
@@ -143,6 +145,12 @@ namespace TravelClubProto.Data
                 sqlCommand.Parameters.AddWithValue("@PriceChangeDate", Dates["PriceChangeDate"]);
                 sqlCommand.Parameters.AddWithValue("@FK_DestinationID", FK_DestinationID);
                 sqlCommand.Parameters.AddWithValue("@Description", Description);
+                sqlCommand.Parameters.AddWithValue("@TravelDate", Dates["TravelDate"]);
+                sqlCommand.Parameters.AddWithValue("@LeaveDate", Dates["LeaveDate"]);
+                sqlCommand.Parameters.AddWithValue("@ImageLink",ImageLink);
+                sqlCommand.Parameters.AddWithValue("@DepartureAirport", DepartureAirport);
+
+
                 //The built commands are executed
                 sqlCommand.ExecuteNonQuery();
             }
