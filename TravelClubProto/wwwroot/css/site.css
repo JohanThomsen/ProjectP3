@@ -2,15 +2,15 @@
 
 
 
-.VacFigures{
+/*.VacFigures{
     width: inherit;
     height: inherit;
-}
+}*/
 
 .Column {
     float: left;
     width: 19%;
-    margin-left:9px;
+    margin:0.5%;
 }
 
 /* Clear floats after the columns */
