@@ -2,16 +2,23 @@
 
 @using TravelClubProto.Data
 @inject DataAccessService DaService
-<h3>View Vacations</h3>
+<h3>Se ferier</h3>
 
 @foreach (Vacation vac in vacations)
 {   
-    <BSJumbotron>
-    <p> @vac.Description </p>
-    <p> @vac.ID </p>
-    <p> @vac.Destination.Location</p>
-    <p> First price: @vac.Prices[0]</p>
+<BSJumbotron>
+    <h2>
+        @vac.Destination.Location 
+    </h2>
+
+    <BSJumbotron Class="TextJumbotron">
+        <h4>Beskrivelse af ferien</h4>
+        <p>@vac.Description</p>
+        <h16> @vac.ID </h16>
     </BSJumbotron>
+   
+    <p> First price: @vac.Prices[0]</p>
+</BSJumbotron>
 }
 
 @code {

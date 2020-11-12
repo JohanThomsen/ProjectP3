@@ -6,6 +6,10 @@
     width: inherit;
     height: inherit;
 }*/
+.TextJumbotron {
+    border-color: black;
+    border-width: 4px;
+}
 
 .Column {
     float: left;
