@@ -1,0 +1,67 @@
+﻿@page "/DeleteButtons"
+@using TravelClubProto.Data
+@inject DataAccessService DaService
+
+<h3>DeleteButtons</h3>
+<h2> Rows Affected : @count</h2>
+<button class="btn btn-primary" @onclick="DeleteVacations">Delete all vacations</button>
+<button class="btn btn-primary" @onclick="DeleteDestinations">Delete all destinations</button>
+<button class="btn btn-primary" @onclick="DeleteAccounts">Delete all accounts</button>
+<button class="btn btn-primary" @onclick="DeleteCustomers">Delete all customers</button>
+<button class="btn btn-primary" @onclick="DeleteCustomerVacationRelations">Delete all Customer Vacation Relations</button>
+<button class="btn btn-primary" @onclick="DeletePriceAgents">Delete all PriceAgents</button>
+<button class="btn btn-primary" @onclick="DeletePriceAgentRelations">Delete all PriceAgent Relations</button>
+
+
+@code {
+    int count = 0;
+    public void DeleteVacations()
+    {
+        DeleteCustomerVacationRelations();
+        DeletePriceAgentRelations();
+        count += DaService.ClearTable("Prices");
+        count += DaService.ClearTable("Vacation");
+
+    }
+
+    public void DeleteDestinations()
+    {
+        count += DaService.ClearTable("Activities");
+        DeleteVacations();
+        count += DaService.ClearTable("Destination");
+    }
+
+    public void DeleteAccounts()
+    {
+        DeleteCustomerVacationRelations();
+        DeletePriceAgents();
+        count += DaService.ClearTable("Account");
+    }
+
+    public void DeleteCustomers()
+    {
+        DeleteCustomerVacationRelations();
+        DeletePriceAgents();
+        count += DaService.DeleteCustomers();
+    }
+
+    public void DeleteCustomerVacationRelations()
+    {
+        count += DaService.ClearTable("CustomerVacationsTravelGroupRelations");
+        count += DaService.ClearTable("CustomerVacations");
+        count += DaService.ClearTable("TravelGroup");
+    }
+
+    public void DeletePriceAgents()
+    {
+        DeletePriceAgentRelations();
+        count += DaService.ClearTable("PriceAgent");
+    }
+
+    public void DeletePriceAgentRelations()
+    {
+        count += DaService.ClearTable("RelevantVacations");
+        count += DaService.ClearTable("DiscardedVacations");
+    }
+
+}

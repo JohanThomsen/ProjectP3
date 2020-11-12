@@ -2,9 +2,8 @@
 @using TravelClubProto.Data
 @inject DataAccessService DaService
 
-<h3>AddDestination</h3>
 <h2>
-    Hotel:  @formsModelVal.Location || Location:  @formsModelVal.Hotel. @added
+    @inputFeedback
 </h2>
 
 
@@ -17,28 +16,39 @@
         <BSLabel For="Hotel">Hotel</BSLabel>
         <BSInput Id="Hotel" InputType="InputType.Text" PlaceHolder="Enter Hotel" @bind-Value="formsModelVal.Hotel"></BSInput>
     </BSFormGroup>
+    <BSForm Model="formsModelAct" OnValidSubmit="ActivitySubmitted" Context="PricesForm" IsInline="true">
+        <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+            <BSLabel For="Activity">Tilføj Aktivitet </BSLabel>
+            <BSInput Id="Activity" InputType="InputType.Text" PlaceHolder="Aktivitet" @bind-Value="formsModelAct.Type"></BSInput>
+        </BSFormGroup>
+        <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
+        <pre>@activityFeedback</pre>
+    </BSForm>
     <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
 </BSForm>
 
 @code {
-    public List<string> Activities = new List<string>();
 
-    Destination destination = new Destination();
+    public List<Activity> Activities = new List<Activity>();
+    public string activityFeedback;
     public bool IsOpen1 = false;
-    string added = "not added";
+    string inputFeedback = "Add a destination";
+
 
     public void ValidFormSubmitted()
     {
-        added = "Is added";
+        inputFeedback = "Destination succesfully added";
         Destination d = new Destination(DaService);
         d.Location = formsModelVal.Location;
         d.Hotel = formsModelVal.Hotel;
+        d.AddDate = DateTime.Now;
         d.InsertDestinationIntoDataBase();
+        int destID = d.GetID();
+        foreach (Activity activity in Activities)
+        {
+            activity.InsertActivityIntoDataBase(destID);
+        }
     }
-
-    
-
-
 
     public class FormsModelVal
     {
@@ -55,4 +65,25 @@
         public Boolean Valid { get; set; }
     }
     FormsModelVal formsModelVal = new FormsModelVal();
+
+    public class FormsModelAct
+    {
+
+        [Required]
+        [StringLength(50, ErrorMessage = "Forklaring for lang (Maks 50 karakterer)")]
+        public string Type { get; set; }
+
+        [Required]
+        public Boolean Valid { get; set; }
+    }
+    FormsModelAct formsModelAct = new FormsModelAct();
+
+
+    public void ActivitySubmitted()
+    {
+        Activities.Add(new Activity(DaService, formsModelAct.Type));
+
+        activityFeedback += "Activity Added: " + formsModelAct.Type + ".\n";
+        formsModelAct.Type = "";
+    }
 }

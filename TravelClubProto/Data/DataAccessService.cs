@@ -62,9 +62,9 @@ namespace TravelClubProto.Data
 
 
         //Kan Slettes er flyttet
-        public async Task<Destination> GetDestinationByID(int ID)
+        public async Task<Destination> GetDestinationByID(int ID, DataAccessService DaService)
         {
-            Destination matchingDestination = new Destination();
+            Destination matchingDestination = new Destination(DaService);
             try
             {
                 using (SqlConnection myConnection = new SqlConnection(ConnectionString))
@@ -95,7 +95,7 @@ namespace TravelClubProto.Data
             return await Task.FromResult(matchingDestination);
         }
 
-        public async Task<List<Destination>> GetAllDestinations()
+        public async Task<List<Destination>> GetAllDestinations(DataAccessService DaService)
         {
             List<Destination> Destinations = new List<Destination>();
             Destination d;
@@ -111,7 +111,7 @@ namespace TravelClubProto.Data
                 //Reads data into designated class
                 foreach (DataRow row in dt.Rows)
                 {
-                    d = new Destination();
+                    d = new Destination(DaService);
                     d.ID = Convert.ToInt32(row["DestinationID"]);
                     d.Hotel = row["Hotel"] as string;
                     d.Location = row["Location"] as string;
@@ -144,7 +144,8 @@ namespace TravelClubProto.Data
                 Console.WriteLine(e);
             }
         }
-        public async Task<List<Activity>> GetAllActivities()
+
+        public async Task<List<Activity>> GetAllActivities(DataAccessService DaService)
         {
             List<Activity> activities = new List<Activity>();
             Activity a;
@@ -160,7 +161,7 @@ namespace TravelClubProto.Data
                 //Reads data into designated class
                 foreach (DataRow row in dt.Rows)
                 {
-                    a = new Activity();
+                    a = new Activity(DaService);
                     a.ID = Convert.ToInt32(row["ActivityID"]);
                     a.Type = row["Type"] as string;
                     activities.Add(a);
@@ -222,6 +223,46 @@ namespace TravelClubProto.Data
                 vacations.Add(v);
             }
             return vacations;
+        }
+
+        public int ClearTable(string table)
+        {
+            int count = 0;
+            try
+            {
+                using (var sc = new SqlConnection(ConnectionString))
+                using (var cmd = sc.CreateCommand())
+                {
+                    sc.Open();
+                    cmd.CommandText = "DELETE FROM [dbo]." + table;
+                    count = cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return count;
+        }
+
+        public int DeleteCustomers()
+        {
+            int count = 0;
+            try
+            {
+                using (var sc = new SqlConnection(ConnectionString))
+                using (var cmd = sc.CreateCommand())
+                {
+                    sc.Open();
+                    cmd.CommandText = "DELETE FROM [dbo].Account WHERE Type='Customer'";
+                    count = cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return count;
         }
     }
 

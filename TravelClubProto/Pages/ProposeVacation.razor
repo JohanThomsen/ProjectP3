@@ -55,7 +55,7 @@
         public List<Destination> destinations = new List<Destination>();
         protected override async Task OnInitializedAsync()
         {
-            destinations = await DaService.GetAllDestinations();
+            destinations = await DaService.GetAllDestinations(DaService);
         }
 
         public void ValidFormSubmitted()
