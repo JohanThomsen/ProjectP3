@@ -21,7 +21,7 @@ namespace TravelClubProto.Data
         public string Type { get; set; }
         private DateTime CreationDate { get; set; }
         public int ID { get; set; }
-        public Boolean LoggedIn { get { return LoggedIn; } set {} }
+        
 
         public DataAccessService DaService { get; set; }
 
@@ -69,6 +69,7 @@ namespace TravelClubProto.Data
         {
 
             Account user = new Customer(email, password, daService);
+            daService.LoggedIn = false;
             try
             {
                 using (SqlConnection myConnection = new SqlConnection(daService.ConnectionString))
@@ -89,8 +90,12 @@ namespace TravelClubProto.Data
                             if (Reader["Email"] as string == user.Email && Reader["Password"] as string == user.Password)
                             {
                                 Console.WriteLine(user.ID);
+                                daService.LoggedIn = true;
+                                   
+                                myConnection.Close();
                                 return await Task.FromResult(user.ID);
                             }
+                       
                         }
                         myConnection.Close();
                     }

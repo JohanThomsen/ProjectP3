@@ -7,6 +7,7 @@
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
 
+
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container" style="float:right;">
         <a class="navbar-brand" href="">TravelClub</a>
@@ -49,18 +50,37 @@
         </div>
     </div>
 
-    <div class="dropdown">
-        <div class="HamburgerMenu">
-            <BSDropdown>
-                <BSDropdownToggle Class="oi oi-menu">
-                    <BSDropdownMenu Right="true">
-                        <BSDropdownItem Href="javascript:void(0);" @onclick="PromptLogin">Log ind</BSDropdownItem>
-                        <BSDropdownItem Href="javascript:void(0);" @onclick="CreateProfile">Opret Bruger</BSDropdownItem>
-                    </BSDropdownMenu>
-                </BSDropdownToggle>
-            </BSDropdown>
+    
+    @if (DaService.LoggedIn == false) 
+    {
+        <div class="dropdown">
+            <div class="HamburgerMenu">
+                <BSDropdown>
+                    <BSDropdownToggle Class="oi oi-menu">
+                        <BSDropdownMenu Right="true">
+                            <BSDropdownItem Href="javascript:void(0);" @onclick="PromptLogin">Log ind</BSDropdownItem>
+                            <BSDropdownItem Href="javascript:void(0);" @onclick="CreateProfile">Opret Bruger</BSDropdownItem>
+                        </BSDropdownMenu>
+                    </BSDropdownToggle>
+                </BSDropdown>
+            </div>
         </div>
-    </div>
+    }
+    else
+    {
+        <div class="dropdown">
+            <div class="HamburgerMenu">
+                <BSDropdown>
+                    <BSDropdownToggle Class="oi oi-menu">
+                        <BSDropdownMenu Right="true">
+                            <BSDropdownItem Href="javascript:void(0);" @onclick="PromptLogin">Min profil</BSDropdownItem>
+                            <BSDropdownItem Href="javascript:void(0);" @onclick="LogOut">Log ud</BSDropdownItem>
+                        </BSDropdownMenu>
+                    </BSDropdownToggle>
+                </BSDropdown>
+            </div>
+        </div>
+    }
 </nav>
 
 @*MODAL FOR LOGIN PROMPT*@
@@ -131,7 +151,6 @@
     BSModal CreateProfileModal;
 
 
-
     void OnToggleLogin(MouseEventArgs e)
     {
         LoginModal.Toggle();
@@ -145,8 +164,10 @@
     async void LogInToProfile(MouseEventArgs e)
     {
         //returnerer ID ved succes og -1 ved fail
-        Account.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
+        await Account.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
+
         LoginModal.Toggle();
+
     }
 
     void SaveProfileToTables(MouseEventArgs e)
@@ -166,10 +187,12 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
     void PromptLogin(MouseEventArgs e)
     {
         OnToggleLogin(e);
     }
+
     void CreateProfile(MouseEventArgs e)
     {
         OnToggleCreateProfile(e);
@@ -181,6 +204,11 @@
         Console.WriteLine("Form succesfully submitted");
     }
 
+
+    void LogOut(MouseEventArgs e)
+    {
+        DaService.LoggedIn = false;
+    }
 
     public class FormsModelVal
     {

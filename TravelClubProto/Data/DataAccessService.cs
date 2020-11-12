@@ -10,6 +10,11 @@ namespace TravelClubProto.Data
 {
     public class DataAccessService
     {
+
+        //public Boolean LoggedIn { get { } set {  } }
+        public bool LoggedIn { get; set; }
+
+
         private IConfiguration config;
         //IConfiguration gets key/value from appsettings.json
         public DataAccessService(IConfiguration configuration)
