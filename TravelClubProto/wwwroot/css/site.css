@@ -1,5 +1,25 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+
+
+/*.VacFigures{
+    width: inherit;
+    height: inherit;
+}*/
+
+.Column {
+    float: left;
+    width: 19%;
+    margin:0.5%;
+}
+
+/* Clear floats after the columns */
+.Row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 a.navbar-brand {
     white-space: normal;
     text-align: center;
