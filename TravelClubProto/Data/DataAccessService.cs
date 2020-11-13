@@ -115,6 +115,7 @@ namespace TravelClubProto.Data
                     d.ID = Convert.ToInt32(row["DestinationID"]);
                     d.Hotel = row["Hotel"] as string;
                     d.Location = row["Location"] as string;
+                    d.Country = row["Country"] as string;
                     Destinations.Add(d);
                 }
             }
@@ -217,9 +218,13 @@ namespace TravelClubProto.Data
                 if (!(row["Deadline"] is DBNull)) v.Dates.Add("Deadline", Convert.ToDateTime(row["Deadline"]));
                 if (!(row["GracePeriodLength"] is DBNull)) v.Dates.Add("GracePeriodLength", Convert.ToDateTime(row["GracePeriodLength"]));
                 if (!(row["RejectionDate"] is DBNull)) v.Dates.Add("RejectionDate", Convert.ToDateTime(row["RejectionDate"]));
+                if (!(row["TravelDate"] is DBNull)) v.Dates.Add("TravelDate", Convert.ToDateTime(row["TravelDate"]));
+                if (!(row["LeaveDate"] is DBNull)) v.Dates.Add("LeaveDate", Convert.ToDateTime(row["LeaveDate"]));
                 v.Dates.Add("PriceChangeDate", Convert.ToDateTime(row["PriceChangeDate"]));
                 v.FK_DestinationID = Convert.ToInt32(row["FK_DestinationID"]);
                 v.Description = row["Description"] as string;
+                v.ImageLink = row["ImageLink"] as string;
+                v.DepartureAirport = row["DepartureAirport"] as string;
                 vacations.Add(v);
             }
             return vacations;

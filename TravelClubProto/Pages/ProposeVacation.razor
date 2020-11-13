@@ -9,15 +9,27 @@
         <BSDropdownMenu @bind-IsOpen="@IsOpen1">
             @foreach (Destination destination in destinations)
             {
-               <BSDropdownItem IsButton="true" @onclick="@(e => getDestinationInfo(destination))">Location : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
-               <BSDropdownItem IsDivider="true"></BSDropdownItem>
+                <BSDropdownItem IsButton="true" @onclick="@(e => getDestinationInfo(destination))">Land: @destination.Country . Lokation : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
+                <BSDropdownItem IsDivider="true"></BSDropdownItem>
             }
-       </BSDropdownMenu>
-    <pre> @destinationFeedback</pre>
+        </BSDropdownMenu>
+        <pre> @destinationFeedback</pre>
     </BSDropdown>
     <BSFormGroup>
         <BSLabel For="Description">Beskrivelse</BSLabel>
         <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="DepartureAirport">Afrejse Dato</BSLabel>
+        <BSInput InputType="InputType.Text" Id="DepartureAirport" @bind-Value="@formsModelVal.DepartureAirport"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="TravelDate">Afrejse Dato</BSLabel>
+        <BSInput InputType="InputType.Date" Id="TravelDate" @bind-Value="@formsModelVal.TravelDate"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="LeaveDate">Hjemrejse Dato</BSLabel>
+        <BSInput InputType="InputType.Date" Id="LeaveDate" @bind-Value="@formsModelVal.LeaveDate"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
         <BSLabel For="Deadline">Tilmeldingsfrist</BSLabel>
@@ -28,22 +40,26 @@
         <BSInput Id="GraceperiodLength" InputType="InputType.Number" PlaceHolder="Længde i dage" @bind-Value="formsModelVal.GraceperiodLength"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
+        <BSLabel For="ImageLink">Billede</BSLabel>
+        <BSInput Id="ImageLink" InputType="InputType.Text" PlaceHolder="Webadresse til billede" @bind-Value="formsModelVal.ImageLink"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
         <BSLabel For="minNumberOfUsers">Minimum antal deltagere</BSLabel>
         <BSInput Id="minNumberOfUsers" InputType="InputType.Number" PlaceHolder="0" @bind-Value="formsModelVal.minNumberOfUsers"></BSInput>
     </BSFormGroup>
     <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm" IsInline="true">
-            <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                <BSLabel For="Price">Pris </BSLabel>
-                <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Pris" @bind-Value="formsModelPrices.price"></BSInput>
-            </BSFormGroup>
-            <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                <BSLabel For="Break">Interval pris  </BSLabel>
-                <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Interval pris" @bind-Value="formsModelPrices.breakPoint"></BSInput>
-            </BSFormGroup>
-            <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
-            <pre>@priceFeedback</pre>
+        <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+            <BSLabel For="Price">Pris </BSLabel>
+            <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Pris" @bind-Value="formsModelPrices.price"></BSInput>
+        </BSFormGroup>
+        <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+            <BSLabel For="Break">Interval pris  </BSLabel>
+            <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Interval pris" @bind-Value="formsModelPrices.breakPoint"></BSInput>
+        </BSFormGroup>
+        <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
+        <pre>@priceFeedback</pre>
     </BSForm>
-        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilføj ferie</BSButton>
+    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilføj ferie</BSButton>
 </BSForm>
 
     @code {
@@ -68,8 +84,12 @@
             v.Dates.Add("Deadline", formsModelVal.Deadline);
             v.Dates.Add("GracePeriodLength", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
             v.Dates.Add("PriceChangeDate", DateTime.Now);
+            v.Dates.Add("TravelDate", formsModelVal.TravelDate);
+            v.Dates.Add("LeaveDate", formsModelVal.LeaveDate);
+            v.ImageLink = formsModelVal.ImageLink;
             v.Description = formsModelVal.Description;
             v.FK_DestinationID = activeDestination;
+            v.DepartureAirport = formsModelVal.DepartureAirport;
             v.InsertVacationToDatabase();
         }
 
@@ -97,6 +117,11 @@
         public class FormsModelVal
         {
             [Required]
+            [StringLength(100, ErrorMessage = "LufthavnsNavn for lang (100 character limit).")]
+            public string DepartureAirport { get; set; }
+            
+
+            [Required]
             //TODO add more constraints.
             public int GraceperiodLength { get; set; }
 
@@ -104,11 +129,21 @@
             public DateTime Deadline { get; set; } = DateTime.Now;
 
             [Required]
+            public DateTime TravelDate { get; set; } = DateTime.Now;
+
+            [Required]
+            public DateTime LeaveDate { get; set; } = DateTime.Now;
+
+            [Required]
             public int minNumberOfUsers { get; set; }
 
             [Required]
-            [StringLength(1000, ErrorMessage = "Hotel name too long (1000 character limit).")]
+            [StringLength(1000, ErrorMessage = "Beskrivelse for lang (1000 character limit).")]
             public string Description { get; set; }
+
+            [Required]
+            [StringLength(1000, ErrorMessage = "Link er for langt max 1000 karakterer.")]
+            public string ImageLink { get; set; }
 
             [Required]
             public Boolean Valid { get; set; }
