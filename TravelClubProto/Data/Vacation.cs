@@ -27,6 +27,7 @@ namespace TravelClubProto.Data
         public string DepartureAirport { get; set; }
         public DataAccessService DaService { get; set; }
         public VacationAdministrator VacAdmin { get; set; }
+        public TravelGroup TravelGroup { get; }
 
         private string _state;
         public string State
@@ -53,6 +54,7 @@ namespace TravelClubProto.Data
             DaService = daService;
             VacAdmin = new VacationAdministrator();
             Destination = getDestination(daService);
+            TravelGroup = new TravelGroup(ID, daService);
             getPrices();
         }
 
@@ -164,61 +166,35 @@ namespace TravelClubProto.Data
                 con.Close();
                 getID();
                 InsertPricesIntoDatabase();
-                InsertTravelGroupIntoDatabase();
             }
             
         }
-    private void getID()
-    {
-        try
+        private void getID()
         {
-            using (SqlConnection myConnection = new SqlConnection(DaService.ConnectionString))
-            {
-                //The * means all. So data from [dbo].[Destination] table are selected by the database
-                string query = "SELECT * FROM [dbo].[vacation] WHERE ProposalDate=@ProposalDate";
-                SqlCommand sqlCommand = new SqlCommand(query, myConnection);
-                sqlCommand.Parameters.AddWithValue("@ProposalDate", Dates["ProposalDate"]);
-                myConnection.Open();
-                //Reads all the executed sql commands
-                using (SqlDataReader Reader = sqlCommand.ExecuteReader())
-                {
-                    // Reads all data and converts to object and type matches
-                    while (Reader.Read())
-                    {
-                        ID = Convert.ToInt32(Reader["ID"]);
-                    }
-                    myConnection.Close();
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-    }
-
-        private void InsertTravelGroupIntoDatabase()
-        {
-            SqlConnection con = new SqlConnection(DaService.ConnectionString);
             try
             {
-                //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string query = "INSERT INTO [dbo].[TravelGroup] (FK_VacationID) VALUES(@FK_VacationID)";
-                //SqlCommand is used to build up commands
-                SqlCommand sqlCommand = new SqlCommand(query, con);
-                con.Open();
-                sqlCommand.Parameters.AddWithValue("@FK_vacationID", ID);
-                //The built commands are executed
-                sqlCommand.ExecuteNonQuery();
+                using (SqlConnection myConnection = new SqlConnection(DaService.ConnectionString))
+                {
+                    //The * means all. So data from [dbo].[Destination] table are selected by the database
+                    string query = "SELECT * FROM [dbo].[vacation] WHERE ProposalDate=@ProposalDate";
+                    SqlCommand sqlCommand = new SqlCommand(query, myConnection);
+                    sqlCommand.Parameters.AddWithValue("@ProposalDate", Dates["ProposalDate"]);
+                    myConnection.Open();
+                    //Reads all the executed sql commands
+                    using (SqlDataReader Reader = sqlCommand.ExecuteReader())
+                    {
+                        // Reads all data and converts to object and type matches
+                        while (Reader.Read())
+                        {
+                            ID = Convert.ToInt32(Reader["ID"]);
+                        }
+                        myConnection.Close();
+                    }
+                }
             }
-            //Catches the error and prints it
             catch (Exception e)
             {
                 Console.WriteLine(e);
-            }
-            finally
-            {
-                con.Close();
             }
         }
 

@@ -11,6 +11,11 @@
 <button class="btn btn-primary" @onclick="DeleteCustomerVacationRelations">Delete all Customer Vacation Relations</button>
 <button class="btn btn-primary" @onclick="DeletePriceAgents">Delete all PriceAgents</button>
 <button class="btn btn-primary" @onclick="DeletePriceAgentRelations">Delete all PriceAgent Relations</button>
+<button class="btn btn-secondary" @onclick="JoinVacation">Test Join</button>
+<button class="btn btn-secondary" @onclick="FavouriteVacation">Test Favourite</button>
+<button class="btn btn-secondary" @onclick="LeaveVacation">Leave Vacation</button>
+<button class="btn btn-secondary" @onclick="GetJoinedUsers">Get All joined users</button>
+<button class="btn btn-secondary" @onclick="GetFavouritedUsers">Get all favourited users</button>
 
 
 @code {
@@ -47,9 +52,7 @@
 
     public void DeleteCustomerVacationRelations()
     {
-        count += DaService.ClearTable("CustomerVacationsTravelGroupRelations");
-        count += DaService.ClearTable("CustomerVacations");
-        count += DaService.ClearTable("TravelGroup");
+        count += DaService.ClearTable("CustomerVacationRelations");
     }
 
     public void DeletePriceAgents()
@@ -62,6 +65,46 @@
     {
         count += DaService.ClearTable("RelevantVacations");
         count += DaService.ClearTable("DiscardedVacations");
+    }
+
+    async public void JoinVacation()
+    {
+        List<Vacation> templit = await DaService.GetAllVacations(DaService);
+        templit[0].TravelGroup.ChangeVacationRelation(15, 33, "Joined");
+    }
+
+    async public void FavouriteVacation()
+    {
+        List<Vacation> templit = await DaService.GetAllVacations(DaService);
+        Console.WriteLine(templit[0].ID);
+        templit[0].TravelGroup.ChangeVacationRelation(15, 33, "Favourited");
+    }
+
+    async public void LeaveVacation()
+    {
+        List<Vacation> templit = await DaService.GetAllVacations(DaService);
+        templit[0].TravelGroup.LeaveVacation(15);
+    }
+
+    async public void GetJoinedUsers()
+    {
+        List<Vacation> templit = await DaService.GetAllVacations(DaService);
+        List<int> IDS = await templit[0].TravelGroup.GetUserIDsFromRelation(33, "Joined");
+        if (IDS.Count != 0)
+        {
+            Console.WriteLine(IDS[0]);
+        }
+    }
+
+    async public void GetFavouritedUsers()
+    {
+        List<Vacation> templit = await DaService.GetAllVacations(DaService);
+        List<int> IDS = await templit[0].TravelGroup.GetUserIDsFromRelation(33, "Favourited");
+        if (IDS.Count != 0)
+        {
+            Console.WriteLine(IDS[0]);
+        }
+
     }
 
 }
