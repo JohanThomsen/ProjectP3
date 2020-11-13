@@ -7,17 +7,37 @@
     font-size: 50px;
     }
 
+.UserIcon {
+    
+    margin-right: 20px;
+    background: url(https://www.flaticon.com/svg/static/icons/svg/74/74472.svg) no-repeat 5%;
+    border: none;
+    
+}
+
 .dropdown-toggle::before, .dropdown-toggle::after{
     border: none;
     /*content:none;*/
 }
 
-.dropdown-menu{
-    
-    
+
+
+@-ms-keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
-.ModalTitle{
+
+.dropdown-menu {
+
+}
+
+.ModalTitle {
     margin: 0 0 0 43%;
 }
 /* Provide sufficient contrast against white background */
@@ -31,27 +51,24 @@ a {
     border-color: #1861ac;
 }
 
-.nav-pills , .nav-pills .show > .nav-link {
+.nav-pills, .nav-pills .show > .nav-link {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
 
 
-    .nav-link.active {
-        color: #d7d7d7;
-        border-radius: 4px;
-        background-color: rgba(30,144,255,0.25);
-    }
+.nav-link.active {
+    color: #d7d7d7;
+    border-radius: 4px;
+    background-color: rgba(30,144,255,0.25);
+}
 
-    .nav-link:hover {
-        border-radius: 4px;
-        background-color: rgba(30,144,255,0.1);
-        color: white;
-    }
-
-
-
+.nav-link:hover {
+    border-radius: 4px;
+    background-color: rgba(30,144,255,0.1);
+    color: white;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -60,8 +77,8 @@ html {
 
 @media (min-width: 768px) {
     html {
-        font-size: 16px;
-    }
+    font-size: 16px;
+}
 }
 
 .border-top {
