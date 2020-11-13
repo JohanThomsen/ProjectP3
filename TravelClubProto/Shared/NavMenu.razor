@@ -50,8 +50,8 @@
         </div>
     </div>
 
-    
-    @if (DaService.LoggedIn == false) 
+
+    @if (DaService.LoggedIn == false)
     {
         <div class="dropdown">
             <div class="HamburgerMenu">
@@ -136,15 +136,21 @@
                 </BSFormGroup>
 
                 @*Submit Button*@
-                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick = "SaveProfileToTables">Opret Bruger</BSButton>
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
 
             </BSForm>
         </p>
     </BSModalBody>
 </BSModal>
 
+<BSModal @ref="WarningBox" Size="Size.Medium">
+    <BSModalHeader Class="ModalTitle" OnClick="@LogInToProfile">INFO</BSModalHeader>
+    <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
+</BSModal>
 
 @code {
+
+    BSModal WarningBox { get; set; }
 
     BSModal LoginModal;
 
@@ -167,6 +173,11 @@
         await Account.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
 
         LoginModal.Toggle();
+
+        if (DaService.LoggedIn == false)
+        {
+            WarningBox.Toggle();
+        }
 
     }
 
