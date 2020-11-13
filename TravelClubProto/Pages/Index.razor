@@ -1,10 +1,11 @@
 ﻿@page "/"
 
-<div class="docs-example">
+<div class="SearchFields">
     <BSJumbotron IsFluid="true">
         <BSContainer>
             <BSForm Model="@formsModelVal">
                 <BSBasicForm IsInline="true">
+
                     <BSFormGroup>
                         <BSLabel for="InputEmail"></BSLabel>
                         <BSInput id="InputEmail" InputType="InputType.Text" PlaceHolder="Afrejselufthavn" @bind-Value="formsModelVal.Afrejselufthavn"></BSInput>

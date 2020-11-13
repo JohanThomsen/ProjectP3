@@ -6,11 +6,14 @@
     width: inherit;
     height: inherit;
 }*/
+.InputFieldIndex {
+    /*float: left;*/
+}
 
 .Column {
     float: left;
     width: 19%;
-    margin:0.5%;
+    margin: 0.5%;
 }
 
 /* Clear floats after the columns */
