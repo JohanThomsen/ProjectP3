@@ -7,17 +7,27 @@
 @foreach (Vacation vac in vacations)
 {   
 <BSJumbotron>
-    <h2>
-        @vac.Destination.Location 
-    </h2>
+    <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+
 
     <BSJumbotron Class="TextJumbotron">
         <h4>Beskrivelse af ferien</h4>
         <p>@vac.Description</p>
         <h16> @vac.ID </h16>
     </BSJumbotron>
-   
-    <p> First price: @vac.Prices[0]</p>
+    
+    <h6>Prices from: @vac.Prices[0] kr. - @vac.Prices[vac.Prices.Count-1] kr.</h6>
+    
+    @for (int i = 0; i < @vac.Prices.Count; i++)
+    {
+        <p> Pricepoint @(i + 1):  @vac.Prices[i] kr. </p>
+
+    }
+
+
+    @vac.Dates["Deadline"]
+
+    @vac.DepartureAirport
 </BSJumbotron>
 }
 
