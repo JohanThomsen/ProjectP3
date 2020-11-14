@@ -14,14 +14,19 @@ namespace TravelClubProto
         public string Location { get; set; }
         public string Hotel { get; set; }
         public DateTime AddDate { get; set; }
-
         public string Country { get; set; }
         public DataAccessService DaService;
+        public List<Activity> Activities { get; set; }
 
         public Destination(DataAccessService daService)
         {
             DaService = daService;
         }
+        public async Task AddActivity()
+        {
+            Activities = await GetAllActivitiesFromDest();
+        }
+        
 
         public void InsertDestinationIntoDataBase()
         {
@@ -83,5 +88,41 @@ namespace TravelClubProto
             }
             return returnid;
         }
+        
+
+
+        public async Task<List<Activity>> GetAllActivitiesFromDest()
+        {
+            List<Activity> activities = new List<Activity>();
+            Activity a;
+            try
+            {
+                //Creates a table
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(DaService.ConnectionString);
+
+                //Gets data from the sql database
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].Activities WHERE FK_DestinationID='{ID}'", con);
+
+                //Structures the data such that it can be read 
+                da.Fill(dt);
+
+                //Reads data into designated class
+                foreach (DataRow row in dt.Rows)
+                {
+                    a = new Activity(DaService);
+                    a.ID = Convert.ToInt32(row["ActivityID"]);
+                    a.Type = row["Type"] as string;
+                    activities.Add(a);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            //Waits for Task to be finished and then returns the list of Destinations
+            return await Task.FromResult(activities);
+        }
+        
     }
 }
