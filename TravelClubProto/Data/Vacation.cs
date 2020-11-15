@@ -40,6 +40,7 @@ namespace TravelClubProto.Data
             }
         }
 
+        //Constructor from insertion form
         public Vacation(List<int> stretchGoals, List<decimal> prices, DataAccessService daService)
         {
             VacAdmin = new VacationAdministrator();
@@ -47,43 +48,19 @@ namespace TravelClubProto.Data
             DaService = daService;
         }
 
+        //Constructor from Database
         public Vacation(DataAccessService daService, int id, int destinationID)
         {
             ID = id;
             FK_DestinationID = destinationID;
             DaService = daService;
             VacAdmin = new VacationAdministrator();
-            Destination = getDestination(daService);
             TravelGroup = new TravelGroup(ID, daService);
+            getDestination(daService);
             getPrices();
         }
 
-        private void getPrices()
-        {
-            Dictionary<int, decimal> prices = new Dictionary<int, decimal>();
-            try
-            {
-                //Creates a table
-                DataTable dt = new DataTable();
-                SqlConnection con = new SqlConnection(DaService.ConnectionString);
-                //Gets data from the sql database
-                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].Prices WHERE FK_VacationID='{ID}'", con);
-                //Structures the data such that it can be read 
-                da.Fill(dt);
-                //Reads data into designated class
-                foreach (DataRow row in dt.Rows)
-                {
-                    Prices.Add(Convert.ToDecimal(row["Price"]));
-                    StretchGoals.Add(Convert.ToInt32(row["JoinAmount"]));
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
-        private Destination getDestination(DataAccessService daService)
+        private async void getDestination(DataAccessService daService)
         {
             Destination matchingDestination = new Destination(daService);
             try
@@ -113,9 +90,70 @@ namespace TravelClubProto.Data
             {
                 Console.WriteLine(e);
             }
-            return matchingDestination;
+
+            matchingDestination.Activities = await GetAllActivitiesByDestID(matchingDestination.ID);
+
+            Destination = matchingDestination;
         }
 
+        private async Task<List<Activity>> GetAllActivitiesByDestID(int FK_DestinationID)
+        {
+            List<Activity> activities = new List<Activity>();
+            Activity a;
+            try
+            {
+                //Creates a table
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(DaService.ConnectionString);
+                //Gets data from the sql database
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].Activities WHERE FK_DestinationID = '{FK_DestinationID}'", con);
+                //Structures the data such that it can be read 
+                da.Fill(dt);
+                //Reads data into designated class
+                foreach (DataRow row in dt.Rows)
+                {
+                    a = new Activity(DaService);
+                    a.ID = Convert.ToInt32(row["ActivityID"]);
+                    a.Type = row["Type"] as string;
+                    activities.Add(a);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            //Waits for Task to be finished and then returns the list of Destinations
+            return await Task.FromResult(activities);
+        }
+
+        private void getPrices()
+        {
+            Dictionary<int, decimal> prices = new Dictionary<int, decimal>();
+            try
+            {
+                //Creates a table
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(DaService.ConnectionString);
+                //Gets data from the sql database
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].Prices WHERE FK_VacationID='{ID}'", con);
+                //Structures the data such that it can be read 
+                da.Fill(dt);
+                //Reads data into designated class
+                foreach (DataRow row in dt.Rows)
+                {
+                    Prices.Add(Convert.ToDecimal(row["Price"]));
+                    StretchGoals.Add(Convert.ToInt32(row["JoinAmount"]));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+
+        // Everything above get the Vacation from the database
+        // Everything below insert the vacation inton the database
         private void AddPrices(List<int> stretchGoals, List<decimal> prices)
         {
             for (int i = 0; i < stretchGoals.Count; i++)

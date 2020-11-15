@@ -60,41 +60,6 @@ namespace TravelClubProto.Data
             }
         }
 
-
-        //Kan Slettes er flyttet
-        public async Task<Destination> GetDestinationByID(int ID, DataAccessService DaService)
-        {
-            Destination matchingDestination = new Destination(DaService);
-            try
-            {
-                using (SqlConnection myConnection = new SqlConnection(ConnectionString))
-                {
-                    //The * means all. So data from [dbo].[Destination] table are selected by the database
-                    string query = "SELECT * FROM [dbo].[Destination] WHERE DestinationID=@DestinationID";
-                    SqlCommand sqlCommand = new SqlCommand(query, myConnection);
-                    sqlCommand.Parameters.AddWithValue("@DestinationID", ID);
-                    myConnection.Open();
-                    //Reads all the executed sql commands
-                    using (SqlDataReader Reader = sqlCommand.ExecuteReader())
-                    {
-                        // Reads all data and converts to object and type matches
-                        while (Reader.Read())
-                        {
-                            matchingDestination.ID = Convert.ToInt32(Reader["DestinationID"]);
-                            matchingDestination.Hotel = Reader["Hotel"] as string;
-                            matchingDestination.Location = Reader["Location"] as string;
-                        }
-                        myConnection.Close();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            return await Task.FromResult(matchingDestination);
-        }
-
         public async Task<List<Destination>> GetAllDestinations(DataAccessService DaService)
         {
             List<Destination> Destinations = new List<Destination>();

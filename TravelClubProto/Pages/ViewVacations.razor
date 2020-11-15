@@ -5,21 +5,21 @@
 <h3>Se ferier</h3>
 
 @foreach (Vacation vac in vacations)
-{   
-    vac.Destination.AddActivity();
+{
+    <!-- vac.Destination.AddActivity(); -->
     <BSJumbotron>
         <h2>@vac.Destination.Hotel, @vac.Destination.Location </h2> <h10> @vac.ID </h10>
         <p><h4>Afrejselufthavn:</h4> @vac.DepartureAirport</p>
-    <BSJumbotron Class="TextJumbotron">
+        <BSJumbotron Class="TextJumbotron">
             <h4>Beskrivelse af ferien:</h4>
             <p>@vac.Description</p>
             <h4>Activities:</h4>
             @foreach (Activity item in vac.Destination.Activities)
             {
                 <p>@item.Type</p>
-            }         
-        
-    </BSJumbotron>
+            }
+
+        </BSJumbotron>
 
         <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
         <p>
