@@ -3,9 +3,38 @@
 @inject DataAccessService DaService
 <h3>ProposeVacation</h3>
 
+<BSModal @ref="DestinationModal" IsCentered="true">
+    <BSModalHeader OnClick="@OnToggleAddDestination">Opret Destination</BSModalHeader>
+    <BSModalBody>
+        <BSForm Model="formsModelDest" OnValidSubmit="ValidFormSubmitted">
+            <BSFormGroup>
+                <BSLabel For="Country">Land</BSLabel>
+                <BSInput Id="Country" InputType="InputType.Text" PlaceHolder="Indtast Land" @bind-Value="formsModelDest.Country"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="Location">Location</BSLabel>
+                <BSInput Id="Location" InputType="InputType.Text" PlaceHolder="Indtast Lokation" @bind-Value="formsModelDest.Location"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="Hotel">Hotel</BSLabel>
+                <BSInput Id="Hotel" InputType="InputType.Text" PlaceHolder="Indtast Hotel" @bind-Value="formsModelDest.Hotel"></BSInput>
+            </BSFormGroup>
+            <BSForm Model="formsModelAct" OnValidSubmit="ActivitySubmitted" Context="PricesForm" IsInline="true">
+                <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                    <BSLabel For="Activity">Tilføj Aktivitet </BSLabel>
+                    <BSInput Id="Activity" InputType="InputType.Text" PlaceHolder="Aktivitet" @bind-Value="formsModelAct.Type"></BSInput>
+                </BSFormGroup>
+                <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj Aktivitet  </BSButton>
+                <pre>@activityFeedback</pre>
+            </BSForm>
+            <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
+        </BSForm>
+    </BSModalBody>
+</BSModal>
+
 <BSForm Model="formsModelVal" OnValidSubmit="ValidFormSubmitted">
     <BSDropdown IsOpen="@IsOpen1">
-        <BSDropdownToggle Color="Color.Secondary" @onclick="onClick1">Destination</BSDropdownToggle>
+        <BSDropdownToggle Color="Color.Primary" @onclick="onClick1">Destination</BSDropdownToggle>
         <BSDropdownMenu @bind-IsOpen="@IsOpen1">
             @foreach (Destination destination in destinations)
             {
@@ -15,6 +44,7 @@
         </BSDropdownMenu>
         <pre> @destinationFeedback</pre>
     </BSDropdown>
+    <BSButton @onclick="OnToggleAddDestination" Color="Color.Secondary">Tilføj ny destination</BSButton>
     <BSFormGroup>
         <BSLabel For="Description">Beskrivelse</BSLabel>
         <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
@@ -73,6 +103,10 @@
         public List<decimal> Prices = new List<decimal>();
         public List<int> Breaks = new List<int>();
         public List<Destination> destinations = new List<Destination>();
+        public List<Activity> Activities = new List<Activity>();
+        public string activityFeedback;
+        BSModal DestinationModal;
+
         protected override async Task OnInitializedAsync()
         {
             destinations = await DaService.GetAllDestinations(DaService);
@@ -124,7 +158,7 @@
             [Required]
             [StringLength(100, ErrorMessage = "LufthavnsNavn for lang (100 character limit).")]
             public string DepartureAirport { get; set; }
-            
+
 
             [Required]
             //TODO add more constraints.
@@ -159,6 +193,27 @@
         }
         FormsModelVal formsModelVal = new FormsModelVal();
 
+        public class FormsModelDest
+        {
+            [Required]
+            [StringLength(50, ErrorMessage = "Country Name too long (50 character limit).")]
+            public string Country { get; set; }
+
+            [Required]
+            [StringLength(50, ErrorMessage = "Location too long (50 character limit).")]
+            public string Location { get; set; }
+
+            [Required]
+            [StringLength(30, ErrorMessage = "Hotel name too long (30 character limit).")]
+            public string Hotel { get; set; }
+
+            [Required]
+            public Boolean Valid { get; set; }
+        }
+        FormsModelDest formsModelDest = new FormsModelDest();
+
+
+
         public void PriceSubmitted()
         {
             Prices.Add(formsModelPrices.price);
@@ -174,5 +229,31 @@
             [Required]
             public int breakPoint { get; set; }
         }
+        void OnToggleAddDestination(MouseEventArgs e)
+        {
+            DestinationModal.Toggle();
+        }
+
+        public class FormsModelAct
+        {
+
+            [Required]
+            [StringLength(50, ErrorMessage = "Forklaring for lang (Maks 50 karakterer)")]
+            public string Type { get; set; }
+
+            [Required]
+            public Boolean Valid { get; set; }
+        }
+        FormsModelAct formsModelAct = new FormsModelAct();
+
+        public void ActivitySubmitted()
+        {
+            Activities.Add(new Activity(DaService, formsModelAct.Type));
+
+            activityFeedback += "Aktivitet tilføjet: " + formsModelAct.Type + ".\n";
+            formsModelAct.Type = "";
+        }
+
+
         FormsModelPrices formsModelPrices = new FormsModelPrices();
     }
