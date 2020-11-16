@@ -36,6 +36,10 @@
         <BSInput InputType="InputType.Date" Id="Deadline" @bind-Value="@formsModelVal.Deadline"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
+        <BSLabel For="TravelBureauWebsiteLink">Link til ferie på egen hjemmeside</BSLabel>
+        <BSInput InputType="InputType.Text" Id="TravelBureauWebsiteLink" @bind-Value="@formsModelVal.TravelBureauWebsiteLink"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
         <BSLabel For="GraceperiodLength">Betalingsperiode</BSLabel>
         <BSInput Id="GraceperiodLength" InputType="InputType.Number" PlaceHolder="Længde i dage" @bind-Value="formsModelVal.GraceperiodLength"></BSInput>
     </BSFormGroup>
@@ -90,6 +94,7 @@
             v.Description = formsModelVal.Description;
             v.FK_DestinationID = activeDestination;
             v.DepartureAirport = formsModelVal.DepartureAirport;
+            v.TravelBureauWebsiteLink = formsModelVal.TravelBureauWebsiteLink;
             v.InsertVacationToDatabase();
         }
 
@@ -144,6 +149,10 @@
             [Required]
             [StringLength(1000, ErrorMessage = "Link er for langt max 1000 karakterer.")]
             public string ImageLink { get; set; }
+
+            [Required]
+            [StringLength(1000, ErrorMessage = "Link er for langt max 1000 karakterer.")]
+            public string TravelBureauWebsiteLink { get; set; }
 
             [Required]
             public Boolean Valid { get; set; }

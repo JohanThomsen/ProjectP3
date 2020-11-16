@@ -195,6 +195,7 @@ namespace TravelClubProto.Data
                 v.Description = row["Description"] as string;
                 v.ImageLink = row["ImageLink"] as string;
                 v.DepartureAirport = row["DepartureAirport"] as string;
+                v.TravelBureauWebsiteLink = row["TravelBureauWebsiteLink"] as string;
                 vacations.Add(v);
             }
             return vacations;
