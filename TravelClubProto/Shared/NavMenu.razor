@@ -1,5 +1,15 @@
-﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container">
+﻿@using Microsoft.Extensions.Configuration;
+@using System.Collections.Generic;
+@using System.Data;
+@using Microsoft.Data.SqlClient;
+@using System.Threading.Tasks;
+@using Microsoft.EntityFrameworkCore.Migrations.Operations;
+@using TravelClubProto.Data;
+@inject DataAccessService DaService
+
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container" style="float:right;">
         <a class="navbar-brand" href="">TravelClub</a>
         <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
@@ -35,13 +45,171 @@
                     <NavLink class="nav-link text-dark" href="AddDestination">
                         <span class="oi oi-list-rich" aria-hidden="true"></span> Add Destination
                     </NavLink>
+                    <i class='fas fa-user-alt'></i>
                 </li>
             </ul>
         </div>
     </div>
+
+    
+
+    @if (DaService.LoggedIn == false)
+    {
+        <div class="dropdown">
+            <div class="HamburgerMenu">
+                <BSDropdown>
+                    <BSDropdownToggle Class="oi oi-menu">
+                        <BSDropdownMenu Right="true">
+                            <BSDropdownItem Href="javascript:void(0);" @onclick="PromptLogin">Log ind</BSDropdownItem>
+                            <BSDropdownItem Href="javascript:void(0);" @onclick="CreateProfile">Opret Bruger</BSDropdownItem>
+                        </BSDropdownMenu>
+                    </BSDropdownToggle>
+                </BSDropdown>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="dropdown">
+            <div class="HamburgerMenu">
+                <BSDropdown>
+                    <BSDropdownToggle class="btn btn-outline-info btn-lg UserIcon" type="button">                  
+                        <BSDropdownMenu Right="true">                        
+                            <BSDropdownItem Href="myProfile" @onclick="MyProfile">Min profil</BSDropdownItem>
+                            <BSDropdownItem Href="javascript:void(0);" @onclick="LogOut">Log ud</BSDropdownItem>
+                        </BSDropdownMenu>
+                    </BSDropdownToggle>
+                </BSDropdown>
+            </div>
+        </div>
+    }
 </nav>
 
+@*MODAL FOR LOGIN PROMPT*@
+<BSModal @ref="LoginModal" IsCentered="true">
+    <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
+    <BSModalBody>
+        <p>
+            <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+
+                <BSFormGroup>
+                    @*Input for user email*@
+                    <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                    <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                </BSFormGroup>
+
+                <BSFormGroup>
+                    @*Input for user password*@
+                    <BSLabel for="InputPassword">Kodeord</BSLabel>
+                    <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                </BSFormGroup>
+
+                <BSFormGroup IsCheck="true">
+                    @*Remember me check box*@
+                    <BSInput Id="ModalCheck" InputType="InputType.Checkbox" @bind-Value="formsModelVal.Valid"></BSInput>
+                    <BSLabel IsCheck="true" For="ModalCheck">Husk mig</BSLabel>
+                </BSFormGroup>
+
+                @*Submit Button*@
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
+            </BSForm>
+        </p>
+    </BSModalBody>
+</BSModal>
+
+@*MODAL FOR CREATEPROFILE PROMPT*@
+<BSModal @ref="CreateProfileModal" IsCentered="true">
+    <BSModalHeader OnClick="@OnToggleCreateProfile">Opret Bruger</BSModalHeader>
+    <BSModalBody>
+        <p>
+            <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+
+                <BSFormGroup>
+                    @*Input for user email*@
+                    <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                    <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                </BSFormGroup>
+
+                <BSFormGroup>
+                    @*Input for user password*@
+                    <BSLabel for="InputPassword">Kodeord</BSLabel>
+                    <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                </BSFormGroup>
+
+                @*Submit Button*@
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
+
+            </BSForm>
+        </p>
+    </BSModalBody>
+</BSModal>
+
+<BSModal @ref="WarningBox" Size="Size.Medium">
+    <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
+    <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
+</BSModal>
+
+@if (DaService.LoggedIn == true)
+{
+    //Midlertidig løsning, den skal kunne fade ud af sig selv
+<BSAlert @ref="LoggedInBox" IsDismissible="true" Color="Color.Info">
+        Du er nu logget ind!
+</BSAlert>
+}
+
+
 @code {
+
+    BSAlert LoggedInBox { get; set; }
+
+    BSModal WarningBox { get; set; }
+
+    BSModal LoginModal;
+
+    BSModal CreateProfileModal;
+
+
+    void OnToggleLogin(MouseEventArgs e)
+    {
+        LoginModal.Toggle();
+    }
+
+    void OnToggleCreateProfile(MouseEventArgs e)
+    {
+        CreateProfileModal.Toggle();
+    }
+
+    void OnToggleMyProfile(MouseEventArgs e)
+    {
+        MyProfile();
+    }
+
+    void MyProfile()
+    {
+
+    }
+
+    async void LogInToProfile(MouseEventArgs e)
+    {
+        //returnerer ID ved succes og -1 ved fail
+        await Account.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
+
+        LoginModal.Toggle();
+
+        if (DaService.LoggedIn == false)
+        {
+            WarningBox.Toggle();
+        }
+        
+    }
+
+    void SaveProfileToTables(MouseEventArgs e)
+    {
+        Customer newUser = new Customer(formsModelVal.Email, formsModelVal.Password, DaService);
+        newUser.InsertIntoDatabase();
+        CreateProfileModal.Toggle();
+    }
+
     bool collapseNavMenu = true;
 
     string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
@@ -52,4 +220,42 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
+    void PromptLogin(MouseEventArgs e)
+    {
+        OnToggleLogin(e);
+    }
+
+    void CreateProfile(MouseEventArgs e)
+    {
+        OnToggleCreateProfile(e);
+    }
+
+
+    void ConsoleWrite()
+    {
+        Console.WriteLine("Form succesfully submitted");
+    }
+
+
+    void LogOut(MouseEventArgs e)
+    {
+        DaService.LoggedIn = false;
+    }
+
+    public class FormsModelVal
+    {
+        [Required]
+        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(20, ErrorMessage = "password too long (20 character limit).")]
+        public string Password { get; set; }
+
+        [Required]
+        public Boolean Valid { get; set; }
+    }
+    FormsModelVal formsModelVal = new FormsModelVal();
+
 }
