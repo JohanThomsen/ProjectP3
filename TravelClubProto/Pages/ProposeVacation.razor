@@ -6,7 +6,7 @@
 <BSModal @ref="DestinationModal" IsCentered="true">
     <BSModalHeader OnClick="@OnToggleAddDestination">Opret Destination</BSModalHeader>
     <BSModalBody>
-        <BSForm Model="formsModelDest" OnValidSubmit="ValidFormSubmitted">
+        <BSForm Model="formsModelDest" OnValidSubmit="ValidDestSubmitted">
             <BSFormGroup>
                 <BSLabel For="Country">Land</BSLabel>
                 <BSInput Id="Country" InputType="InputType.Text" PlaceHolder="Indtast Land" @bind-Value="formsModelDest.Country"></BSInput>
@@ -50,7 +50,7 @@
         <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
-        <BSLabel For="DepartureAirport">Afrejse Dato</BSLabel>
+        <BSLabel For="DepartureAirport">Afrejse Lufthavn</BSLabel>
         <BSInput InputType="InputType.Text" Id="DepartureAirport" @bind-Value="@formsModelVal.DepartureAirport"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
@@ -107,6 +107,8 @@
         public string activityFeedback;
         BSModal DestinationModal;
 
+        string inputFeedback = "Add a destination";
+
         protected override async Task OnInitializedAsync()
         {
             destinations = await DaService.GetAllDestinations(DaService);
@@ -132,13 +134,31 @@
             v.InsertVacationToDatabase();
         }
 
+        public void ValidDestSubmitted()
+        {
+            inputFeedback = "Destination succesfully added";
+            Destination d = new Destination(DaService);
+            d.Location = formsModelDest.Location;
+            d.Hotel = formsModelDest.Hotel;
+            d.AddDate = DateTime.Now;
+            d.Country = formsModelDest.Country;
+            d.InsertDestinationIntoDataBase();
+            int destID = d.GetID();
+            foreach (Activity activity in Activities)
+            {
+                activity.InsertActivityIntoDataBase(destID);
+            }
+            d.ID = destID;
+            destinations.Add(d);
+        }
+
         public bool IsOpen1 = false;
 
         public void getDestinationInfo(Destination dest)
         {
             activeDestination = dest.ID;
             IsOpen1 = false;
-            destinationFeedback = $"\nSelected Hotel: {dest.Hotel}, Location {dest.Location}";
+            destinationFeedback = $"\nSelected Hotel: {dest.Hotel}, Location {dest.Location}, Country {dest.Country}";
         }
 
         public void onClick1()
