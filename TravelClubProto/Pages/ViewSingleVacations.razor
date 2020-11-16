@@ -1,0 +1,69 @@
+﻿
+@page "/SingleVacation"
+@using Microsoft.Extensions.Configuration;
+@using System.Collections.Generic;
+@using System.Data;
+@using Microsoft.Data.SqlClient;
+@using System.Threading.Tasks;
+@using Microsoft.EntityFrameworkCore.Migrations.Operations;
+@using TravelClubProto.Data;
+@using TravelClubProto.Data
+@inject DataAccessService DaService
+<h3>Se ferier</h3>
+
+@foreach (Vacation vac in vacations)
+{
+    <!-- vac.Destination.AddActivity(); -->
+<BSJumbotron Class="ViewSingleVacationJumbotron">
+    <div class="SingleVacationContainer">
+        <div class="ViewSingleVacationImage">
+            <BSFigureImage src="@vac.ImageLink" />
+        </div>
+        <br />
+
+        <div class="ViewSingleVacationHotel">
+            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+            <h10>ID:  @vac.ID </h10>
+        </div>
+
+        <div class="Row">
+            <div class="VacationDescriptionColumn">
+                <h4>Beskrivelse af ferien:</h4>
+                <p><b>Afrejselufthavn:</b> @vac.DepartureAirport</p>
+                <p>@vac.Description</p>
+                <h4>Activities:</h4>
+                @foreach (Activity item in vac.Destination.Activities)
+                {
+                    <p>@item.Type</p>
+                }
+            </div>
+
+            <div class="ParticipantDetailColumn">
+                <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+                <button>PROGRESSBAR INDSÆTTES HER</button>
+                <p>
+                    @for (int i = 0; i < @vac.Prices.Count; i++)
+                    {
+                        string priceIntervalHolder = "";
+                        priceIntervalHolder += vac.Prices[i] + "kr.";
+                        <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
+                    }
+                </p>
+
+                <button>TILMELD OG FAVORISER HER!!!!</button>
+                <h6>Deadline: @vac.Dates["Deadline"]</h6>
+
+                <button>SE MERE KNAP. ANVEND HREF vac.travelbureauwebsitelink </button>
+            </div>
+        </div>
+    </div>
+</BSJumbotron>
+}
+
+@code {
+    public List<Vacation> vacations;
+    protected override async Task OnInitializedAsync()
+    {
+        vacations = await DaService.GetAllVacations(DaService);
+    }
+}
