@@ -5,6 +5,7 @@
 @using System.Threading.Tasks;
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject DataAccessService DaService
 
 
@@ -192,7 +193,7 @@
     async void LogInToProfile(MouseEventArgs e)
     {
         //returnerer ID ved succes og -1 ved fail
-        await Account.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
+        int ID = await Account.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
 
         LoginModal.Toggle();
 
@@ -200,7 +201,12 @@
         {
             WarningBox.Toggle();
         }
-        
+        else
+        {
+            DateTime expiry = DateTime.Now.AddHours(2);
+            await localStorage.SetItemAsync("login", ID + "," + expiry);
+        }
+
     }
 
     void SaveProfileToTables(MouseEventArgs e)
