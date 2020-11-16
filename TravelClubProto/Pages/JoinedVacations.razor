@@ -11,66 +11,107 @@
 <h1>Hej Ole, velkommen til din profil</h1>
 
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container" style="float:right;">
-        <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-            <ul class="navbar-nav flex-grow-1">
-                <BSNav IsList="true" IsVertical="true">
-                    <li class="nav-item">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+                    <ul class="navbar-nav flex-grow-1">
+                        <BSNav IsList="true" IsVertical="true">
+                            <li class="nav-item">
 
-                        <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
-                            <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-dark" href="MyProfile">
-                            <span class="oi oi-cog" aria-hidden="true"></span> Min profil
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-dark" href="JoinedVacations">
-                            <span class="oi oi-globe" aria-hidden="true"></span> Tilmeldte feriepakker
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-dark" href="PriceAgents">
-                            <span class="oi oi-bell" aria-hidden="true"></span> Mine Prisagenter
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-dark" href="FavouritedVacations">
-                            <span class="oi oi-heart" aria-hidden="true"></span> Mine favoriserede feriepakker
-                        </NavLink>
-                    </li>
-                    <li class="nav-item" @onclick="LogOut">
-                        <NavLink class="nav-link text-dark" href="">
-                            <span class="oi oi-account-logout" aria-hidden="true"></span> Log ud
-                        </NavLink>
-                    </li>
-                </BSNav>
-            </ul>
+                                <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
+                                    <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link text-dark" href="MyProfile">
+                                    <span class="oi oi-cog" aria-hidden="true"></span> Min profil
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link text-dark" href="JoinedVacations">
+                                    <span class="oi oi-globe" aria-hidden="true"></span> Tilmeldte feriepakker
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link text-dark" href="PriceAgents">
+                                    <span class="oi oi-bell" aria-hidden="true"></span> Mine Prisagenter
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link text-dark" href="FavouritedVacations">
+                                    <span class="oi oi-heart" aria-hidden="true"></span> Mine favoriserede feriepakker
+                                </NavLink>
+                            </li>
+                            <li class="nav-item" @onclick="LogOut">
+                                <NavLink class="nav-link text-dark" href="">
+                                    <span class="oi oi-account-logout" aria-hidden="true"></span> Log ud
+                                </NavLink>
+                            </li>
+                        </BSNav>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm">
+                <h4>Dine tilmeldte Feriepakker</h4>
+                <ul>
+                    @foreach (int item in JoinedVacs)
+                    {
+                        foreach (Vacation vac in vacations)
+                        {
+                            if (item == vac.ID)
+                            {
+                                <!-- vac.Destination.AddActivity(); -->
+                                <BSJumbotron Class="jumbotron">
+                                    <h2>@vac.Destination.Hotel, @vac.Destination.Location </h2> <h10> @vac.ID </h10>
+                                    <p><h4>Afrejselufthavn:</h4> @vac.DepartureAirport</p>
+                                    <BSJumbotron Class="TextJumbotron">
+                                        <h4>Beskrivelse af ferien:</h4>
+                                        <p>@vac.Description</p>
+                                        <h4>Activities:</h4>
+                                        @foreach (Activity item in vac.Destination.Activities)
+                                        {
+                                            <p>@item.Type</p>
+                                        }
+
+                                    </BSJumbotron>
+
+                                    <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+                                    <p>
+                                        @for (int i = 0; i < @vac.Prices.Count; i++)
+                                        {
+                                            string priceIntervalHolder = "";
+                                            priceIntervalHolder += vac.Prices[i] + "kr.";
+                                            <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
+                                        }
+                                    </p>
+                                    <h6>Deadline: @vac.Dates["Deadline"]</h6>
+                                </BSJumbotron>
+                            }
+                        }
+                    }
+                </ul>
+            </div>
         </div>
-        <p>Tilmeldte Feriepakker</p>
-        <ul>
-            @foreach (int item in JoinedVacs)
-            {
-                <li>@item</li>
-            }
-        </ul>
     </div>
+
 </nav>
 
 
     @code {
         public List<int> JoinedVacs = new List<int>();
+        public List<Vacation> vacations;
 
         protected override async Task OnInitializedAsync()
         {
             JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Joined");
+            vacations = await DaService.GetAllVacations(DaService);
 
         }
+
         CustomerVacations CustomerVac => new CustomerVacations(DaService);
 
         bool collapseNavMenu = true;
