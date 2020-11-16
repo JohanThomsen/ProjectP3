@@ -68,13 +68,34 @@
             collapseNavMenu = !collapseNavMenu;
         }
 
-        void showFavouritedVacations()
+        public async Task<List<Vacation>> showFavouritedVacations(DataAccessService DaService)
         {
-            CustomerVacations ss = new CustomerVacations();
-            List<Vacation> favouritedVacations = new List<Vacation>();
-            foreach (Vacation item in favouritedVacations)
-            {
 
+            List<Vacation> favouritedVacations = new List<Vacation>();
+
+
+            try {
+                
+                //Creates a table
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(DaService.ConnectionString);
+                //Gets data from the sql database
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM [dbo].Destination", con);
+                //Structures the data such that it can be read 
+                da.Fill(dt);
+                //Reads data into designated class
+                foreach (DataRow row in dt.Rows)
+                {
+
+                 
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            //Waits for Task to be finished and then returns the list of Destinations
+            return await Task.FromResult(favouritedVacations);
         }
-    }
+
+        }
