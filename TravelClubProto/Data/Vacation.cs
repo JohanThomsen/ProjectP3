@@ -25,6 +25,7 @@ namespace TravelClubProto.Data
         public DateTime GracePeriodLength { get; set; }
         public string ImageLink { get; set; }
         public string DepartureAirport { get; set; }
+        public string TravelBureauWebsiteLink { get; set; }
         public DataAccessService DaService { get; set; }
         public VacationAdministrator VacAdmin { get; set; }
         public TravelGroup TravelGroup { get; }
@@ -171,8 +172,8 @@ namespace TravelClubProto.Data
             try
             {
                 //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string query = "INSERT INTO [dbo].[Vacation] (State, MinNumberOfusers, MinNumberOfUsersExceeded, ProposalDate, Deadline, GracePeriodLength, PriceChangeDate, FK_DestinationID, Description, TravelDate, LeaveDate, ImageLink, DepartureAirport)" +
-                               " VALUES(@State, @MinNumberOfusers, @MinNumberOfUsersExceeded, @ProposalDate, @Deadline, @GracePeriodLength, @PriceChangeDate, @FK_DestinationID, @Description, @TravelDate, @LeaveDate, @ImageLink, @DepartureAirport)";
+                string query = "INSERT INTO [dbo].[Vacation] (State, MinNumberOfusers, MinNumberOfUsersExceeded, ProposalDate, Deadline, GracePeriodLength, PriceChangeDate, FK_DestinationID, Description, TravelDate, LeaveDate, ImageLink, DepartureAirport, TravelBureauWebsiteLink)" +
+                               " VALUES(@State, @MinNumberOfusers, @MinNumberOfUsersExceeded, @ProposalDate, @Deadline, @GracePeriodLength, @PriceChangeDate, @FK_DestinationID, @Description, @TravelDate, @LeaveDate, @ImageLink, @DepartureAirport, @TravelBureauWebsiteLink)";
                 //SqlCommand is used to build up commands
                 SqlCommand sqlCommand = new SqlCommand(query, con);
                 con.Open();
@@ -187,8 +188,9 @@ namespace TravelClubProto.Data
                 sqlCommand.Parameters.AddWithValue("@Description", Description);
                 sqlCommand.Parameters.AddWithValue("@TravelDate", Dates["TravelDate"]);
                 sqlCommand.Parameters.AddWithValue("@LeaveDate", Dates["LeaveDate"]);
-                sqlCommand.Parameters.AddWithValue("@ImageLink",ImageLink);
+                sqlCommand.Parameters.AddWithValue("@ImageLink", ImageLink);
                 sqlCommand.Parameters.AddWithValue("@DepartureAirport", DepartureAirport);
+                sqlCommand.Parameters.AddWithValue("@TravelBureauWebsiteLink", TravelBureauWebsiteLink);
 
 
                 //The built commands are executed
