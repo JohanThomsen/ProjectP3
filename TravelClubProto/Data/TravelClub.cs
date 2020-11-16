@@ -7,7 +7,6 @@ namespace TravelClubProto.Data
 {
     public class TravelClub : Account
     {
-        public VacationData VacationAdministrator { get; set; }
         public TravelClub(string email, string password, DataAccessService daService) : base(email, password, daService) 
         {
             Type = "TravelClub";
