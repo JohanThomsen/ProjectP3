@@ -26,9 +26,9 @@ namespace TravelClubProto.Data
         public PersonalInformation PI;
         public TravelPreferences   TP;
 
-        public Customer(string username, string password, int id) : base(username, password)
+        public Customer(string email, string password, DataAccessService daService) : base(email, password, daService)
         {
-            ID = id;
+            Type = "Customer";
         }
 
         public void ChangePersonalInformation(string name, string emailAddress)

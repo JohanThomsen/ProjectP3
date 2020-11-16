@@ -7,16 +7,10 @@ namespace TravelClubProto.Data
 {
     public class TravelClub : Account
     {
-        private string Type = "TravelClub";
-        public List<Vacation> TravelClubCompletedVacations = new List<Vacation>();
-        public List<Customer> CustomerList = new List<Customer>();
-
-
-        public TravelClub(string username, string password) : base(username, password) {}
-
-        public void CreateCustomer(string username, string password)
+        public VacationData VacationAdministrator { get; set; }
+        public TravelClub(string email, string password, DataAccessService daService) : base(email, password, daService) 
         {
-            CustomerList.Add(new Customer(username, password, CustomerList.Count + 1));
+            Type = "TravelClub";
         }        
     }
 }
