@@ -1,4 +1,4 @@
-﻿@page "/MyProfile"
+﻿@page "/JoinedVacations"
 @using Microsoft.Extensions.Configuration;
 @using System.Collections.Generic;
 @using System.Data;
@@ -52,25 +52,41 @@
                 </BSNav>
             </ul>
         </div>
+        <p>Tilmeldte Feriepakker</p>
+        <ul>
+            @foreach (int item in JoinedVacs)
+            {
+                <li>@item</li>
+            }
+        </ul>
     </div>
 </nav>
 
 
-@code {
-    bool collapseNavMenu = true;
+    @code {
+        public List<int> JoinedVacs = new List<int>();
 
-    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+        protected override async Task OnInitializedAsync()
+        {
+            JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Joined");
 
-    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+        }
+        CustomerVacations CustomerVac => new CustomerVacations(DaService);
 
-    void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
+        bool collapseNavMenu = true;
+
+        string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+
+        string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+
+        void ToggleNavMenu()
+        {
+            collapseNavMenu = !collapseNavMenu;
+        }
+
+        void LogOut(MouseEventArgs e)
+        {
+            DaService.LoggedIn = false;
+        }
+
     }
-
-    void LogOut(MouseEventArgs e)
-    {
-        DaService.LoggedIn = false;
-    }
-
-}

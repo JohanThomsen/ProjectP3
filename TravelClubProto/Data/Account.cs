@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -90,7 +88,8 @@ namespace TravelClubProto.Data
                             if (Reader["Email"] as string == user.Email && Reader["Password"] as string == user.Password)
                             {
                                 daService.LoggedIn = true;
-                                   
+                                daService.LoggedInAccountID = user.ID;
+
                                 myConnection.Close();
                                 return await Task.FromResult(user.ID);
                             }

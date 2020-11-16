@@ -75,8 +75,8 @@
                 <BSDropdown>
                     <BSDropdownToggle class="btn btn-outline-info btn-lg UserIcon" type="button">                  
                         <BSDropdownMenu Right="true">                        
-                            <BSDropdownItem Href="myProfile" @onclick="MyProfile">Min profil</BSDropdownItem>
-                            <BSDropdownItem Href="javascript:void(0);" @onclick="LogOut">Log ud</BSDropdownItem>
+                            <BSDropdownItem Href="MyTravelClub" @onclick="MyProfile">Min profil</BSDropdownItem>
+                            <BSDropdownItem Href="" @onclick="LogOut">Log ud</BSDropdownItem>
                         </BSDropdownMenu>
                     </BSDropdownToggle>
                 </BSDropdown>
@@ -256,6 +256,6 @@
         [Required]
         public Boolean Valid { get; set; }
     }
-    FormsModelVal formsModelVal = new FormsModelVal();
+    public FormsModelVal formsModelVal = new FormsModelVal();
 
 }

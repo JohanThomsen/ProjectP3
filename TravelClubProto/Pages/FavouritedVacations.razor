@@ -1,4 +1,4 @@
-﻿@page "/MyProfile"
+﻿@page "/FavouritedVacations"
 @using Microsoft.Extensions.Configuration;
 @using System.Collections.Generic;
 @using System.Data;
@@ -6,7 +6,7 @@
 @using System.Threading.Tasks;
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
-@inject DataAccessService DaService
+@inject DataAccessService DaService 
 
 <h1>Hej Ole, velkommen til din profil</h1>
 
@@ -52,11 +52,29 @@
                 </BSNav>
             </ul>
         </div>
+        <p>Favoriserede Feriepakker</p>
+        <ul>
+                @foreach (int item in FavouritedVacs)
+                {
+                    <li>@item</li>
+                }
+        </ul>
     </div>
 </nav>
 
 
+
+
 @code {
+    public List<int> FavouritedVacs = new List<int>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        FavouritedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Favourited");
+
+    }
+    CustomerVacations CustomerVac => new CustomerVacations(DaService);
+
     bool collapseNavMenu = true;
 
     string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";

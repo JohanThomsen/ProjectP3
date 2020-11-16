@@ -9,7 +9,14 @@
 .InputFieldIndex {
     /*float: left;*/
 }
+.header{
+    background-color: white;
+    padding-top: 100px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
 
+}
 .Column {
     float: left;
     width: 19%;
@@ -22,7 +29,6 @@
     display: table;
     clear: both;
 }
-
 
 .navbar-brand {
     white-space: normal;
