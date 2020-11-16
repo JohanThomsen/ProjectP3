@@ -1,16 +1,44 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-
+* {
+    box-sizing: border-box;
+}
 
 /*.VacFigures{
     width: inherit;
     height: inherit;
 }*/
 
-.ViewVacationImage{
+
+
+.VacationDescriptionColumn {
     float: left;
-    width: 100%;
-    height: 25%;
+    width: 19%;
+    margin: 0.5%;
+}
+
+
+
+.ViewVacationImage {
+    background:top center;
+    width:50%;
+    margin-top:1%;
+    float: right;
+}
+
+
+.ViewSingleVacationImage {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+
+.VacationDescriptionContainer{
+    border: 1px;
+    border-style: solid;
+    border-color: black;
 }
 
 

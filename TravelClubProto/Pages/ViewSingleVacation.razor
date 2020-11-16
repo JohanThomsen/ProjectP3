@@ -1,4 +1,4 @@
-﻿@page "/vacationView"
+﻿
 
 @using TravelClubProto.Data
 @inject DataAccessService DaService
@@ -7,24 +7,27 @@
 @foreach (Vacation vac in vacations)
 {
     <!-- vac.Destination.AddActivity(); -->
-
 <BSJumbotron>
-    
-    <div class="ViewVacationImage">
-        <BSFigureImage src="@vac.ImageLink" />
+    <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2> 
+    <h10>ID:  @vac.ID </h10>
+
+    <div class="ViewSingleVacationImage" >
+        <BSFigureImage src="@vac.ImageLink"/>
     </div>
-
-    <div class="ViewDescriptionRow">
-        <div class="VacationHotelColumn">
-            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-            <h10>ID:  @vac.ID </h10>
-
-            <h2>Feriebeskrivelse: </h2>
-            <p>@vac.Description</p>
-        </div>
-    </div>
-
     <br />
+    
+    <BSJumbotron Class="VacationDescriptionJumbotron">
+        <div class="VacationDescriptionContainer">
+            <h4>Beskrivelse af ferien:</h4>
+            <p><b>Afrejselufthavn:</b> @vac.DepartureAirport</p>
+            <p>@vac.Description</p>
+            <h4>Activities:</h4>
+            @foreach (Activity item in vac.Destination.Activities)
+            {
+                <p>@item.Type</p>
+            }
+        </div>
+    </BSJumbotron>
 
     <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
     <p>
