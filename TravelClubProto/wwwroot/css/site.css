@@ -20,17 +20,6 @@
     background-color: rgba(30,144,255,1)
 }
 
-.progressBarJoinedUsers::-webkit-progress-value::before {
-    -webkit-appearance: none;
-}
-
-.progressBarJoinedUsers::-webkit-progress-value::before {
-    content: "Hej";
-    position: absolute;
-    right: 0;
-    top: -125%;
-}
-
 /*.VacFigures{
     width: inherit;
     height: inherit;

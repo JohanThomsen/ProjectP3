@@ -39,7 +39,7 @@
         <span class="progressBarGenerator">
             @for (int i = 0; i < vac.StretchGoals.Count; i++)
             {
-                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], 7)></progress>
                 <span class="stretchGoalText">@vac.StretchGoals[i]</span>
             }
         </span>
@@ -54,22 +54,23 @@
         vacations = await DaService.GetAllVacations(DaService);
     }
     @*Calculates progress bar fill value from joined user and stretch goals*@
-    int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
-    {
-        int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
-        int prevGoal = stretchGoals[prevIndex];
+int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
+{
+    int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
+    int prevGoal = stretchGoals[prevIndex];
 
-        if (joinedUsers >= currGoal)
-        {
-            return currGoal;
-        }
-        else if (prevGoal > joinedUsers)
-        {
-            return 0;
-        }
-        else
-        {
-            return joinedUsers - prevGoal;
-        }
+    if (joinedUsers >= currGoal)
+    {
+        return currGoal;
     }
+    else if (joinedUsers >= prevGoal)
+    {
+        return joinedUsers - prevGoal;
+
+    }
+    else 
+    {
+        return 0;
+    }
+}
 }
