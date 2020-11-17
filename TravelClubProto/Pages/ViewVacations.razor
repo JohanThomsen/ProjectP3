@@ -1,6 +1,7 @@
 ﻿@page "/vacationView"
 
 @using TravelClubProto.Data
+@using Microsoft.AspNetCore
 @inject DataAccessService DaService
 <h3>Se ferier</h3>
 
@@ -11,7 +12,8 @@
 <BSJumbotron>
     
     <div class="ViewVacationImage">
-        <BSFigureImage src="@vac.ImageLink" />
+        <BSFigureImage src="@vac.ImageLink" @onclick="ViewSingleVacation"/>
+        <a href="www.google.com"></a>
     </div>
 
     <div class="ViewDescriptionRow">
@@ -44,5 +46,12 @@
     protected override async Task OnInitializedAsync()
     {
         vacations = await DaService.GetAllVacations(DaService);
+    }
+
+
+    public void ViewSingleVacationWithID()
+    {
+        BrowserUriHelper.Instance.NavigateTo("" +
+            "");
     }
 }
