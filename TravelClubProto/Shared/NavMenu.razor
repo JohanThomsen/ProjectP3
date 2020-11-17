@@ -175,7 +175,7 @@
 
     BSModal CreateProfileModal;
 
-
+    
     void OnToggleLogin(MouseEventArgs e)
     {
         LoginModal.Toggle();
@@ -206,10 +206,12 @@
         if (DaService.LoggedIn == false)
         {
             WarningBox.Toggle();
+            
         }
         else
         {
             DateTime expiry = DateTime.Now.AddHours(2);
+            await localStorage.ClearAsync();
             await localStorage.SetItemAsync("login", ID + "," + expiry);
         }
 
