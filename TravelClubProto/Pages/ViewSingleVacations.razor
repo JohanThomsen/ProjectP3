@@ -58,7 +58,7 @@
                 @*<button class="btn btn-secondary" @onclick="FavouriteVacation">Favorisere ferie</button>*@
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
-                @*<button class="btn btn-secondary" @onclick="FavouriteVacation">Se mere</button>*@
+                <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
             </div>
         </div>
     </div>
@@ -85,9 +85,5 @@
     //    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Favourited");
     //}
 
-    //async public void LinkToTravelBureau()
-    //{
-
-    //}
 
 }
