@@ -10,6 +10,7 @@ namespace TravelClubProto.Data
     
     public class Vacation
     {
+        //Hej Bang :D
         public Dictionary<string, DateTime> Dates = new Dictionary<string, DateTime>();
 
         //public Dictionary<int, decimal> Prices = new Dictionary<int, decimal>();
