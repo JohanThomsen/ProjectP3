@@ -4,6 +4,33 @@
     box-sizing: border-box;
 }
 
+/*Progressbar Appearnce*/
+.progressBarJoinedUsers {
+    -webkit-appearance: none;
+}
+
+.progressBarJoinedUsers::-webkit-progress-bar {
+    background-color: rgba(30,144,255,0.1);
+    background-image: none;
+    border-radius: 10%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset
+}
+
+.progressBarJoinedUsers::-webkit-progress-value {
+    background-color: rgba(30,144,255,1)
+}
+
+.progressBarJoinedUsers::-webkit-progress-value::before {
+    -webkit-appearance: none;
+}
+
+.progressBarJoinedUsers::-webkit-progress-value::before {
+    content: "Hej";
+    position: absolute;
+    right: 0;
+    top: -125%;
+}
+
 /*.VacFigures{
     width: inherit;
     height: inherit;
@@ -194,4 +221,8 @@ body {
     width: 100%;
     white-space: nowrap;
     line-height: 60px; /* Vertically center the text there */
+}
+
+.form-group.home-search{
+    width: 19%;
 }

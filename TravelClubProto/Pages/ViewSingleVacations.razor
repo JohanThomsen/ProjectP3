@@ -7,7 +7,6 @@
 @using System.Threading.Tasks;
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
-@using TravelClubProto.Data
 @inject DataAccessService DaService
 <h3>Se ferier</h3>
 
@@ -15,9 +14,8 @@
 
 
 @foreach (Vacation vac in vacations)
-{
-    <!-- vac.Destination.AddActivity(); -->
-<BSJumbotron Class="ViewSingleVacationJumbotron">
+{ 
+    <BSJumbotron Class="ViewSingleVacationJumbotron">
     <div class="SingleVacationContainer">
         <div class="ViewSingleVacationImage">
             <BSFigureImage src="@vac.ImageLink" />

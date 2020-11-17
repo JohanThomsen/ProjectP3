@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,88 +9,166 @@ namespace TravelClubProto.Data
     public class VacationAdministrator
     {
         //TDODO skal nok bruge en dataccesservice
-        public VacationAdministrator()
+        public DataAccessService DaService { get; set; }
+        private int VacID { get; set; }
+
+        public VacationAdministrator(DataAccessService daService, int vacID)
         {
+            DaService = daService;
+            VacID = vacID;
         }
 
-        public void OnStateChange(string state, int vacationID)
+        public void OnStateChange(string state, string oldState)
         {
             switch (state)
             {
                 case "Published":
-                    PublishVacation(state, vacationID);
+                    if (oldState == "Proposed")
+                    {
+                        PublishVacation(state);
+                    } else
+                    {
+                        throw new InvalidStateException("Invalid new state");
+                    }
                     break;
                 case "Rejected":
-                    RejectProposal(vacationID);
+                    if (oldState == "Proposed")
+                    {
+                        RejectProposal(state);
+                    }
+                    else
+                    {
+                        throw new InvalidStateException("Invalid new state");
+                    }
+                    
                     break;
-                case "Cancelled":
-                    CancelVacation(vacationID);
+                case "Canceled":
+                    CancelVacation(state);
                     break;
                 case "GracePeriod":
-                    StartGracePeriod(vacationID);
+                    if (oldState == "Published")
+                    {
+                        StartGracePeriod(state);
+                    }
+                    else
+                    {
+                        throw new InvalidStateException("Invalid new state");
+                    }
                     break;
                 case "Completed":
-                    CompleteVacation(vacationID);
+                    if (oldState == "GracePeriod")
+                    {
+                        CompleteVacation(state);
+                    }
+                    else
+                    {
+                        throw new InvalidStateException("Invalid new state");
+                    }
+                    break;
+                case "Proposed":
+                    ResetVacation();
                     break;
                 default:
-                    break;
+                    throw new InvalidStateException("Invalid new state");
             }
         }
 
-        public void StartGracePeriod(int vacationID)
-        {
 
-            //if (VacData.FindVac(vacationID).State == "GracePeriod")
-            //{
-                //AddDateTime("GracePeriodDate", vacationID);
-                //VacData.GracePeriodVacations.Add(vacationID);
-                //VacData.PublishedVacations.Remove(vacationID);
-                //TODO add exceptions
-            //}
+        private void PublishVacation(string state)
+        {
+            AddDateTimeAndChangeDate(state, "PublishDate");
         }
 
-        public void CompleteVacation(int vacationID)
+
+        private void RejectProposal(string state)
         {
-            //if (VacData.FindVac(vacationID).State == "Completed")
-            //{
-                //AddDateTime("CompletionDate", vacationID);
-                //TODO tilføj til TravelBureauCompletedVacations
-                //TODO tilføj til TravelClubCompletedVacations
-                //TODO tilføj til CustomerCompletedVacations
-                //VacData.GracePeriodVacations.Remove(vacationID);
-                //TODO add exceptions
-            //}
+            AddDateTimeAndChangeDate(state, "RejectionDate");
+            //TODO add stuff for TravelBureau
         }
 
-        public void PublishVacation(string state, int vacationID)
+        private void CancelVacation(string state)
         {
-            if (state == "Published")
+            AddDateTimeAndChangeDate(state, "CancelDate");
+            DeleteVacationRelation();
+            //TODO Do stuff for travel Bureau
+        }
+
+        private void StartGracePeriod(string state)
+        {
+            AddDateTimeAndChangeDate(state, "GracePeriodDate");
+
+            //TODO add stuff for TravelBureau
+        }
+
+
+
+        private void CompleteVacation(string state)
+        {
+            AddDateTimeAndChangeDate(state, "CompletionDate");
+
+            DeleteVacationRelation();
+        }
+
+
+        private void DeleteVacationRelation()
+        {
+            try
             {
-                //TODO fjern fra travelbureausProposedVacations
-               // VacData.PublishedVacations.Add(vacationID);
-               // VacData.ProposedVacations.Remove(vacationID);
-                //AddDateTime("PublishDate", vacationID);
-                //Add Exceptions
+                using (var sc = new SqlConnection(DaService.ConnectionString))
+                using (var cmd = sc.CreateCommand())
+                {
+                    sc.Open();
+                    cmd.CommandText = "DELETE FROM [dbo].CustomerVacationRelations WHERE FK_VacationID=@VacID";
+                    cmd.Parameters.AddWithValue("@VacID", VacID);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
-        public void CancelVacation(int vacationID)
+        private void AddDateTimeAndChangeDate(string state, string DateType)
         {
-            //VacData.PublishedVacations.Remove(vacationID);
-            //AddDateTime("CancelDate", vacationID);
-            //TODO fjerne joinedVacation(Customer)
-            //TODO fjern fra favouritedVacation(Customer)
+            DateTime now = DateTime.Now;
+            try
+            {
+                using (var sc = new SqlConnection(DaService.ConnectionString))
+                using (var cmd = sc.CreateCommand())
+                {
+                    sc.Open();
+                    cmd.CommandText = $"UPDATE [dbo].Vacation SET State=@state, {DateType}=@now WHERE ID=@VacID";
+                    cmd.Parameters.AddWithValue("@state", state);
+                    cmd.Parameters.AddWithValue("@now", now);
+                    cmd.Parameters.AddWithValue("@VacID", VacID);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
-        public void RejectProposal(int vacationID)
+        //Not needed in final production. Just usefull for now
+        private void ResetVacation()
         {
-
-
+            try
+            {
+                using (var sc = new SqlConnection(DaService.ConnectionString))
+                using (var cmd = sc.CreateCommand())
+                {
+                    sc.Open();
+                    cmd.CommandText = $"UPDATE [dbo].Vacation SET State='Proposed', PublishDate=NULL, GracePeriodDate=NULL, CancelDate=NULL, CompletionDate=NULL, RejectionDate=NULL WHERE ID=@VacID";
+                    cmd.Parameters.AddWithValue("@VacID", VacID);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
-
-        private void AddDateTime(string state, int vacationID)
-        {
-        }
-
     }
 }
