@@ -40,7 +40,10 @@
 
             <div class="ParticipantDetailColumn">
                 <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-                <button>PROGRESSBAR INDSÆTTES HER</button>
+
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">ProgressBarPlaceholderLIGENU</BSButton>
+
+
                 <p>
                     @for (int i = 0; i < @vac.Prices.Count; i++)
                     {
@@ -50,10 +53,11 @@
                     }
                 </p>
 
-                <button>TILMELD OG FAVORISER HER!!!!</button>
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilmeld ferie</BSButton>
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Favoriser ferie</BSButton>
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
-                <button>SE MERE KNAP. ANVEND HREF vac.travelbureauwebsitelink </button>
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Link">Se mere</BSButton>
             </div>
         </div>
     </div>
