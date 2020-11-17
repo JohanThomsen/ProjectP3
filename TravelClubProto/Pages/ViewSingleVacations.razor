@@ -11,6 +11,9 @@
 @inject DataAccessService DaService
 <h3>Se ferier</h3>
 
+
+
+
 @foreach (Vacation vac in vacations)
 {
     <!-- vac.Destination.AddActivity(); -->
@@ -53,11 +56,11 @@
                     }
                 </p>
 
-                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilmeld ferie</BSButton>
-                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Favoriser ferie</BSButton>
+                <button class="btn btn-secondary" @onclick="JoinVacation">Tilmeld ferie</button>
+                <button class="btn btn-secondary" @onclick="FavouriteVacation">Favorisere ferie</button>
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
-                <BSButton Color="Color.Primary" ButtonType="ButtonType.Link">Se mere</BSButton>
+                <button class="btn btn-secondary" @onclick="FavouriteVacation">Se mere</button>
             </div>
         </div>
     </div>
@@ -70,4 +73,23 @@
     {
         vacations = await DaService.GetAllVacations(DaService);
     }
+
+    //async public void JoinVacation()
+    //{
+    //    List<Vacation> templit = await DaService.GetAllVacations(DaService);
+    //    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Joined");
+    //}
+
+    //async public void FavouriteVacation()
+    //{
+    //    List<Vacation> templit = await DaService.GetAllVacations(DaService);
+    //    Console.WriteLine(templit[0].ID);
+    //    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Favourited");
+    //}
+
+    //async public void LinkToTravelBureau()
+    //{
+
+    //}
+
 }
