@@ -192,6 +192,7 @@ namespace TravelClubProto.Data
                 if (!(row["LeaveDate"] is DBNull)) v.Dates.Add("LeaveDate", Convert.ToDateTime(row["LeaveDate"]));
                 v.Dates.Add("PriceChangeDate", Convert.ToDateTime(row["PriceChangeDate"]));
                 v.FK_DestinationID = Convert.ToInt32(row["FK_DestinationID"]);
+                v.FK_PublisherID = Convert.ToInt32(row["FK_PublisherID"]);
                 v.Description = row["Description"] as string;
                 v.ImageLink = row["ImageLink"] as string;
                 v.DepartureAirport = row["DepartureAirport"] as string;
