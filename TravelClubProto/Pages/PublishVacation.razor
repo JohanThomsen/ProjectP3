@@ -45,7 +45,7 @@
                 </p>
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
-                <BSButton @onclick="@(e => ChangeVacState(vac))">Udgiv ferie</BSButton>
+                <BSButton @onclick="@(e => ChangeVacState(vac, "Published"))">Udgiv ferie</BSButton>
             </BSJumbotron>
         }
 
@@ -54,14 +54,14 @@
 
 @code {
     public List<Vacation> vacations;
-    
+
     protected override async Task OnInitializedAsync()
     {
         vacations = await DaService.GetAllVacations(DaService);
     }
 
-    void ChangeVacState(Vacation vac)
+    void ChangeVacState(Vacation vac, string state)
     {
-        vac.State = "Published";
+        vac.State = state;
     }
 }
