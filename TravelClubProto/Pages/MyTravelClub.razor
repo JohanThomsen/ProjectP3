@@ -8,65 +8,94 @@
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
 
-<h1>Hej Ole, velkommen til din profil</h1>
+<h3>Mit TravelClub</h3>
 
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container">
-        <div class="row">
-            <div class="col-sm column">
-                <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-                    <ul class="navbar-nav flex-grow-1">
-                        <BSNav IsList="true" IsVertical="true">
-                            <li class="nav-item">
-
-                                <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
-                                    <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="MyProfile">
-                                    <span class="oi oi-cog" aria-hidden="true"></span> Min profil
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="JoinedVacations">
-                                    <span class="oi oi-globe" aria-hidden="true"></span> Tilmeldte feriepakker
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="PriceAgents">
-                                    <span class="oi oi-bell" aria-hidden="true"></span> Mine Prisagenter
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="FavouritedVacations">
-                                    <span class="oi oi-heart" aria-hidden="true"></span> Mine favoriserede feriepakker
-                                </NavLink>
-                            </li>
-                            <li class="nav-item" @onclick="LogOut">
-                                <NavLink class="nav-link text-dark" href="">
-                                    <span class="oi oi-account-logout" aria-hidden="true"></span> Log ud
-                                </NavLink>
-                            </li>
-                        </BSNav>
-                    </ul>
+            <div class="row">
+                <div class="col-sm column">
+                    <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+                        <ul class="navbar-nav flex-grow-1">
+                            <BSNav IsList="true" IsVertical="true" class="borderlines">
+                                <li class="nav-item">
+                                    <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
+                                        <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link text-dark" href="MyProfile">
+                                        <span class="oi oi-cog" aria-hidden="true"></span> Min profil
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link text-dark" href="JoinedVacations">
+                                        <span class="oi oi-globe" aria-hidden="true"></span> Tilmeldte feriepakker
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link text-dark" href="PriceAgents">
+                                        <span class="oi oi-bell" aria-hidden="true"></span> Mine Prisagenter
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link text-dark" href="FavouritedVacations">
+                                        <span class="oi oi-heart" aria-hidden="true"></span> Mine favoriserede feriepakker
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item" @onclick="LogOut">
+                                    <NavLink class="nav-link text-dark" href="">
+                                        <span class="oi oi-account-logout" aria-hidden="true"></span> Log ud
+                                    </NavLink>
+                                </li>
+                            </BSNav>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="col-sm">
-                <h4>Favoriserede Feriepakker</h4>
-                @*<ul>
-                    @foreach (int item in FavouritedVacs)
-                    {
-                        <li>@item</li>
-                </ul>
-                    }*@
-            </div>
-        </div>
-    </div>
+                
+                <BSContainer class="menu-column">
+                    <BSRow>
+                        <BSCol class="borderlines">
+                            <item>
+                                <NavLink class="nav-link text-dark" href="MyProfile">
+                                    <oi class="oi oi-cog" aria-hidden="true"></oi><br /><h3>Min profil</h3> <br /> Klik her, for at gå til din profil
+                                </NavLink>
+                            </item>
+                        </BSCol>
 
+                        <BSCol class="borderlines">
+                            
+                            <item>
+                                <NavLink class="nav-link text-dark" href="JoinedVacations">
+                                    <span class="oi oi-globe" aria-hidden="true" ></span> <h3>Tilmeldte feriepakker</h3> <br /> Klik her, for at gå til dine tilmeldte feriepakker
+                                </NavLink>
+                            </item>
+                        </BSCol>
+                    </BSRow>
+
+                    <BSRow>
+                        <BSCol class="borderlines">
+                            <item>
+                                <NavLink class="nav-link text-dark" href="PriceAgents">
+                                    <span class="oi oi-bell" aria-hidden="true"></span> <h3>Prisagenter</h3> <br /> Klik her, for at gå til dine prisagenter
+                                </NavLink>
+                            </item>
+                        </BSCol>
+
+                        <BSCol class="borderlines">
+                            <item>
+                                <NavLink class="nav-link text-dark" href="FavouritedVacations">
+                                    <span class="oi oi-heart" aria-hidden="true"></span> <h3>Favoriserede feriepakker</h3> <br /> Klik her, for at gå til dine favoriserede feriepakker
+                                </NavLink>
+                            </item>
+                        </BSCol>
+                    </BSRow>
+
+                </BSContainer>
+            </div>
+    </div>
 </nav>
 
 
@@ -86,7 +115,4 @@
     {
         DaService.LoggedIn = false;
     }
-
-
-
 }
