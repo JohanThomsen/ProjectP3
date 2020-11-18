@@ -5,13 +5,14 @@
 @using System.Threading.Tasks;
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject DataAccessService DaService
-@inject Blazored.LocalStorage.ILocalStorageService localStorage 
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container" style="float:right;">
-        <a class="navbar-brand" href="">TravelClub</a>
+        <a class="navbar-brand" href="">travelclub</a>
         <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -22,16 +23,16 @@
                         <span class="oi oi-home" aria-hidden="true"></span> Home
                     </NavLink>
                 </li>
-                <li class="nav-item">
+                @*<li class="nav-item">
                     <NavLink class="nav-link text-dark" href="counter">
                         <span class="oi oi-plus" aria-hidden="true"></span> Counter
                     </NavLink>
-                </li>
-                <li class="nav-item">
+                </li>*@
+                @*<li class="nav-item">
                     <NavLink class="nav-link text-dark" href="fetchdata">
                         <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch Data
                     </NavLink>
-                </li>
+                </li>*@
                 <li class="nav-item">
                     <NavLink class="nav-link text-dark" href="vacationView">
                         <span class="oi oi-list-rich" aria-hidden="true"></span> View Vacations
@@ -42,9 +43,15 @@
                         <span class="oi oi-list-rich" aria-hidden="true"></span> Propose Vacation
                     </NavLink>
                 </li>
-                <li class="nav-item">
+                @*<li class="nav-item">
                     <NavLink class="nav-link text-dark" href="AddDestination">
                         <span class="oi oi-list-rich" aria-hidden="true"></span> Add Destination
+                    </NavLink>
+                    <i class='fas fa-user-alt'></i>
+                </li>*@
+                <li class="nav-item">
+                    <NavLink class="nav-link text-dark" href="SingleVacation/ID">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> View single vacation
                     </NavLink>
                     <i class='fas fa-user-alt'></i>
                 </li>
@@ -52,7 +59,7 @@
         </div>
     </div>
 
-    
+
 
     @if (DaService.LoggedIn == false)
     {
@@ -74,8 +81,8 @@
         <div class="dropdown">
             <div class="HamburgerMenu">
                 <BSDropdown>
-                    <BSDropdownToggle class="btn btn-outline-info btn-lg UserIcon" type="button">                  
-                        <BSDropdownMenu Right="true">                        
+                    <BSDropdownToggle class="btn btn-outline-info btn-lg UserIcon" type="button">
+                        <BSDropdownMenu Right="true">
                             <BSDropdownItem Href="MyTravelClub" @onclick="OnToggleMyProfile">Min profil</BSDropdownItem>
                             <BSDropdownItem Href="" @onclick="LogOut">Log ud</BSDropdownItem>
                         </BSDropdownMenu>
@@ -215,9 +222,12 @@
         if (DaService.LoggedIn == false)
         {
             WarningBox.Toggle();
-        } else
+
+        }
+        else
         {
-            DateTime expiry = DateTime.Now.AddHours(1);
+            DateTime expiry = DateTime.Now.AddHours(2);
+            await localStorage.ClearAsync();
             await localStorage.SetItemAsync("login", ID + "," + expiry);
         }
 

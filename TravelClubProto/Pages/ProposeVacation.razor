@@ -12,9 +12,38 @@
 
 <h3>Foreslå Ferie</h3>
 
+<BSModal @ref="DestinationModal" IsCentered="true">
+    <BSModalHeader OnClick="@OnToggleAddDestination">Opret Destination</BSModalHeader>
+    <BSModalBody>
+        <BSForm Model="formsModelDest" OnValidSubmit="ValidDestSubmitted">
+            <BSFormGroup>
+                <BSLabel For="Country">Land</BSLabel>
+                <BSInput Id="Country" InputType="InputType.Text" PlaceHolder="Indtast Land" @bind-Value="formsModelDest.Country"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="Location">Location</BSLabel>
+                <BSInput Id="Location" InputType="InputType.Text" PlaceHolder="Indtast Lokation" @bind-Value="formsModelDest.Location"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="Hotel">Hotel</BSLabel>
+                <BSInput Id="Hotel" InputType="InputType.Text" PlaceHolder="Indtast Hotel" @bind-Value="formsModelDest.Hotel"></BSInput>
+            </BSFormGroup>
+            <BSForm Model="formsModelAct" OnValidSubmit="ActivitySubmitted" Context="PricesForm" IsInline="true">
+                <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                    <BSLabel For="Activity">Tilføj Aktivitet </BSLabel>
+                    <BSInput Id="Activity" InputType="InputType.Text" PlaceHolder="Aktivitet" @bind-Value="formsModelAct.Type"></BSInput>
+                </BSFormGroup>
+                <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj Aktivitet  </BSButton>
+                <pre>@activityFeedback</pre>
+            </BSForm>
+            <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
+        </BSForm>
+    </BSModalBody>
+</BSModal>
+
 <BSForm Model="formsModelVal" OnValidSubmit="ValidFormSubmitted">
     <BSDropdown IsOpen="@IsOpen1">
-        <BSDropdownToggle Color="Color.Secondary" @onclick="onClick1">Destination</BSDropdownToggle>
+        <BSDropdownToggle Color="Color.Primary" @onclick="onClick1">Destination</BSDropdownToggle>
         <BSDropdownMenu @bind-IsOpen="@IsOpen1">
             @foreach (Destination destination in destinations)
             {
@@ -24,12 +53,17 @@
         </BSDropdownMenu>
         <pre> @destinationFeedback</pre>
     </BSDropdown>
+    <BSButton @onclick="OnToggleAddDestination" Color="Color.Secondary">Tilføj ny destination</BSButton>
     <BSFormGroup>
         <BSLabel For="Description">Beskrivelse</BSLabel>
         <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
-        <BSLabel For="DepartureAirport">Afrejse Dato</BSLabel>
+        <BSLabel For="PublisherID">Input en relevant account ID. (Dette skal gøre automatisk senere, lige midlertidig løsning)</BSLabel>
+        <BSInput InputType="InputType.Number" Id="PublisherID" @bind-Value="@formsModelVal.PublisherID"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="DepartureAirport">Afrejse Lufthavn</BSLabel>
         <BSInput InputType="InputType.Text" Id="DepartureAirport" @bind-Value="@formsModelVal.DepartureAirport"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
@@ -43,6 +77,10 @@
     <BSFormGroup>
         <BSLabel For="Deadline">Tilmeldingsfrist</BSLabel>
         <BSInput InputType="InputType.Date" Id="Deadline" @bind-Value="@formsModelVal.Deadline"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
+        <BSLabel For="TravelBureauWebsiteLink">Link til ferie på egen hjemmeside</BSLabel>
+        <BSInput InputType="InputType.Text" Id="TravelBureauWebsiteLink" @bind-Value="@formsModelVal.TravelBureauWebsiteLink"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
         <BSLabel For="GraceperiodLength">Betalingsperiode</BSLabel>
@@ -71,51 +109,73 @@
     <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilføj ferie</BSButton>
 </BSForm>
 
-@code {
-    public string destinationFeedback;
-    public int activeDestination;
-    public string priceFeedback;
-    public List<decimal> Prices = new List<decimal>();
-    public List<int> Breaks = new List<int>();
-    public List<Destination> destinations = new List<Destination>();
-    protected override async Task OnInitializedAsync()
-    {
-        destinations = await DaService.GetAllDestinations(DaService);
-    }
+    @code {
+        public string destinationFeedback;
+        public int activeDestination;
+        public string priceFeedback;
+        public List<decimal> Prices = new List<decimal>();
+        public List<int> Breaks = new List<int>();
+        public List<Destination> destinations = new List<Destination>();
+        public List<Activity> Activities = new List<Activity>();
+        public string activityFeedback;
+        BSModal DestinationModal;
 
-    public void ValidFormSubmitted()
-    {
-        Vacation v = new Vacation(Breaks, Prices, DaService);
-        v.State = "Proposed";
-        v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
-        v.MinNumberOfUsersExceeded = 0;
-        v.Dates.Add("ProposalDate", DateTime.Now);
-        v.Dates.Add("Deadline", formsModelVal.Deadline);
-        v.Dates.Add("GracePeriodLength", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
-        v.Dates.Add("PriceChangeDate", DateTime.Now);
-        v.Dates.Add("TravelDate", formsModelVal.TravelDate);
-        v.Dates.Add("LeaveDate", formsModelVal.LeaveDate);
-        v.ImageLink = formsModelVal.ImageLink;
-        v.Description = formsModelVal.Description;
-        v.FK_DestinationID = activeDestination;
-        v.DepartureAirport = formsModelVal.DepartureAirport;
-        v.InsertVacationToDatabase();
-    }
+        string inputFeedback = "Add a destination";
 
-    public bool IsOpen1 = false;
+        protected override async Task OnInitializedAsync()
+        {
+            destinations = await DaService.GetAllDestinations(DaService);
+        }
 
-    public void getDestinationInfo(Destination dest)
-    {
-        activeDestination = dest.ID;
-        IsOpen1 = false;
-        destinationFeedback = $"\nSelected Hotel: {dest.Hotel}, Location {dest.Location}";
-    }
+        public void ValidFormSubmitted()
+        {
+            Vacation v = new Vacation(Breaks, Prices, DaService);
+            v.State = "Proposed";
+            v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
+            v.MinNumberOfUsersExceeded = 0;
+            v.Dates.Add("ProposalDate", DateTime.Now);
+            v.Dates.Add("Deadline", formsModelVal.Deadline);
+            v.Dates.Add("GracePeriodLength", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
+            v.Dates.Add("PriceChangeDate", DateTime.Now);
+            v.Dates.Add("TravelDate", formsModelVal.TravelDate);
+            v.Dates.Add("LeaveDate", formsModelVal.LeaveDate);
+            v.ImageLink = formsModelVal.ImageLink;
+            v.Description = formsModelVal.Description;
+            v.FK_DestinationID = activeDestination;
+            v.FK_PublisherID = formsModelVal.PublisherID;
+            v.DepartureAirport = formsModelVal.DepartureAirport;
+            v.TravelBureauWebsiteLink = formsModelVal.TravelBureauWebsiteLink;
+            v.InsertVacationToDatabase();
+        }
+
+        public void ValidDestSubmitted()
+        {
+            inputFeedback = "Destination succesfully added";
+            Destination d = new Destination(DaService);
+            d.Location = formsModelDest.Location;
+            d.Hotel = formsModelDest.Hotel;
+            d.AddDate = DateTime.Now;
+            d.Country = formsModelDest.Country;
+            d.InsertDestinationIntoDataBase();
+            int destID = d.GetID();
+            foreach (Activity activity in Activities)
+            {
+                activity.InsertActivityIntoDataBase(destID);
+            }
+            d.ID = destID;
+            destinations.Add(d);
+            getDestinationInfo(d);
+        }
+
+        public bool IsOpen1 = false;
 
     public void onClick1()
     {
         if (IsOpen1 == false)
         {
-            IsOpen1 = true;
+            activeDestination = dest.ID;
+            IsOpen1 = false;
+            destinationFeedback = $"\nSelected Hotel: {dest.Hotel}, Location {dest.Location}, Country {dest.Country}";
         }
         else
         {
@@ -123,11 +183,12 @@
         }
     }
 
-    public class FormsModelVal
-    {
-        [Required]
-        [StringLength(100, ErrorMessage = "LufthavnsNavn for lang (100 character limit).")]
-        public string DepartureAirport { get; set; }
+        public class FormsModelVal
+        {
+            [Required]
+            [StringLength(100, ErrorMessage = "LufthavnsNavn for lang (100 character limit).")]
+            public string DepartureAirport { get; set; }
+
 
 
         [Required]
@@ -143,36 +204,91 @@
         [Required]
         public DateTime LeaveDate { get; set; } = DateTime.Now;
 
-        [Required]
-        public int minNumberOfUsers { get; set; }
+            [Required]
+            public int PublisherID { get; set; }
+
+            [Required]
+            [StringLength(1000, ErrorMessage = "Beskrivelse for lang (1000 character limit).")]
+            public string Description { get; set; }
 
         [Required]
         [StringLength(1000, ErrorMessage = "Beskrivelse for lang (1000 character limit).")]
         public string Description { get; set; }
 
-        [Required]
-        [StringLength(1000, ErrorMessage = "Link er for langt max 1000 karakterer.")]
-        public string ImageLink { get; set; }
+            [Required]
+            [StringLength(1000, ErrorMessage = "Link er for langt max 1000 karakterer.")]
+            public string TravelBureauWebsiteLink { get; set; }
 
-        [Required]
-        public Boolean Valid { get; set; }
-    }
-    FormsModelVal formsModelVal = new FormsModelVal();
+            [Required]
+            public Boolean Valid { get; set; }
+        }
+        FormsModelVal formsModelVal = new FormsModelVal();
+
+        public class FormsModelDest
+        {
+            [Required]
+            [StringLength(50, ErrorMessage = "Country Name too long (50 character limit).")]
+            public string Country { get; set; }
+
+            [Required]
+            [StringLength(50, ErrorMessage = "Location too long (50 character limit).")]
+            public string Location { get; set; }
+
+            [Required]
+            [StringLength(30, ErrorMessage = "Hotel name too long (30 character limit).")]
+            public string Hotel { get; set; }
+
+            [Required]
+            public Boolean Valid { get; set; }
+        }
+        FormsModelDest formsModelDest = new FormsModelDest();
+
+
+
+        public void PriceSubmitted()
+        {
+            Prices.Add(formsModelPrices.price);
+            Breaks.Add(formsModelPrices.breakPoint);
 
     public void PriceSubmitted()
     {
         Prices.Add(formsModelPrices.price);
         Breaks.Add(formsModelPrices.breakPoint);
 
-        priceFeedback += "Price: " + formsModelPrices.price + ". Breakpoint: " + formsModelPrices.breakPoint + ".\n";
-    }
+        public class FormsModelPrices
+        {
+            [Required]
+            public decimal price { get; set; }
+            [Required]
+            public int breakPoint { get; set; }
+        }
+        void OnToggleAddDestination(MouseEventArgs e)
+        {
+            DestinationModal.Toggle();
+        }
 
-    public class FormsModelPrices
-    {
-        [Required]
-        public decimal price { get; set; }
-        [Required]
-        public int breakPoint { get; set; }
+        public class FormsModelAct
+        {
+
+            [Required]
+            [StringLength(50, ErrorMessage = "Forklaring for lang (Maks 50 karakterer)")]
+            public string Type { get; set; }
+
+            [Required]
+            public Boolean Valid { get; set; }
+        }
+        FormsModelAct formsModelAct = new FormsModelAct();
+
+        public void ActivitySubmitted()
+        {
+            Activities.Add(new Activity(DaService, formsModelAct.Type));
+
+            activityFeedback += "Aktivitet tilføjet: " + formsModelAct.Type + ".\n";
+            formsModelAct.Type = "";
+        }
+
+
+        FormsModelPrices formsModelPrices = new FormsModelPrices();
     }
     FormsModelPrices formsModelPrices = new FormsModelPrices();
 }

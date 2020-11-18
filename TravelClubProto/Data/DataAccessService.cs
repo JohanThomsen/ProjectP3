@@ -160,7 +160,7 @@ namespace TravelClubProto.Data
                 //Structures the data such that it can be read 
                 da.Fill(dt);
                 //Reads data into designated class
-                vacations = FillVacationList(dt, DaService);
+                vacations = await FillVacationList(dt, DaService);
                 
             }
             catch (Exception e)
@@ -171,7 +171,7 @@ namespace TravelClubProto.Data
             return await Task.FromResult(vacations);
         }
 
-        private List<Vacation> FillVacationList(DataTable dt, DataAccessService DaService)
+        private async Task<List<Vacation>> FillVacationList(DataTable dt, DataAccessService DaService)
         {
             List<Vacation> vacations = new List<Vacation>();
             Vacation v;
@@ -193,14 +193,69 @@ namespace TravelClubProto.Data
                 if (!(row["LeaveDate"] is DBNull)) v.Dates.Add("LeaveDate", Convert.ToDateTime(row["LeaveDate"]));
                 v.Dates.Add("PriceChangeDate", Convert.ToDateTime(row["PriceChangeDate"]));
                 v.FK_DestinationID = Convert.ToInt32(row["FK_DestinationID"]);
+                v.FK_PublisherID = Convert.ToInt32(row["FK_PublisherID"]);
                 v.Description = row["Description"] as string;
                 v.ImageLink = row["ImageLink"] as string;
                 v.DepartureAirport = row["DepartureAirport"] as string;
+                v.TravelBureauWebsiteLink = row["TravelBureauWebsiteLink"] as string;
                 vacations.Add(v);
             }
-            return vacations;
+            return await Task.FromResult(vacations);
         }
 
+        public async Task<Vacation> GetVacationByID(DataAccessService DaService, int vacID)
+        {
+            Vacation v = null;
+            try
+            {
+                //Creates a table
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(ConnectionString);
+                //Gets data from the sql database
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].Vacation WHERE ID='{vacID}'", con);
+                //Structures the data such that it can be read 
+                da.Fill(dt);
+                //Reads data into designated class
+                v = await FillVacation(dt, DaService);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            //Waits for Task to be finished and then returns the list of Destinations
+            return await Task.FromResult(v);
+        }
+
+        private Task<Vacation> FillVacation(DataTable dt, DataAccessService DaService)
+        {
+            Vacation v = null;
+            foreach (DataRow row in dt.Rows)
+            {
+                v = new Vacation(DaService, Convert.ToInt32(row["ID"]), Convert.ToInt32(row["FK_DestinationID"]));
+                v.State = row["State"] as string;
+                v.MinNumberOfUsers = Convert.ToInt32(row["MinNumberOfUsers"]);
+                v.MinNumberOfUsersExceeded = Convert.ToInt32(row["MinNumberOfUsersExceeded"]);
+                v.Dates.Add("ProposalDate", Convert.ToDateTime(row["ProposalDate"]));
+                if (!(row["PublishDate"] is DBNull)) v.Dates.Add("PublishDate", Convert.ToDateTime(row["PublishDate"]));
+                if (!(row["GracePeriodDate"] is DBNull)) v.Dates.Add("GracePeriodDate", Convert.ToDateTime(row["GracePeriodDate"]));
+                if (!(row["CancelDate"] is DBNull)) v.Dates.Add("CancelDate", Convert.ToDateTime(row["CancelDate"]));
+                if (!(row["CompletionDate"] is DBNull)) v.Dates.Add("CompletionDate", Convert.ToDateTime(row["CompletionDate"]));
+                if (!(row["Deadline"] is DBNull)) v.Dates.Add("Deadline", Convert.ToDateTime(row["Deadline"]));
+                if (!(row["GracePeriodLength"] is DBNull)) v.Dates.Add("GracePeriodLength", Convert.ToDateTime(row["GracePeriodLength"]));
+                if (!(row["RejectionDate"] is DBNull)) v.Dates.Add("RejectionDate", Convert.ToDateTime(row["RejectionDate"]));
+                if (!(row["TravelDate"] is DBNull)) v.Dates.Add("TravelDate", Convert.ToDateTime(row["TravelDate"]));
+                if (!(row["LeaveDate"] is DBNull)) v.Dates.Add("LeaveDate", Convert.ToDateTime(row["LeaveDate"]));
+                v.Dates.Add("PriceChangeDate", Convert.ToDateTime(row["PriceChangeDate"]));
+                v.FK_DestinationID = Convert.ToInt32(row["FK_DestinationID"]);
+                v.FK_PublisherID = Convert.ToInt32(row["FK_PublisherID"]);
+                v.Description = row["Description"] as string;
+                v.ImageLink = row["ImageLink"] as string;
+                v.DepartureAirport = row["DepartureAirport"] as string;
+                v.TravelBureauWebsiteLink = row["TravelBureauWebsiteLink"] as string;
+            }
+            return Task.FromResult(v);
+        }
         public int ClearTable(string table)
         {
             int count = 0;

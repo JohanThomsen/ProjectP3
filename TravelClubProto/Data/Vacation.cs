@@ -10,6 +10,7 @@ namespace TravelClubProto.Data
     
     public class Vacation
     {
+        //Hej Bang :D
         public Dictionary<string, DateTime> Dates = new Dictionary<string, DateTime>();
 
         //public Dictionary<int, decimal> Prices = new Dictionary<int, decimal>();
@@ -22,11 +23,13 @@ namespace TravelClubProto.Data
         public int MinNumberOfUsersExceeded { get; set; }
         public string Description { get; set; }
         public int FK_DestinationID { get; set; }
+        public int FK_PublisherID { get; set; }
         public DateTime GracePeriodLength { get; set; }
         public string ImageLink { get; set; }
         public string DepartureAirport { get; set; }
+        public string TravelBureauWebsiteLink { get; set; }
         public DataAccessService DaService { get; set; }
-        public VacationAdministrator VacAdmin { get; set; }
+        private VacationAdministrator VacAdmin { get; set; }
         public TravelGroup TravelGroup { get; }
 
         private string _state;
@@ -35,17 +38,26 @@ namespace TravelClubProto.Data
             get { return _state; }
             set 
             {
+                try
+                {
+                    VacAdmin.OnStateChange(value, _state);
+                }
+                catch (InvalidStateException e)
+                {
+                    Console.WriteLine(e);
+                }
+                
                 _state = value;
-                VacAdmin.OnStateChange(_state, ID);
+                
             }
         }
 
         //Constructor from insertion form
         public Vacation(List<int> stretchGoals, List<decimal> prices, DataAccessService daService)
         {
-            VacAdmin = new VacationAdministrator();
-            AddPrices(stretchGoals, prices);
             DaService = daService;
+            AddPrices(stretchGoals, prices);  
+            VacAdmin = new VacationAdministrator(daService, ID);
         }
 
         //Constructor from Database
@@ -54,7 +66,7 @@ namespace TravelClubProto.Data
             ID = id;
             FK_DestinationID = destinationID;
             DaService = daService;
-            VacAdmin = new VacationAdministrator();
+            VacAdmin = new VacationAdministrator(daService, ID);
             TravelGroup = new TravelGroup(ID, daService);
             getDestination(daService);
             getPrices();
@@ -171,8 +183,8 @@ namespace TravelClubProto.Data
             try
             {
                 //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string query = "INSERT INTO [dbo].[Vacation] (State, MinNumberOfusers, MinNumberOfUsersExceeded, ProposalDate, Deadline, GracePeriodLength, PriceChangeDate, FK_DestinationID, Description, TravelDate, LeaveDate, ImageLink, DepartureAirport)" +
-                               " VALUES(@State, @MinNumberOfusers, @MinNumberOfUsersExceeded, @ProposalDate, @Deadline, @GracePeriodLength, @PriceChangeDate, @FK_DestinationID, @Description, @TravelDate, @LeaveDate, @ImageLink, @DepartureAirport)";
+                string query = "INSERT INTO [dbo].[Vacation] (State, MinNumberOfusers, MinNumberOfUsersExceeded, ProposalDate, Deadline, GracePeriodLength, PriceChangeDate, FK_DestinationID, Description, TravelDate, LeaveDate, ImageLink, DepartureAirport, TravelBureauWebsiteLink, FK_PublisherID)" +
+                               " VALUES(@State, @MinNumberOfusers, @MinNumberOfUsersExceeded, @ProposalDate, @Deadline, @GracePeriodLength, @PriceChangeDate, @FK_DestinationID, @Description, @TravelDate, @LeaveDate, @ImageLink, @DepartureAirport, @TravelBureauWebsiteLink, @FK_PublisherID)";
                 //SqlCommand is used to build up commands
                 SqlCommand sqlCommand = new SqlCommand(query, con);
                 con.Open();
@@ -184,11 +196,13 @@ namespace TravelClubProto.Data
                 sqlCommand.Parameters.AddWithValue("@GracePeriodLength", Dates["GracePeriodLength"]);
                 sqlCommand.Parameters.AddWithValue("@PriceChangeDate", Dates["PriceChangeDate"]);
                 sqlCommand.Parameters.AddWithValue("@FK_DestinationID", FK_DestinationID);
+                sqlCommand.Parameters.AddWithValue("@FK_PublisherID", FK_PublisherID);
                 sqlCommand.Parameters.AddWithValue("@Description", Description);
                 sqlCommand.Parameters.AddWithValue("@TravelDate", Dates["TravelDate"]);
                 sqlCommand.Parameters.AddWithValue("@LeaveDate", Dates["LeaveDate"]);
-                sqlCommand.Parameters.AddWithValue("@ImageLink",ImageLink);
+                sqlCommand.Parameters.AddWithValue("@ImageLink", ImageLink);
                 sqlCommand.Parameters.AddWithValue("@DepartureAirport", DepartureAirport);
+                sqlCommand.Parameters.AddWithValue("@TravelBureauWebsiteLink", TravelBureauWebsiteLink);
 
 
                 //The built commands are executed

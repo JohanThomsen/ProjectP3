@@ -1,11 +1,82 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+.jumbotron {
+    background-color: #f7fbfc;
+    border: 1px solid rgb(149, 168, 189);
+}
 
+*{
+    box-sizing: border-box;
+}
+
+/*Progressbar Appearnce*/
+.progressBarJoinedUsers {
+    -webkit-appearance: none;
+}
+
+.progressBarJoinedUsers::-webkit-progress-bar {
+    background-color: rgba(30,144,255,0.1);
+    background-image: none;
+    border-radius: 10%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+.progressBarJoinedUsers::-webkit-progress-value {
+    background-color: rgba(30,144,255,1);
+}
 
 /*.VacFigures{
     width: inherit;
     height: inherit;
 }*/
+
+
+.ViewSingleVacationHotel{
+    margin:1%;
+}
+
+.SingleVacationDescriptionColumn {
+    float: left;
+    width: 60%;
+    margin: 2%;
+}
+
+.ParticipantDetailColumn {
+    float:right;
+    width:30%;
+    margin:1%;
+}
+
+.VacationDescriptionColumn {
+    float: left;
+    width: 19%;
+    margin: 0.5%;
+}
+
+.ViewVacationImage {
+    background:top center;
+    width:50%;
+    margin-top:1%;
+    float: right;
+}
+
+
+.ViewSingleVacationImage {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
+
+
+.SingleVacationContainer {
+    border: 1px;
+    border-style: solid;
+    border-color: black;
+
+}
+
+
 .InputFieldIndex {
     /*float: left;*/
 }
@@ -93,34 +164,36 @@ a {
     border-color: #1861ac;
 }
 
+/*Nav bar appearance*/
+
+
+.nav-link text-dark {
+    padding-bottom: 5px;
+    border-bottom: 2px solid;
+}
+
+
+
 .nav-pills, .nav-pills .show > .nav-link {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
 
-
-    .nav-link.active {
-        color: #d7d7d7;
-        border-radius: 4px;
-        background-color: rgba(30,144,255,0.25);
-    }
-
-    .nav-link:hover {
-        border-radius: 4px;
-        background-color: rgba(30,144,255,0.1);
-        color: white;
-    }
-
-    #TravelClubInfo {
-    vertical-align: text-top;
-    text-align: left;
-    }
+.nav-link.active {
+    border-bottom: 2px solid #009ee0;
+    color: white;
+}
 
 .nav-link:hover {
-    border-radius: 4px;
-    background-color: rgba(30,144,255,0.1);
+    /*background-color: rgba(30,144,255,0.1);*/
+    border-bottom: 2px solid #e39a1a;
     color: white;
+}
+
+#TravelClubInfo {
+vertical-align: text-top;
+text-align: left;
 }
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -169,4 +242,8 @@ body {
     width: 100%;
     white-space: nowrap;
     line-height: 60px; /* Vertically center the text there */
+}
+
+.form-group.home-search{
+    width: 19%;
 }
