@@ -1,7 +1,16 @@
 ﻿@page "/ProposeVacation"
-@using TravelClubProto.Data
+
+
+@using Microsoft.Extensions.Configuration;
+@using System.Collections.Generic;
+@using System.Data;
+@using Microsoft.Data.SqlClient;
+@using System.Threading.Tasks;
+@using Microsoft.EntityFrameworkCore.Migrations.Operations;
+@using TravelClubProto.Data;
 @inject DataAccessService DaService
-<h3>ProposeVacation</h3>
+
+<h3>Foreslå Ferie</h3>
 
 <BSForm Model="formsModelVal" OnValidSubmit="ValidFormSubmitted">
     <BSDropdown IsOpen="@IsOpen1">
@@ -62,108 +71,108 @@
     <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilføj ferie</BSButton>
 </BSForm>
 
-    @code {
-        public string destinationFeedback;
-        public int activeDestination;
-        public string priceFeedback;
-        public List<decimal> Prices = new List<decimal>();
-        public List<int> Breaks = new List<int>();
-        public List<Destination> destinations = new List<Destination>();
-        protected override async Task OnInitializedAsync()
-        {
-            destinations = await DaService.GetAllDestinations(DaService);
-        }
-
-        public void ValidFormSubmitted()
-        {
-            Vacation v = new Vacation(Breaks, Prices, DaService);
-            v.State = "Proposed";
-            v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
-            v.MinNumberOfUsersExceeded = 0;
-            v.Dates.Add("ProposalDate", DateTime.Now);
-            v.Dates.Add("Deadline", formsModelVal.Deadline);
-            v.Dates.Add("GracePeriodLength", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
-            v.Dates.Add("PriceChangeDate", DateTime.Now);
-            v.Dates.Add("TravelDate", formsModelVal.TravelDate);
-            v.Dates.Add("LeaveDate", formsModelVal.LeaveDate);
-            v.ImageLink = formsModelVal.ImageLink;
-            v.Description = formsModelVal.Description;
-            v.FK_DestinationID = activeDestination;
-            v.DepartureAirport = formsModelVal.DepartureAirport;
-            v.InsertVacationToDatabase();
-        }
-
-        public bool IsOpen1 = false;
-
-        public void getDestinationInfo(Destination dest)
-        {
-            activeDestination = dest.ID;
-            IsOpen1 = false;
-            destinationFeedback = $"\nSelected Hotel: {dest.Hotel}, Location {dest.Location}";
-        }
-
-        public void onClick1()
-        {
-            if (IsOpen1 == false)
-            {
-                IsOpen1 = true;
-            }
-            else
-            {
-                IsOpen1 = false;
-            }
-        }
-
-        public class FormsModelVal
-        {
-            [Required]
-            [StringLength(100, ErrorMessage = "LufthavnsNavn for lang (100 character limit).")]
-            public string DepartureAirport { get; set; }
-            
-
-            [Required]
-            //TODO add more constraints.
-            public int GraceperiodLength { get; set; }
-
-            [Required]
-            public DateTime Deadline { get; set; } = DateTime.Now;
-
-            [Required]
-            public DateTime TravelDate { get; set; } = DateTime.Now;
-
-            [Required]
-            public DateTime LeaveDate { get; set; } = DateTime.Now;
-
-            [Required]
-            public int minNumberOfUsers { get; set; }
-
-            [Required]
-            [StringLength(1000, ErrorMessage = "Beskrivelse for lang (1000 character limit).")]
-            public string Description { get; set; }
-
-            [Required]
-            [StringLength(1000, ErrorMessage = "Link er for langt max 1000 karakterer.")]
-            public string ImageLink { get; set; }
-
-            [Required]
-            public Boolean Valid { get; set; }
-        }
-        FormsModelVal formsModelVal = new FormsModelVal();
-
-        public void PriceSubmitted()
-        {
-            Prices.Add(formsModelPrices.price);
-            Breaks.Add(formsModelPrices.breakPoint);
-
-            priceFeedback += "Price: " + formsModelPrices.price + ". Breakpoint: " + formsModelPrices.breakPoint + ".\n";
-        }
-
-        public class FormsModelPrices
-        {
-            [Required]
-            public decimal price { get; set; }
-            [Required]
-            public int breakPoint { get; set; }
-        }
-        FormsModelPrices formsModelPrices = new FormsModelPrices();
+@code {
+    public string destinationFeedback;
+    public int activeDestination;
+    public string priceFeedback;
+    public List<decimal> Prices = new List<decimal>();
+    public List<int> Breaks = new List<int>();
+    public List<Destination> destinations = new List<Destination>();
+    protected override async Task OnInitializedAsync()
+    {
+        destinations = await DaService.GetAllDestinations(DaService);
     }
+
+    public void ValidFormSubmitted()
+    {
+        Vacation v = new Vacation(Breaks, Prices, DaService);
+        v.State = "Proposed";
+        v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
+        v.MinNumberOfUsersExceeded = 0;
+        v.Dates.Add("ProposalDate", DateTime.Now);
+        v.Dates.Add("Deadline", formsModelVal.Deadline);
+        v.Dates.Add("GracePeriodLength", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));
+        v.Dates.Add("PriceChangeDate", DateTime.Now);
+        v.Dates.Add("TravelDate", formsModelVal.TravelDate);
+        v.Dates.Add("LeaveDate", formsModelVal.LeaveDate);
+        v.ImageLink = formsModelVal.ImageLink;
+        v.Description = formsModelVal.Description;
+        v.FK_DestinationID = activeDestination;
+        v.DepartureAirport = formsModelVal.DepartureAirport;
+        v.InsertVacationToDatabase();
+    }
+
+    public bool IsOpen1 = false;
+
+    public void getDestinationInfo(Destination dest)
+    {
+        activeDestination = dest.ID;
+        IsOpen1 = false;
+        destinationFeedback = $"\nSelected Hotel: {dest.Hotel}, Location {dest.Location}";
+    }
+
+    public void onClick1()
+    {
+        if (IsOpen1 == false)
+        {
+            IsOpen1 = true;
+        }
+        else
+        {
+            IsOpen1 = false;
+        }
+    }
+
+    public class FormsModelVal
+    {
+        [Required]
+        [StringLength(100, ErrorMessage = "LufthavnsNavn for lang (100 character limit).")]
+        public string DepartureAirport { get; set; }
+
+
+        [Required]
+        //TODO add more constraints.
+        public int GraceperiodLength { get; set; }
+
+        [Required]
+        public DateTime Deadline { get; set; } = DateTime.Now;
+
+        [Required]
+        public DateTime TravelDate { get; set; } = DateTime.Now;
+
+        [Required]
+        public DateTime LeaveDate { get; set; } = DateTime.Now;
+
+        [Required]
+        public int minNumberOfUsers { get; set; }
+
+        [Required]
+        [StringLength(1000, ErrorMessage = "Beskrivelse for lang (1000 character limit).")]
+        public string Description { get; set; }
+
+        [Required]
+        [StringLength(1000, ErrorMessage = "Link er for langt max 1000 karakterer.")]
+        public string ImageLink { get; set; }
+
+        [Required]
+        public Boolean Valid { get; set; }
+    }
+    FormsModelVal formsModelVal = new FormsModelVal();
+
+    public void PriceSubmitted()
+    {
+        Prices.Add(formsModelPrices.price);
+        Breaks.Add(formsModelPrices.breakPoint);
+
+        priceFeedback += "Price: " + formsModelPrices.price + ". Breakpoint: " + formsModelPrices.breakPoint + ".\n";
+    }
+
+    public class FormsModelPrices
+    {
+        [Required]
+        public decimal price { get; set; }
+        [Required]
+        public int breakPoint { get; set; }
+    }
+    FormsModelPrices formsModelPrices = new FormsModelPrices();
+}
