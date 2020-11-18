@@ -10,8 +10,16 @@
 }
 
 /*Progressbar Appearnce*/
-.progressBarJoinedUsers {
+progress.progressBarJoinedUsers {
     -webkit-appearance: none;
+    height: 2em;
+    width: 4em;
+}
+
+progress.progressBarJoinedUsersVS {
+    -webkit-appearance: none;
+    height: 2em;
+    width: 4em;
 }
 
 .progressBarJoinedUsers::-webkit-progress-bar {
@@ -24,6 +32,19 @@
 .progressBarJoinedUsers::-webkit-progress-value {
     background-color: rgba(30,144,255,1);
 }
+
+.progressBarJoinedUsersVS::-webkit-progress-bar {
+    background-color: rgba(30,144,255,0.1);
+    background-image: none;
+    border-radius: 10%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+.progressBarJoinedUsersVS::-webkit-progress-value {
+    background-color: rgba(30,144,255,1);
+}
+
+
 
 /*.VacFigures{
     width: inherit;
@@ -70,10 +91,7 @@
 
 
 .SingleVacationContainer {
-    border: 1px;
-    border-style: solid;
-    border-color: black;
-
+    border: 1px solid rgb(149, 168, 189)
 }
 
 
