@@ -13,13 +13,13 @@
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container">
         <div class="row">
-            <div class="col-sm">
+            <div class="navigation">
                 <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
                     <ul class="navbar-nav flex-grow-1">
-                        <BSNav IsList="true" IsVertical="true">
+                        <BSNav IsList="true" IsVertical="true" class="borderlines">
                             <li class="nav-item">
 
                                 <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
@@ -38,12 +38,12 @@
                             </li>
                             <li class="nav-item">
                                 <NavLink class="nav-link text-dark" href="PriceAgents">
-                                    <span class="oi oi-bell" aria-hidden="true"></span> Mine Prisagenter
+                                    <span class="oi oi-bell" aria-hidden="true"></span> Prisagenter
                                 </NavLink>
                             </li>
                             <li class="nav-item">
                                 <NavLink class="nav-link text-dark" href="FavouritedVacations">
-                                    <span class="oi oi-heart" aria-hidden="true"></span> Mine favoriserede feriepakker
+                                    <span class="oi oi-heart" aria-hidden="true"></span> Favoriserede feriepakker
                                 </NavLink>
                             </li>
                             <li class="nav-item" @onclick="LogOut">
@@ -55,7 +55,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-sm">
+            <div class="rightside">
                 <h4>Dine prisagenter</h4>
                 <ul>
                     @*@foreach (int item in FavouritedVacs)

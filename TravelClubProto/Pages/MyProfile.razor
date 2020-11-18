@@ -14,13 +14,13 @@
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container">
         <div class="row">
-            <div class="navbar-column">
+            <div class="navigation">
                 <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
                     <ul class="navbar-nav flex-grow-1">
-                        <BSNav IsList="true" IsVertical="true">
+                        <BSNav IsList="true" IsVertical="true" class="borderlines">
                             <li class="nav-item">
 
                                 <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
@@ -39,12 +39,12 @@
                             </li>
                             <li class="nav-item">
                                 <NavLink class="nav-link text-dark" href="PriceAgents">
-                                    <span class="oi oi-bell" aria-hidden="true"></span> Mine Prisagenter
+                                    <span class="oi oi-bell" aria-hidden="true"></span> Prisagenter
                                 </NavLink>
                             </li>
                             <li class="nav-item">
                                 <NavLink class="nav-link text-dark" href="FavouritedVacations">
-                                    <span class="oi oi-heart" aria-hidden="true"></span> Mine favoriserede feriepakker
+                                    <span class="oi oi-heart" aria-hidden="true"></span> Favoriserede feriepakker
                                 </NavLink>
                             </li>
                             <li class="nav-item" @onclick="LogOut">
@@ -56,20 +56,20 @@
                     </ul>
                 </div>
             </div>
-            <div class="">
-                <h4>Rediger din profil</h4>
-                <BSForm Model="formsModelVal" OnValidSubmit="ConsoleWrite">
-                    <BSFormGroup>
-                        <BSLabel For="exampleInputFullName">Fulde navn:</BSLabel>
-                        <BSInput Id="exampleInputFirstName" InputType="InputType.Text" PlaceHolder="Thomas Larsen" @bind-Value="formsModelVal.FullName"></BSInput>
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                    </BSFormGroup>
-                    <BSFormGroup>
-                        <BSLabel For="exampleInputEmail1">Email addresse</BSLabel>
-                        <BSInput Id="exampleInputEmail1" InputType="InputType.Email" PlaceHolder="" @bind-Value="formsModelVal.Email"></BSInput>
-                    </BSFormGroup>
-                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfile">Gem profil</BSButton>
-                    @*@foreach (Vacation vac in vacations )
+                <div class="rightside">
+                    <h4>Rediger din profil</h4>
+                    <BSForm Model="formsModelVal" OnValidSubmit="ConsoleWrite">
+                        <BSFormGroup>
+                            <BSLabel For="exampleInputFullName">Fulde navn:</BSLabel>
+                            <BSInput Id="exampleInputFirstName" InputType="InputType.Text" PlaceHolder="Thomas Larsen" @bind-Value="formsModelVal.FullName"></BSInput>
+                        </BSFormGroup>
+                        <BSFormGroup>
+                            <BSLabel For="exampleInputEmail1">Email addresse</BSLabel>
+                            <BSInput Id="exampleInputEmail1" InputType="InputType.Email" PlaceHolder="" @bind-Value="formsModelVal.Email"></BSInput>
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        </BSFormGroup>
+                        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfile">Gem profil</BSButton>
+                        @*@foreach (Vacation vac in vacations )
                     {
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="defaultCheck">
@@ -78,12 +78,10 @@
                         </label>
                     </div>
                     }*@
-                </BSForm>
-
+                    </BSForm>
+                </div>
             </div>
         </div>
-    </div>
-
 </nav>
 
 
