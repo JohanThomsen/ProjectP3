@@ -45,13 +45,6 @@
             </div>
 
             
-            <span class="progressBarGenerator">
-                @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                {
-                    <progress class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
-
-                }
-            </span>
             <div class="ParticipantDetailColumn">
                 <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
                 <p>
@@ -62,6 +55,13 @@
                         <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
                     }
                 </p>
+            <span class="progressBarGenerator">
+                @for (int i = 0; i < vac.StretchGoals.Count; i++)
+                {
+                    <progress class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+
+                }
+            </span>
 
                 @*<button class="btn btn-secondary" @onclick="JoinVacation">Tilmeld ferie</button>*@
                 @*<button class="btn btn-secondary" @onclick="FavouriteVacation">Favorisere ferie</button>*@
