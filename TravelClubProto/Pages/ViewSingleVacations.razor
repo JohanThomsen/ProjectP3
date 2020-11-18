@@ -1,5 +1,8 @@
 ﻿
-@page "/SingleVacation"
+@page "/SingleVacation/ID"
+
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
 @using Microsoft.Extensions.Configuration;
 @using System.Collections.Generic;
 @using System.Data;
@@ -7,7 +10,15 @@
 @using System.Threading.Tasks;
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
+
 @inject DataAccessService DaService
+
+
+<h2>@pm.VacID</h2>
+
+
+
+
 <h3>Se ferier</h3>
 
 
@@ -15,6 +26,8 @@
 
 @foreach (Vacation vac in vacations)
 {
+
+
     int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
     int stretchGoalsMax = vac.StretchGoals.Max();
 
@@ -76,6 +89,7 @@
 
 @code {
     public List<Vacation> vacations;
+    PostModel pm = new PostModel();
     protected override async Task OnInitializedAsync()
     {
         vacations = await DaService.GetAllVacations(DaService);
@@ -101,7 +115,14 @@
         }
     }
 
-
+    public class PostModel : PageModel
+    {
+        public string VacID { get; set; }
+        public void OnGet(string vacID)
+        {
+            VacID = vacID;
+        }
+    }
 
 
     //async public void JoinVacation()
