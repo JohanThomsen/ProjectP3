@@ -16,10 +16,21 @@
     margin-top: 1%;
     float: right;
 }
+.menu-column {
+    width: 60%;
+    float: inherit;
+    display:block;
+}
+.borderlines {
+    border: solid;
+    border-color:black;
+    border-width:1px;
+    margin:3%;
+}
 
-.vacation-column{
-    width:60%;
-    float:inherit;
+.vacation-column {
+    width: 60%;
+    float: inherit;
 }
 
 .navbar-column{
