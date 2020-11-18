@@ -10,6 +10,21 @@
     /*float: left;*/
 }
 
+.ViewVacationImage {
+    background: top center;
+    width: 50%;
+    margin-top: 1%;
+    float: right;
+}
+
+.vacation-column{
+    width:60%;
+    float:inherit;
+}
+
+.navbar-column{
+    float: left;
+}
 
 .header{
     background-color: white;
@@ -19,10 +34,7 @@
     position: relative;
 
 }
-.column {
-    
-    width: 20%;
-}
+
 
 /* Clear floats after the columns */
 .Row:after {

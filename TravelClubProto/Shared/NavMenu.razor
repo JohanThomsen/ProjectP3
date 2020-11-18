@@ -6,6 +6,7 @@
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage 
 
 
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -75,7 +76,7 @@
                 <BSDropdown>
                     <BSDropdownToggle class="btn btn-outline-info btn-lg UserIcon" type="button">                  
                         <BSDropdownMenu Right="true">                        
-                            <BSDropdownItem Href="MyTravelClub" @onclick="MyProfile">Min profil</BSDropdownItem>
+                            <BSDropdownItem Href="MyTravelClub" @onclick="OnToggleMyProfile">Min profil</BSDropdownItem>
                             <BSDropdownItem Href="" @onclick="LogOut">Log ud</BSDropdownItem>
                         </BSDropdownMenu>
                     </BSDropdownToggle>
@@ -168,6 +169,8 @@
 
     BSModal CreateProfileModal;
 
+    Account acc;
+
 
     void OnToggleLogin(MouseEventArgs e)
     {
@@ -181,26 +184,44 @@
 
     void OnToggleMyProfile(MouseEventArgs e)
     {
-        MyProfile();
+        MyProfile(DaService);
     }
 
-    void MyProfile()
+    async void MyProfile(DataAccessService daService)
     {
+        if (daService.LoggedIn == true)
+        {
+            string loginInfo = await localStorage.GetItemAsync<String>("login");
+            string[] loginresult = loginInfo.Split(",");
+            int ID = Convert.ToInt32(loginresult[0]);
+            DateTime expiry = Convert.ToDateTime(loginresult[1]);
+            if (expiry > DateTime.Now)
+            {
+                Login login = new Login();
+                acc = await login.GetAccountByID(daService, ID);
+                DaService.LoggedInType = acc.Type;
+            }
 
+
+        }
     }
 
     async void LogInToProfile(MouseEventArgs e)
     {
         //returnerer ID ved succes og -1 ved fail
-        await Account.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
+        int ID = await Account.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
 
         LoginModal.Toggle();
 
         if (DaService.LoggedIn == false)
         {
             WarningBox.Toggle();
+        } else
+        {
+            DateTime expiry = DateTime.Now.AddHours(1);
+            await localStorage.SetItemAsync("login", ID + "," + expiry);
         }
-        
+
     }
 
     void SaveProfileToTables(MouseEventArgs e)

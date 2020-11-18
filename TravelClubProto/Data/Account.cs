@@ -13,7 +13,7 @@ namespace TravelClubProto.Data
 {
     public abstract class Account
     {
-        private DateTime LoginDate { get; set; }
+        public DateTime LoginDate { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string Type { get; set; }

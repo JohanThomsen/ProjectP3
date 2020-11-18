@@ -13,7 +13,7 @@
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container">
         <div class="row">
-            <div class="col-sm">
+            <div class="navbar-column">
                 <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -55,7 +55,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-sm">
+            <div class="vacation-column">
                 <h4>Dine tilmeldte Feriepakker</h4>
                 <ul>
                     @foreach (int item in JoinedVacs)
@@ -65,19 +65,24 @@
                             if (item == vac.ID)
                             {
                                 <!-- vac.Destination.AddActivity(); -->
-                                <BSJumbotron Class="jumbotron">
-                                    <h2>@vac.Destination.Hotel, @vac.Destination.Location </h2> <h10> @vac.ID </h10>
-                                    <p><h4>Afrejselufthavn:</h4> @vac.DepartureAirport</p>
-                                    <BSJumbotron Class="TextJumbotron">
-                                        <h4>Beskrivelse af ferien:</h4>
-                                        <p>@vac.Description</p>
-                                        <h4>Activities:</h4>
-                                        @foreach (Activity item in vac.Destination.Activities)
-                                        {
-                                            <p>@item.Type</p>
-                                        }
 
-                                    </BSJumbotron>
+                                <BSJumbotron>
+
+                                    <div class="ViewVacationImage">
+                                        <BSFigureImage src="@vac.ImageLink" />
+                                    </div>
+
+                                    <div class="ViewDescriptionRow">
+                                        <div class="VacationHotelColumn">
+                                            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+                                            <h10>ID:  @vac.ID </h10>
+
+                                            <h2>Feriebeskrivelse: </h2>
+                                            <p>@vac.Description</p>
+                                        </div>
+                                    </div>
+
+                                    <br />
 
                                     <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
                                     <p>

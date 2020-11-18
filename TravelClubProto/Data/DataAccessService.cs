@@ -14,6 +14,7 @@ namespace TravelClubProto.Data
         public bool LoggedIn { get; set; }
 
         public int LoggedInAccountID { get; set; }
+        public string LoggedInType { get; set; }
 
 
         private IConfiguration config;

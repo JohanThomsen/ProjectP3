@@ -7,13 +7,14 @@
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <h1>Hej Ole, velkommen til din profil</h1>
 
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container">
         <div class="row">
-            <div class="col-sm">
+            <div class="navbar-column">
                 <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -55,14 +56,30 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-sm">
-                <h4>Favoriserede Feriepakker</h4>
-                @*<ul>
-                    @foreach (int item in FavouritedVacs)
+            <div class="">
+                <h4>Rediger din profil</h4>
+                <BSForm Model="formsModelVal" OnValidSubmit="ConsoleWrite">
+                    <BSFormGroup>
+                        <BSLabel For="exampleInputFullName">Fulde navn:</BSLabel>
+                        <BSInput Id="exampleInputFirstName" InputType="InputType.Text" PlaceHolder="Thomas Larsen" @bind-Value="formsModelVal.FullName"></BSInput>
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </BSFormGroup>
+                    <BSFormGroup>
+                        <BSLabel For="exampleInputEmail1">Email addresse</BSLabel>
+                        <BSInput Id="exampleInputEmail1" InputType="InputType.Email" PlaceHolder="" @bind-Value="formsModelVal.Email"></BSInput>
+                    </BSFormGroup>
+                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfile">Gem profil</BSButton>
+                    @*@foreach (Vacation vac in vacations )
                     {
-                        <li>@item</li>
-                    }
-                </ul>*@
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck">
+                        <label class="form-check-label" for="defaultCheck">
+                            @vac.Destination
+                        </label>
+                    </div>
+                    }*@
+                </BSForm>
+
             </div>
         </div>
     </div>
@@ -71,6 +88,9 @@
 
 
 @code {
+
+    public List<Vacation> vacations;
+
     bool collapseNavMenu = true;
 
     string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
@@ -87,4 +107,39 @@
         DaService.LoggedIn = false;
     }
 
+    async void SaveEditedProfile(DataAccessService daService)
+    {
+       
+        //customer.TP.Dest = formsModelVal
+
+        }
+
+    
+
+
+    void SaveProfile(MouseEventArgs e)
+    {
+        SaveEditedProfile(DaService);
+    }
+
+    void ConsoleWrite()
+    {
+        Console.WriteLine("Form succesfully submitted");
+    }
+
+    public class FormsModelVal
+    {
+
+        [StringLength(50, ErrorMessage = "Name too long (50 character limit).")]
+        public string FullName { get; set; }
+
+        [StringLength(50, ErrorMessage = "Email too long (50 character limit).")]
+        public string Email { get; set; }
+
+
+
+    }
+    public FormsModelVal formsModelVal = new FormsModelVal();
+
 }
+
