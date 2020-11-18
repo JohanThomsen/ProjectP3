@@ -1,6 +1,7 @@
 ﻿@page "/vacationView"
 
 @using TravelClubProto.Data
+@using TravelClubProto.Pages
 @using Microsoft.AspNetCore
 @inject DataAccessService DaService
 <h3>Se ferier</h3>
@@ -9,44 +10,46 @@
 {
     int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
     int stretchGoalsMax = vac.StretchGoals.Max();
-        <BSJumbotron>
+    <BSJumbotron>
 
+
+        <a class="" href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
             <div class="ViewVacationImage">
                 <BSFigureImage src="@vac.ImageLink" />
             </div>
+        </a>
+        <div class="ViewDescriptionRow">
+            <div class="VacationHotelColumn">
+                <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+                <h10>ID:  @vac.ID </h10>
 
-            <div class="ViewDescriptionRow">
-                <div class="VacationHotelColumn">
-                    <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                    <h10>ID:  @vac.ID </h10>
-
-                    <h2>Feriebeskrivelse: </h2>
-                    <p>@vac.Description</p>
-                </div>
+                <h2>Feriebeskrivelse: </h2>
+                <p>@vac.Description</p>
             </div>
+        </div>
 
-            <br />
+        <br />
 
-            <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-            <p>
-                @for (int i = 0; i < @vac.Prices.Count; i++)
-                {
-                    string priceIntervalHolder = "";
-                    priceIntervalHolder += vac.Prices[i] + "kr.";
-                    <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
-                }
-            </p>
-            <span class="progressBarGenerator">
-                @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                {
-                    <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+        <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+        <p>
+            @for (int i = 0; i < @vac.Prices.Count; i++)
+            {
+                string priceIntervalHolder = "";
+                priceIntervalHolder += vac.Prices[i] + "kr.";
+                <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
+            }
+        </p>
+        <span class="progressBarGenerator">
+            @for (int i = 0; i < vac.StretchGoals.Count; i++)
+            {
+                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
 
-                }
-            </span>
-            <h6>Deadline: @vac.Dates["Deadline"]</h6>
-           
+            }
+        </span>
+        <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
-        </BSJumbotron>
+
+    </BSJumbotron>
 }
 
 @code {

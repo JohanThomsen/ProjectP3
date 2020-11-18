@@ -1,6 +1,11 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-* {
+.jumbotron {
+    background-color: #f7fbfc;
+    border: 1px solid rgb(149, 168, 189);
+}
+
+*{
     box-sizing: border-box;
 }
 
@@ -13,11 +18,11 @@
     background-color: rgba(30,144,255,0.1);
     background-image: none;
     border-radius: 10%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
 
 .progressBarJoinedUsers::-webkit-progress-value {
-    background-color: rgba(30,144,255,1)
+    background-color: rgba(30,144,255,1);
 }
 
 /*.VacFigures{
@@ -42,16 +47,11 @@
     margin:1%;
 }
 
-
-
-
 .VacationDescriptionColumn {
     float: left;
     width: 19%;
     margin: 0.5%;
 }
-
-
 
 .ViewVacationImage {
     background:top center;
@@ -134,34 +134,36 @@ a {
     border-color: #1861ac;
 }
 
+/*Nav bar appearance*/
+
+
+.nav-link text-dark {
+    padding-bottom: 5px;
+    border-bottom: 2px solid;
+}
+
+
+
 .nav-pills, .nav-pills .show > .nav-link {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
 
-
-    .nav-link.active {
-        color: #d7d7d7;
-        border-radius: 4px;
-        background-color: rgba(30,144,255,0.25);
-    }
-
-    .nav-link:hover {
-        border-radius: 4px;
-        background-color: rgba(30,144,255,0.1);
-        color: white;
-    }
-
-    #TravelClubInfo {
-    vertical-align: text-top;
-    text-align: left;
-    }
+.nav-link.active {
+    border-bottom: 2px solid #009ee0;
+    color: white;
+}
 
 .nav-link:hover {
-    border-radius: 4px;
-    background-color: rgba(30,144,255,0.1);
+    /*background-color: rgba(30,144,255,0.1);*/
+    border-bottom: 2px solid #e39a1a;
     color: white;
+}
+
+#TravelClubInfo {
+vertical-align: text-top;
+text-align: left;
 }
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -212,11 +214,6 @@ body {
     line-height: 60px; /* Vertically center the text there */
 }
 
-
-
-.form-group.home-search {
+.form-group.home-search{
     width: 19%;
-}
-.form-control {
-    width: 100% !important;
 }
