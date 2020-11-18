@@ -50,6 +50,10 @@
         <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
     </BSFormGroup>
     <BSFormGroup>
+        <BSLabel For="PublisherID">Input en relevant account ID. (Dette skal gøre automatisk senere, lige midlertidig løsning)</BSLabel>
+        <BSInput InputType="InputType.Number" Id="PublisherID" @bind-Value="@formsModelVal.PublisherID"></BSInput>
+    </BSFormGroup>
+    <BSFormGroup>
         <BSLabel For="DepartureAirport">Afrejse Lufthavn</BSLabel>
         <BSInput InputType="InputType.Text" Id="DepartureAirport" @bind-Value="@formsModelVal.DepartureAirport"></BSInput>
     </BSFormGroup>
@@ -129,6 +133,7 @@
             v.ImageLink = formsModelVal.ImageLink;
             v.Description = formsModelVal.Description;
             v.FK_DestinationID = activeDestination;
+            v.FK_PublisherID = formsModelVal.PublisherID;
             v.DepartureAirport = formsModelVal.DepartureAirport;
             v.TravelBureauWebsiteLink = formsModelVal.TravelBureauWebsiteLink;
             v.InsertVacationToDatabase();
@@ -196,6 +201,9 @@
 
             [Required]
             public int minNumberOfUsers { get; set; }
+
+            [Required]
+            public int PublisherID { get; set; }
 
             [Required]
             [StringLength(1000, ErrorMessage = "Beskrivelse for lang (1000 character limit).")]

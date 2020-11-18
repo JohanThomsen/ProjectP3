@@ -23,6 +23,7 @@ namespace TravelClubProto.Data
         public int MinNumberOfUsersExceeded { get; set; }
         public string Description { get; set; }
         public int FK_DestinationID { get; set; }
+        public int FK_PublisherID { get; set; }
         public DateTime GracePeriodLength { get; set; }
         public string ImageLink { get; set; }
         public string DepartureAirport { get; set; }
@@ -54,8 +55,9 @@ namespace TravelClubProto.Data
         //Constructor from insertion form
         public Vacation(List<int> stretchGoals, List<decimal> prices, DataAccessService daService)
         {
-            AddPrices(stretchGoals, prices);
             DaService = daService;
+            AddPrices(stretchGoals, prices);  
+            VacAdmin = new VacationAdministrator(daService, ID);
         }
 
         //Constructor from Database
@@ -181,8 +183,8 @@ namespace TravelClubProto.Data
             try
             {
                 //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string query = "INSERT INTO [dbo].[Vacation] (State, MinNumberOfusers, MinNumberOfUsersExceeded, ProposalDate, Deadline, GracePeriodLength, PriceChangeDate, FK_DestinationID, Description, TravelDate, LeaveDate, ImageLink, DepartureAirport, TravelBureauWebsiteLink)" +
-                               " VALUES(@State, @MinNumberOfusers, @MinNumberOfUsersExceeded, @ProposalDate, @Deadline, @GracePeriodLength, @PriceChangeDate, @FK_DestinationID, @Description, @TravelDate, @LeaveDate, @ImageLink, @DepartureAirport, @TravelBureauWebsiteLink)";
+                string query = "INSERT INTO [dbo].[Vacation] (State, MinNumberOfusers, MinNumberOfUsersExceeded, ProposalDate, Deadline, GracePeriodLength, PriceChangeDate, FK_DestinationID, Description, TravelDate, LeaveDate, ImageLink, DepartureAirport, TravelBureauWebsiteLink, FK_PublisherID)" +
+                               " VALUES(@State, @MinNumberOfusers, @MinNumberOfUsersExceeded, @ProposalDate, @Deadline, @GracePeriodLength, @PriceChangeDate, @FK_DestinationID, @Description, @TravelDate, @LeaveDate, @ImageLink, @DepartureAirport, @TravelBureauWebsiteLink, @FK_PublisherID)";
                 //SqlCommand is used to build up commands
                 SqlCommand sqlCommand = new SqlCommand(query, con);
                 con.Open();
@@ -194,6 +196,7 @@ namespace TravelClubProto.Data
                 sqlCommand.Parameters.AddWithValue("@GracePeriodLength", Dates["GracePeriodLength"]);
                 sqlCommand.Parameters.AddWithValue("@PriceChangeDate", Dates["PriceChangeDate"]);
                 sqlCommand.Parameters.AddWithValue("@FK_DestinationID", FK_DestinationID);
+                sqlCommand.Parameters.AddWithValue("@FK_PublisherID", FK_PublisherID);
                 sqlCommand.Parameters.AddWithValue("@Description", Description);
                 sqlCommand.Parameters.AddWithValue("@TravelDate", Dates["TravelDate"]);
                 sqlCommand.Parameters.AddWithValue("@LeaveDate", Dates["LeaveDate"]);
