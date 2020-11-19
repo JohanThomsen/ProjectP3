@@ -36,7 +36,6 @@ namespace TravelClubProto.Data
             }
         }
 
-        
         public void InsertNewDestination(string hotel, string location)
         {
 

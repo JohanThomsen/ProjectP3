@@ -20,57 +20,62 @@ namespace TravelClubProto.Data
 
         public void OnStateChange(string state, string oldState)
         {
-            switch (state)
+            if (oldState != null)
             {
-                case "Published":
-                    if (oldState == "Proposed")
-                    {
-                        PublishVacation(state);
-                    } else
-                    {
-                        throw new InvalidStateException("Invalid new state");
-                    }
-                    break;
-                case "Rejected":
-                    if (oldState == "Proposed")
-                    {
-                        RejectProposal(state);
-                    }
-                    else
-                    {
-                        throw new InvalidStateException("Invalid new state");
-                    }
-                    
-                    break;
-                case "Canceled":
-                    CancelVacation(state);
-                    break;
-                case "GracePeriod":
-                    if (oldState == "Published")
-                    {
-                        StartGracePeriod(state);
-                    }
-                    else
-                    {
-                        throw new InvalidStateException("Invalid new state");
-                    }
-                    break;
-                case "Completed":
-                    if (oldState == "GracePeriod")
-                    {
-                        CompleteVacation(state);
-                    }
-                    else
-                    {
-                        throw new InvalidStateException("Invalid new state");
-                    }
-                    break;
-                case "Proposed":
-                    ResetVacation();
-                    break;
-                default:
-                    throw new InvalidStateException("Invalid new state");
+                switch (state)
+                {
+                    case "Published":
+                        if (oldState == "Proposed")
+                        {
+                            PublishVacation(state);
+                        }
+                        else
+                        {
+                            throw new InvalidStateException("Invalid new state");
+                        }
+                        break;
+                    case "Rejected":
+                        if (oldState == "Proposed")
+                        {
+                            RejectProposal(state);
+                        }
+                        else
+                        {
+                            throw new InvalidStateException("Invalid new state");
+                        }
+
+                        break;
+                    case "Canceled":
+                        CancelVacation(state);
+                        break;
+                    case "GracePeriod":
+                        if (oldState == "Published")
+                        {
+                            StartGracePeriod(state);
+                        }
+                        else
+                        {
+                            throw new InvalidStateException("Invalid new state");
+                        }
+                        break;
+                    case "Completed":
+                        if (oldState == "GracePeriod")
+                        {
+                            CompleteVacation(state);
+                        }
+                        else
+                        {
+                            throw new InvalidStateException("Invalid new state");
+                        }
+                        break;
+                    case "Proposed":
+                        ResetVacation();
+                        break;
+                    default:
+                        break;
+                }
             }
+            
         }
 
 
