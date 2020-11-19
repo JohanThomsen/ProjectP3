@@ -4,6 +4,8 @@
 @using TravelClubProto.Pages
 @using Microsoft.AspNetCore
 @inject DataAccessService DaService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
 <h3>Se ferier</h3>
 
 @foreach (Vacation vac in vacations)
@@ -38,6 +40,8 @@
                 priceIntervalHolder += vac.Prices[i] + "kr.";
                 <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
             }
+
+
         </p>
         <span class="progressBarGenerator">
             @for (int i = 0; i < vac.StretchGoals.Count; i++)
@@ -45,7 +49,13 @@
                 <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
 
             }
+        <span>
+            <BSButton @onclick="@(e => FavouriteVacation(vac))" Color="Color.Primary">Favorisere ferie</BSButton>
+            <a class="btn btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
         </span>
+        </span>
+
+
         <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
 
@@ -53,11 +63,14 @@
 }
 
 @code {
+    int customerID;
     public List<Vacation> vacations;
     protected override async Task OnInitializedAsync()
     {
         vacations = await DaService.GetAllVacations(DaService);
     }
+
+
     @*Calculates progress bar fill value from joined user and stretch goals*@
     int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
     {
@@ -76,5 +89,25 @@
         {
             return joinedUsers - prevGoal;
         }
+    }  
+
+    public async void checkCookie()
+    {
+        string cookie = await localStorage.GetItemAsStringAsync("login");
+        string[] splitCookie = cookie.Split(",");
+        if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
+        {
+            customerID = Convert.ToInt32(splitCookie[0]);
+        }
     }
+
+    public void FavouriteVacation(Vacation vac)
+    {
+        checkCookie();
+        vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
+    }
+    
+    
+
+
 }

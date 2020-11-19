@@ -38,6 +38,8 @@ namespace TravelClubProto.Data
 
                     //The built commands are executed
                     sqlCommand.ExecuteNonQuery();
+
+                    
                 }
                 //Catches the error and prints it
                 catch (Exception e)
