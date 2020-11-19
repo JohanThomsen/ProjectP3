@@ -9,149 +9,140 @@
 @inject DataAccessService DaService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-
-<h3>Mit TravelClub</h3>
-
 @if (DaService.LoggedInType == "Customer")
 {
-    
-
-        <BSRow class="container">
-            <div class="borderlines">
-
-
+<BSJumbotron>
+    <h3>Mit TravelClub</h3>
+    <BSRow Class="borderlines">
+        <BSCol>
             <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <BSCol>
-                <div class="borderlines">
-                    <div class="mytravelclubnavigation">
 
-                    </div>
-                    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-                        <BSNav IsList="true" IsVertical="true">
-                            <li class="nav-item">
 
-                                <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
-                                    <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="EditProfile">
-                                    <span class="oi oi-cog" aria-hidden="true"></span> Min profil
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="JoinedVacations">
-                                    <span class="oi oi-globe" aria-hidden="true"></span> Tilmeldte feriepakker
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="PriceAgents">
-                                    <span class="oi oi-bell" aria-hidden="true"></span> Prisagenter
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="FavouritedVacations">
-                                    <span class="oi oi-heart" aria-hidden="true"></span> Favoriserede feriepakker
-                                </NavLink>
-                            </li>
-                            <li class="nav-item" @onclick="LogOut">
-                                <NavLink class="nav-link text-dark" href="">
-                                    <span class="oi oi-account-logout" aria-hidden="true"></span> Log ud
-                                </NavLink>
-                            </li>
-                        </BSNav>
-                    </div>
+                <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+                    <BSNav IsList="true" IsVertical="true">
+                        <li class="nav-item">
+
+                            <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
+                                <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link text-dark" href="EditProfile">
+                                <span class="oi oi-cog" aria-hidden="true"></span> Min profil
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link text-dark" href="JoinedVacations">
+                                <span class="oi oi-globe" aria-hidden="true"></span> Tilmeldte feriepakker
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link text-dark" href="PriceAgents">
+                                <span class="oi oi-bell" aria-hidden="true"></span> Prisagenter
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link text-dark" href="FavouritedVacations">
+                                <span class="oi oi-heart" aria-hidden="true"></span> Favoriserede feriepakker
+                            </NavLink>
+                        </li>
+                        <li class="nav-item" @onclick="LogOut">
+                            <NavLink class="nav-link text-dark" href="">
+                                <span class="oi oi-account-logout" aria-hidden="true"></span> Log ud
+                            </NavLink>
+                        </li>
+                    </BSNav>
                 </div>
-            </BSCol>
-
+        </BSCol>
 
 
             <BSCol>
-                <div class="mytravelclubrightside">
-
-                    <BSContainer>
-                        <BSRow>
-                            <BSCol class="borderlines">
-                                <BSCol>
-                                    <NavLink class="text-dark" href="MyProfile">
-                                        <div class="iconcolumn">
-                                            <span class=" oi oi-cog"></span>
-                                        </div>
-                                    </NavLink>
-                                </BSCol>
-                                <BSCol>
-                                    <NavLink class="text-dark" href="MyProfile">
-                                        <div class="icontext">
-                                            <h3>Min profil</h3> <br />
-                                            <p>Klik her, for at gå til din profil</p>
-                                        </div>
-                                    </NavLink>
-
-                                </BSCol>
+                <BSRow>
+                    <BSCol>
+                        <BSRow Class="borderlines">
+                            <BSCol>
+                                <NavLink class="text-dark" href="MyProfile">
+                                    <div class="iconcolumn">
+                                        <span class=" oi oi-cog"></span>
+                                    </div>
+                                </NavLink>
                             </BSCol>
-
-                            <BSCol class="borderlines">
-                                <BSCol>
-                                    <NavLink class="text-dark" href="JoinedVacations">
-                                        <div class="iconcolumn">
-                                            <span class="oi oi-globe" aria-hidden="true"></span>
-                                        </div>
-                                    </NavLink>
-                                </BSCol>
-                                <BSCol>
-                                    <NavLink class="text-dark" href="JoinedVacations">
-                                        <div class="icontext">
-                                            <h3>Tilmeldte feriepakker</h3>
-                                            <p>Klik her, for at gå til dine tilmeldte feriepakker</p>
-                                        </div>
-                                    </NavLink>
-                                </BSCol>
+                            <BSCol>
+                                <NavLink class="text-dark" href="MyProfile">
+                                    <div class="icontext">
+                                        <h3>Min profil</h3>
+                                        <p>Klik her, for at gå til din profil</p>
+                                    </div>
+                                </NavLink>
                             </BSCol>
                         </BSRow>
-
-                        <BSRow>
-                            <BSCol class="borderlines">
-                                <BSCol>
-                                    <NavLink class="text-dark" href="PriceAgents">
-                                        <div class="iconcolumn">
-                                            <span class="oi oi-bell" aria-hidden="true"></span>
-                                        </div>
-                                    </NavLink>
-                                </BSCol>
-                                <BSCol>
-                                    <NavLink class="text-dark" href="PriceAgents">
-                                        <div class="icontext">
-                                            <h3>Prisagenter</h3> <br />
-                                            <p>Klik her, for at gå til dine prisagenter</p>
-                                        </div>
-                                    </NavLink>
-                                </BSCol>
+                    </BSCol>
+                    <BSCol>
+                        <BSRow Class="borderlines">
+                            <BSCol>
+                                <NavLink class="text-dark" href="JoinedVacations">
+                                    <div class="iconcolumn">
+                                        <span class="oi oi-globe" aria-hidden="true"></span>
+                                    </div>
+                                </NavLink>
                             </BSCol>
-
-                            <BSCol class="borderlines">
-                                <BSCol>
-                                    <NavLink class="text-dark" href="FavouritedVacations">
-                                        <div class="iconcolumn">
-                                            <span class="oi oi-heart" aria-hidden="true"></span>
-                                        </div>
-                                    </NavLink>
-                                </BSCol>
-                                <BSCol>
-                                    <NavLink class="text-dark" href="FavouritedVacations">
-                                        <div class="icontext">
-                                            <h3>Favoriserede feriepakker</h3>
-                                            <p>Klik her, for at gå til dine favoriserede feriepakker</p>
-                                        </div>
-                                    </NavLink>
-                                </BSCol>
+                            <BSCol>
+                                <NavLink class="text-dark" href="JoinedVacations">
+                                    <div class="icontext">
+                                        <h3>Tilmeldte feriepakker</h3>
+                                        <p>Klik her, for at gå til dine tilmeldte feriepakker</p>
+                                    </div>
+                                </NavLink>
                             </BSCol>
                         </BSRow>
-                    </BSContainer>
-                </div>
-            </BSCol>
-        </BSRow>
+                    </BSCol>
+                </BSRow>
+
+                <BSRow>
+                    <BSCol>
+                        <BSRow Class=" borderlines">
+                            <BSCol>
+                                <NavLink class="text-dark" href="PriceAgents">
+                                    <div class="iconcolumn">
+                                        <span class="oi oi-bell" aria-hidden="true"></span>
+                                    </div>
+                                </NavLink>
+                            </BSCol>
+                            <BSCol>
+                                <NavLink class="text-dark" href="PriceAgents">
+                                    <div class="icontext">
+                                        <h3>Prisagenter</h3>
+                                        <p>Klik her, for at gå til dine prisagenter</p>
+                                    </div>
+                                </NavLink>
+                            </BSCol>
+                        </BSRow>
+                    </BSCol>
+                    <BSCol>
+                        <BSRow Class="borderlines">
+                            <BSCol>
+                                <NavLink class="text-dark" href="FavouritedVacations">
+                                    <div class="iconcolumn">
+                                        <span class="oi oi-heart" aria-hidden="true"></span>
+                                    </div>
+                                </NavLink>
+                            </BSCol>
+                            <BSCol>
+                                <NavLink class="text-dark" href="FavouritedVacations">
+                                    <div class="icontext">
+                                        <h3>Favoriserede feriepakker</h3>
+                                        <p>Klik her, for at gå til dine favoriserede feriepakker</p>
+                                    </div>
+                                </NavLink>
+                            </BSCol>
+                        </BSRow>
+                    </BSCol>
+                </BSRow>
+        </BSCol>
+    </BSRow>
+</BSJumbotron>
 }
 
 
@@ -225,10 +216,10 @@ else if (DaService.LoggedInType == "TravelClub")
                 </ul>
             </div>
         </nav>
-            </div>
     </div>
 
 }
+
 
 
 

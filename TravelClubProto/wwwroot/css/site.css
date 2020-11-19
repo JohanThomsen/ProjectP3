@@ -1,9 +1,8 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-
-.jumbotron {
-    background-color: #f7fbfc;
-    border: 1px solid rgb(149, 168, 189);
+.mytravelclubrowrightside{
+    width:25%;
 }
+
 
 *{
     box-sizing: border-box;
@@ -81,13 +80,13 @@
 }
 
 .mytravelclubnavigation{
-    width:100%;
+    width:50%;
     float:left;
     
    
 }
 .mytravelclubrightside {
-    width:100%;
+    width:50%;
     float:right;
 }
 .ViewVacationImage {
