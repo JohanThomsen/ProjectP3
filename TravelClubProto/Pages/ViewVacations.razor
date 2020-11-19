@@ -12,59 +12,144 @@
 {
     int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
     int stretchGoalsMax = vac.StretchGoals.Max();
-    <BSJumbotron>
-
-
-        <a class="" href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
-            <div class="ViewVacationImage">
-                <BSFigureImage src="@vac.ImageLink" />
-            </div>
-        </a>
-        <div class="ViewDescriptionRow">
-            <div class="VacationHotelColumn">
-                <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                <h10>ID:  @vac.ID </h10>
-
-                <h2>Feriebeskrivelse: </h2>
-                <p>@vac.Description</p>
-            </div>
+<BSJumbotron>
+    <a class="" href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
+        <div class="ViewVacationImage">
+            <BSFigureImage src="@vac.ImageLink" />
         </div>
+    </a>
+    <div class="ViewDescriptionRow">
+        <div class="VacationHotelColumn">
+            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+            <h10>ID:  @vac.ID </h10>
 
-        <br />
+            <h2>Feriebeskrivelse: </h2>
+            <p>@vac.Description</p>
+        </div>
+    </div>
 
-        <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-        <p>
-            @for (int i = 0; i < @vac.Prices.Count; i++)
-            {
-                string priceIntervalHolder = "";
-                priceIntervalHolder += vac.Prices[i] + "kr.";
-                <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
-            }
+    <br />
+
+    <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+    <p>
+        @for (int i = 0; i < @vac.Prices.Count; i++)
+        {
+            string priceIntervalHolder = "";
+            priceIntervalHolder += vac.Prices[i] + "kr.";
+            <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
+        }
 
 
-        </p>
-        <span class="progressBarGenerator">
-            @for (int i = 0; i < vac.StretchGoals.Count; i++)
-            {
-                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+    </p>
+    <span class="progressBarGenerator">
+        @for (int i = 0; i < vac.StretchGoals.Count; i++)
+        {
+            <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
 
-            }
+        }
         <span>
             <BSButton @onclick="@(e => FavouriteVacation(vac))" Color="Color.Primary">Favorisere ferie</BSButton>
             <a class="btn btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
         </span>
-        </span>
+    </span>
+
+    @*MODAL FOR LOGIN PROMPT*@
+    <BSModal @ref="LoginModal" IsCentered="true">
+        <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
+        <BSModalBody>
+            <p>
+                @notloggedinfeedback <br /><br />
+                <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+
+                    <BSFormGroup>
+                        @*Input for user email*@
+                        <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                        <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                    </BSFormGroup>
+
+                    <BSFormGroup>
+                        @*Input for user password*@
+                        <BSLabel for="InputPassword">Kodeord</BSLabel>
+                        <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                    </BSFormGroup>
+
+                    <BSFormGroup IsCheck="true">
+                        @*Remember me check box*@
+                        <BSInput Id="ModalCheck" InputType="InputType.Checkbox" @bind-Value="formsModelVal.Valid"></BSInput>
+                        <BSLabel IsCheck="true" For="ModalCheck">Husk mig</BSLabel>
+                    </BSFormGroup>
+
+                    @*Submit Button*@
+                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
+                </BSForm>
+            </p>
+        </BSModalBody>
+    </BSModal>
+
+    <BSModal @ref="WarningBox" Size="Size.Medium">
+        <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
+        <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
+    </BSModal>
 
 
-        <h6>Deadline: @vac.Dates["Deadline"]</h6>
-
-
-    </BSJumbotron>
+    <h6>Deadline: @vac.Dates["Deadline"]</h6>
+</BSJumbotron>
 }
 
 @code {
+    BSModal LoginModal;
+    BSModal WarningBox { get; set; }
     int customerID;
     public List<Vacation> vacations;
+    string notloggedinfeedback;
+
+    void OnToggleLogin(MouseEventArgs e)
+    {
+        LoginModal.Toggle();
+    }
+
+    async void LogInToProfile(MouseEventArgs e)
+    {
+        //returnerer ID ved succes og -1 ved fail
+        int ID = await Account.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
+
+        LoginModal.Toggle();
+
+        if (DaService.LoggedIn == false)
+        {
+            WarningBox.Toggle();
+
+        }
+        else
+        {
+            DateTime expiry = DateTime.Now.AddHours(2);
+            await localStorage.ClearAsync();
+            await localStorage.SetItemAsync("login", ID + "," + expiry);
+        }
+    }
+
+
+    public class FormsModelVal
+    {
+        [Required]
+        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(20, ErrorMessage = "password too long (20 character limit).")]
+        public string Password { get; set; }
+
+        [Required]
+        public Boolean Valid { get; set; }
+    }
+    FormsModelVal formsModelVal = new FormsModelVal();
+
+    void ConsoleWrite()
+    {
+        Console.WriteLine("Form succesfully submitted");
+    }
+
+
     protected override async Task OnInitializedAsync()
     {
         vacations = await DaService.GetAllVacations(DaService);
@@ -72,42 +157,51 @@
 
 
     @*Calculates progress bar fill value from joined user and stretch goals*@
-    int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
-    {
-        int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
-        int prevGoal = stretchGoals[prevIndex];
+int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
+{
+    int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
+    int prevGoal = stretchGoals[prevIndex];
 
-        if (joinedUsers >= currGoal)
-        {
-            return currGoal;
-        }
-        else if (currGoal.Equals(stretchGoals[0]))
-        {
-            return joinedUsers;
-        }
-        else
-        {
-            return joinedUsers - prevGoal;
-        }
-    }  
-
-    public async void checkCookie()
+    if (joinedUsers >= currGoal)
     {
-        string cookie = await localStorage.GetItemAsStringAsync("login");
-        string[] splitCookie = cookie.Split(",");
-        if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
-        {
-            customerID = Convert.ToInt32(splitCookie[0]);
-        }
+        return currGoal;
     }
-
-    public void FavouriteVacation(Vacation vac)
+    else if (currGoal.Equals(stretchGoals[0]))
     {
-        checkCookie();
+        return joinedUsers;
+    }
+    else
+    {
+        return joinedUsers - prevGoal;
+    }
+}
+
+public async void checkCookie()
+{
+    string cookie = await localStorage.GetItemAsStringAsync("login");
+    string[] splitCookie = cookie.Split(",");
+    if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
+    {
+        customerID = Convert.ToInt32(splitCookie[0]);
+    }
+}
+
+public void FavouriteVacation(Vacation vac)
+{
+    checkCookie();
+    if (DaService.LoggedIn == true) {
+        notloggedinfeedback = string.Empty;
         vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
     }
-    
-    
+    else
+    {
+        notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
+        LoginModal.Toggle();
+    }
+
+}
+
+
 
 
 }
