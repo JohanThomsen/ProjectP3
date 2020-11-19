@@ -30,7 +30,6 @@
     height: inherit;
 }*/
 
-
 .ViewSingleVacationHotel{
     margin:1%;
 }
@@ -81,12 +80,14 @@
     /*float: left;*/
 }
 
-.navigation{
-    width:20%;
+.mytravelclubnavigation{
+    width:100%;
     float:left;
+    
+   
 }
-.rightside {
-    width:80%;
+.mytravelclubrightside {
+    width:100%;
     float:right;
 }
 .ViewVacationImage {
@@ -95,24 +96,19 @@
     margin-top: 1%;
     float: right;
 }
-.cogwheel{
+.iconcolumn{
    width:10%;
    float:left;
+   margin-top:20%;
+   margin-left:-10%;
+   font-size:xx-large;
   
 }
-.cogtext {
+.icontext {
     width: 90%;
     float: right;
 }
-.globe {
-    width: 10%;
-    float: left;
-   
-}
-.globetext {
-    width: 90%;
-    float: right;
-}
+
 .menu-column {
     width: 60%;
     float: inherit;
