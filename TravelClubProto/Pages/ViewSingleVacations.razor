@@ -12,6 +12,7 @@
 @using TravelClubProto.Data;
 
 @inject DataAccessService DaService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 
 
@@ -55,16 +56,21 @@
                         <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
                     }
                 </p>
-            <span class="progressBarGenerator">
-                @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                {
-                    <progress class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                <span class="progressBarGenerator">
+                    @for (int i = 0; i < vac.StretchGoals.Count; i++)
+                    {
+                        <progress class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
 
-                }
-            </span>
+                    }
+                </span>
 
-                @*<button class="btn btn-secondary" @onclick="JoinVacation">Tilmeld ferie</button>*@
-                @*<button class="btn btn-secondary" @onclick="FavouriteVacation">Favorisere ferie</button>*@
+                <br />
+
+                <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
+                <BSButton @onclick="@(e => FavouriteVacation(vac))" Color="Color.Primary">Favorisere ferie</BSButton>
+
+
+
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
                 <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
@@ -75,8 +81,10 @@
 
 
 @code {
+
     int joinedUsersHolder;
     int stretchGoalsMax;
+    int customerID;
     Vacation vac = null;
     public List<Vacation> vacations;
     protected override async Task OnInitializedAsync()
@@ -84,7 +92,31 @@
         vac = await DaService.GetVacationByID(DaService, Convert.ToInt32(VacationID));
         joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
         stretchGoalsMax = vac.StretchGoals.Max();
+
     }
+
+    public async void checkCookie()
+    {
+        string cookie = await localStorage.GetItemAsStringAsync("login");
+        string[] splitCookie = cookie.Split(",");
+        if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
+        {
+            customerID = Convert.ToInt32(splitCookie[0]);
+        }
+    }
+
+    public void JoinVacation(Vacation vac)
+    {
+        checkCookie();
+        vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Joined");
+    }
+
+    public void FavouriteVacation(Vacation vac)
+    {
+        checkCookie();
+        vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
+    }
+
 
     [Parameter]
     public string VacationID { get; set; }
