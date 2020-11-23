@@ -61,20 +61,12 @@
                     }
                 </span>
 
-                <span class="progressBarGenerator">
-                    @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                    {
-                        <progress class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
-
-                    }
-                </span>
 
                 <br />
 
                 <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
                 <BSButton @onclick="@(e => FavouriteVacation(vac))" Color="Color.Primary">Favorisere ferie</BSButton>
 
-                
                 @*MODAL FOR LOGIN PROMPT*@
                 <BSModal @ref="LoginModal" IsCentered="true">
                     <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>

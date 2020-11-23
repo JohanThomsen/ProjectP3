@@ -32,7 +32,8 @@
         <br />
 
         <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-        <p>
+
+        <span class="progressBarGenerator">
             @for (int i = 0; i < vac.StretchGoals.Count; i++)
             {
                 <span class="progStretchGoal">
@@ -41,14 +42,6 @@
                     </div>
                     <progress role="progressbar" class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)>hej</progress>
                 </span>
-            }
-
-
-        </p>
-        <span class="progressBarGenerator">
-            @for (int i = 0; i < vac.StretchGoals.Count; i++)
-            {
-                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
             }
             <h6>Deadline: @vac.Dates["Deadline"]</h6>
             <span>
