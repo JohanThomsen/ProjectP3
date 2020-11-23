@@ -27,6 +27,7 @@ namespace TravelClubProto
             Configuration = configuration;
             aTimer = new Timer();
             UpdateDatabaseForDeadline(aTimer);
+            //CheckForDeadlines();
         }
 
         public IConfiguration Configuration { get; }
@@ -71,7 +72,7 @@ namespace TravelClubProto
 
         private void UpdateDatabaseForDeadline(Timer aTimer)
         {
-            aTimer.Interval = 60000;
+            aTimer.Interval = 10000;
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
@@ -84,14 +85,19 @@ namespace TravelClubProto
 
             foreach (Vacation vacation in vacs)
             {
+                Console.WriteLine(vacation);
                 if ((vacation.Dates["Deadline"] < DateTime.Now) && (vacation.State == "Published"))
                 {
                     vacation.State = "GracePeriod";
                 }
                 else if ((vacation.Dates["GracePeriodLength"] < DateTime.Now) && (vacation.State == "GracePeriod"))
                 {
-                    vacation.State = "Deadline";
+                    vacation.State = "Completed";
                 }
+                /*else if ((vacation.Dates["Deadline"] < DateTime.Now) && (vacation.State == "Proposed"))
+                {
+                    vacation.State = "Rejected";
+                }*/
             }
         }
 

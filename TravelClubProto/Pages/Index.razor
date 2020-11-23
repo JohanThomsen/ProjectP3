@@ -1,10 +1,25 @@
 ﻿@page "/"
-
+@using Blazored.Typeahead
+@using TravelClubProto.Data
+@inject DataAccessService DaService
 <div class="SearchFields">
+    
+
     <BSJumbotron IsFluid="true">
         <BSContainer>
             <BSForm Model="@formsModelVal">
                 <BSBasicForm IsInline="true">
+
+
+                    <BlazoredTypeahead SearchMethod="SearchVacationAirport" @bind-Value="formsModelVal.Afrejselufthavn" Context="Departure" EnableDropDown="true" ShowDropDownOnFocus="true">
+                        <SelectedTemplate>@Departure</SelectedTemplate>
+                        <ResultTemplate>@Departure</ResultTemplate>
+                    </BlazoredTypeahead>
+
+                    <BlazoredTypeahead SearchMethod="SearchVacationDestination" @bind-Value="formsModelVal.Rejsemål" Context="Destination">
+                        <SelectedTemplate>@Destination</SelectedTemplate>
+                        <ResultTemplate>@Destination</ResultTemplate>
+                    </BlazoredTypeahead>
 
                     <BSFormGroup Class="home-search">
                         <BSLabel for="InputEmail"></BSLabel>
@@ -99,12 +114,6 @@
                     <BSFigureCaption>Ghana</BSFigureCaption>
                 </div>
             </div>
-
-
-
-
-
-
         </BSFigure>
     </BSJumbotron>
 </div>
@@ -115,25 +124,59 @@
 
 @code
 {
+    private List<Vacation> vacations;
+    private List<string> airports = new List<string>();
+    private List<string> destinations = new List<string>();
+    protected override async Task OnInitializedAsync()
+    {
+        vacations = await DaService.GetAllVacations(DaService);
+        foreach (Vacation vac in vacations)
+        {
+            if (!(airports.Contains(vac.DepartureAirport)))
+            {
+                airports.Add(vac.DepartureAirport);
+            }
+
+        }
+
+        foreach (Vacation vac in vacations)
+        {
+            if (!(destinations.Contains(vac.Destination.CountryLocationHotel)))
+            {
+                destinations.Add(vac.Destination.CountryLocationHotel);
+            }
+        }
+    }
+
+    private async Task<IEnumerable<string>> SearchVacationAirport(string searchText)
+    {
+        return await Task.FromResult(airports.Where(x => x.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+
+    private async Task<IEnumerable<string>> SearchVacationDestination(string searchText)
+    {
+        return await Task.FromResult(destinations.Where(x => x.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+
     public class FormsModelVal
     {
-        
+
         [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
         public string Afrejselufthavn { get; set; }
 
-        
+
         [StringLength(50, ErrorMessage = "password too long (20 character limit).")]
         public string Rejsemål { get; set; }
 
-        
+
         [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
         public string AfrejseDato { get; set; }
 
-        
+
         [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
         public string HjemrejseDato { get; set; }
 
-       
+
         [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
         public int AntalDeltagere { get; set; }
 

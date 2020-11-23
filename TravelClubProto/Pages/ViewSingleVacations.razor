@@ -21,6 +21,7 @@
 
 <p>@VacationID</p>
 
+
 <BSJumbotron Class="ViewSingleVacationJumbotron">
     <div class="SingleVacationContainer">
         <div class="ViewSingleVacationImage">
@@ -45,7 +46,7 @@
                 }
             </div>
 
-            
+
             <div class="ParticipantDetailColumn">
                 <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
                 <p>
@@ -69,7 +70,7 @@
                 <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
                 <BSButton @onclick="@(e => FavouriteVacation(vac))" Color="Color.Primary">Favorisere ferie</BSButton>
 
-                
+
                 @*MODAL FOR LOGIN PROMPT*@
                 <BSModal @ref="LoginModal" IsCentered="true">
                     <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
@@ -156,7 +157,7 @@
     public class FormsModelVal
     {
         [Required]
-        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
+        [StringLength(1 - 50, ErrorMessage = "email too long (50 character limit).")]
         public string Email { get; set; }
 
         [Required]
@@ -247,8 +248,7 @@
         }
     }
 
-
-
+    
     //async public void JoinVacation()
     //{
     //    List<Vacation> templit = await DaService.GetAllVacations(DaService);
