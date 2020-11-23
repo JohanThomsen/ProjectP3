@@ -10,46 +10,41 @@
 {
     int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
     int stretchGoalsMax = vac.StretchGoals.Max();
-    <BSJumbotron>
+<BSJumbotron>
 
 
-        <a class="" href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
-            <div class="ViewVacationImage">
-                <BSFigureImage src="@vac.ImageLink" />
-            </div>
-        </a>
-        <div class="ViewDescriptionRow">
-            <div class="VacationHotelColumn">
-                <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                <h10>ID:  @vac.ID </h10>
-
-                <h2>Feriebeskrivelse: </h2>
-                <p>@vac.Description</p>
-            </div>
+    <a class="" href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
+        <div class="ViewVacationImage">
+            <BSFigureImage src="@vac.ImageLink" />
         </div>
+    </a>
+    <div class="ViewDescriptionRow">
+        <div class="VacationHotelColumn">
+            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+            <h10>ID:  @vac.ID </h10>
 
-        <br />
+            <h2>Feriebeskrivelse: </h2>
+            <p>@vac.Description</p>
+        </div>
+    </div>
 
-        <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-        <p>
-            @for (int i = 0; i < @vac.Prices.Count; i++)
-            {
-                string priceIntervalHolder = "";
-                priceIntervalHolder += vac.Prices[i] + "kr.";
-                <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
-            }
-        </p>
-        <span class="progressBarGenerator">
-            @for (int i = 0; i < vac.StretchGoals.Count; i++)
-            {
-                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
-
-            }
-        </span>
+    <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+    
+    <p class="font-italic text-muted"></p>
+   
+    <span role="progressbar" class="progressBarGenerator">
+        @for (int i = 0; i < vac.StretchGoals.Count; i++)
+        { 
+            <span class="progStretchGoal">
+                <div >
+                    @(vac.Prices[i]+ " kr.")
+                </div>
+                <progress role="progressbar" class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)>hej</progress>
+            </span>
+        }
+    </span>
         <h6>Deadline: @vac.Dates["Deadline"]</h6>
-
-
-    </BSJumbotron>
+</BSJumbotron>
 }
 
 @code {
@@ -59,22 +54,22 @@
         vacations = await DaService.GetAllVacations(DaService);
     }
     @*Calculates progress bar fill value from joined user and stretch goals*@
-    int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
-    {
-        int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
-        int prevGoal = stretchGoals[prevIndex];
+int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
+{
+    int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
+    int prevGoal = stretchGoals[prevIndex];
 
-        if (joinedUsers >= currGoal)
-        {
-            return currGoal;
-        }
-        else if (currGoal.Equals(stretchGoals[0]))
-        {
-            return joinedUsers;
-        }
-        else
-        {
-            return joinedUsers - prevGoal;
-        }
+    if (joinedUsers >= currGoal)
+    {
+        return currGoal;
     }
+    else if (currGoal.Equals(stretchGoals[0]))
+    {
+        return joinedUsers;
+    }
+    else
+    {
+        return joinedUsers - prevGoal;
+    }
+}
 }

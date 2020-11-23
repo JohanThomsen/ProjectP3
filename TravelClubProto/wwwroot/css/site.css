@@ -3,30 +3,35 @@
 .jumbotron {
     background-color: #f7fbfc;
     border: 1px solid rgb(149, 168, 189);
+    border-radius:0;
 }
 
 *{
     box-sizing: border-box;
 }
 
-/*Progressbar Appearnce*/
+/*Progressbar Appearance
+--------------------------------------------------------------------------------*/
+.progressBarGeneratorVS{
+    height:1%;
+    width: 1%;
+}
 progress.progressBarJoinedUsers {
     -webkit-appearance: none;
     height: 2em;
-    width: 4em;
+    width: 6em;
 }
 
 progress.progressBarJoinedUsersVS {
     -webkit-appearance: none;
     height: 2em;
-    width: 4em;
+    width: 5em;
 }
 
 .progressBarJoinedUsers::-webkit-progress-bar {
     background-color: rgba(30,144,255,0.1);
     background-image: none;
-    border-radius: 10%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25) inset;
 }
 
 .progressBarJoinedUsers::-webkit-progress-value {
@@ -36,24 +41,32 @@ progress.progressBarJoinedUsersVS {
 .progressBarJoinedUsersVS::-webkit-progress-bar {
     background-color: rgba(30,144,255,0.1);
     background-image: none;
-    border-radius: 10%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25) inset;
+    
 }
 
 .progressBarJoinedUsersVS::-webkit-progress-value {
     background-color: rgba(30,144,255,1);
 }
 
+.progressBarJoinedUsers[value]::-webkit-progress-value::before {
+    content: attr(content);
+    position: absolute;
+    right: 0;
+    top: -125%;
+}
+.progStretchGoal{
+    float:left;
+}
 
+.progStretchGoalVS{
+    float: left;
+}
 
-/*.VacFigures{
-    width: inherit;
-    height: inherit;
-}*/
+/*View singele vacations layout*/
 
-
-.ViewSingleVacationHotel{
-    margin:1%;
+.ViewSingleVacationHotel {
+    margin: 1%;
 }
 
 .SingleVacationDescriptionColumn {
@@ -94,18 +107,14 @@ progress.progressBarJoinedUsersVS {
     border: 1px solid rgb(149, 168, 189)
 }
 
-
-.InputFieldIndex {
-    /*float: left;*/
-}
-
 .Column {
     float: left;
     width: 19%;
     margin: 0.5%;
 }
 
-/* Clear floats after the columns */
+/* Clear floats after the columns
+------------------------------------------------------------------------*/
 .Row:after {
     content: "";
     display: table;
@@ -141,7 +150,8 @@ progress.progressBarJoinedUsersVS {
 .Modal-title {
    width: 100%;
 }
-/* Provide sufficient contrast against white background */
+/* Provide sufficient contrast against white background
+------------------------------------------------------------*/
 a {
     color: #0366d6;
 }
@@ -152,7 +162,8 @@ a {
     border-color: #1861ac;
 }
 
-/*Nav bar appearance*/
+/*Nav bar appearance
+----------------------------------------------------------*/
 
 
 .nav-link text-dark Nav Bar {

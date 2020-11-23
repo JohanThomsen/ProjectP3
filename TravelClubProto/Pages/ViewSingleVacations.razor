@@ -47,27 +47,24 @@
             
             <div class="ParticipantDetailColumn">
                 <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-                <p>
-                    @for (int i = 0; i < @vac.Prices.Count; i++)
+          
+                <span class="progressBarGeneratorVS">
+                    @for (int i = 0; i < vac.StretchGoals.Count; i++)
                     {
-                        string priceIntervalHolder = "";
-                        priceIntervalHolder += vac.Prices[i] + "kr.";
-                        <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
+                        <span class="progStretchGoalVS">
+                            <div>
+                                @(vac.Prices[i]+ " kr.")
+                            </div>
+                            <progress role="progressbar" class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)><span>@vac.StretchGoals[i]</span></progress>
+                        </span>
                     }
-                </p>
-            <span class="progressBarGenerator">
-                @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                {
-                    <progress class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
-
-                }
-            </span>
+                </span>
 
                 @*<button class="btn btn-secondary" @onclick="JoinVacation">Tilmeld ferie</button>*@
                 @*<button class="btn btn-secondary" @onclick="FavouriteVacation">Favorisere ferie</button>*@
-                <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
                 <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
+                <h6>Deadline: @vac.Dates["Deadline"]</h6>
             </div>
         </div>
     </div>
