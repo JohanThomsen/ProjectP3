@@ -252,6 +252,7 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
+    font-family: Arial;
 }
 
 .footer {
@@ -268,4 +269,10 @@ body {
 
 .form-control {
     width: 100% !important;
+}
+
+.page_title {
+    text-align: center;
+    background: rgba(227,154,26,0.95);
+    color: white;
 }
