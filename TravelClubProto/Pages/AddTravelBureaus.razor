@@ -9,6 +9,103 @@
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
 
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+                    <ul class="navbar-nav flex-grow-1">
+                        <BSNav IsList="true" IsVertical="true">
+                            <li class="nav-item">
+                                <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
+                                    <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link text-dark" href="PublishVacation">
+                                    <span class="oi oi-cog" aria-hidden="true"></span> Udgiv feriepakker
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link text-dark" href="AdminVacationTravelClub">
+                                    <span class="oi oi-globe" aria-hidden="true"></span> Administrer feriepakker
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link text-dark" href="AddTravelBureaus">
+                                    <span class="oi oi-globe" aria-hidden="true"></span> Tilføj rejsebureauer
+                                </NavLink>
+                            </li>
+                        </BSNav>
+                    </ul>
+                </div>
+            </div>
+            <div class="vacation-column">
+                <h4>Tilføj rejsebureauer</h4>
+                <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+
+                    <BSFormGroup>
+                        @*Input for user email*@
+                        <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                        <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                    </BSFormGroup>
+
+                    <BSFormGroup>
+                        @*Input for user password*@
+                        <BSLabel for="InputPassword">Kodeord</BSLabel>
+                        <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                    </BSFormGroup>
+
+                    @*Submit Button*@
+                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret rejsebureau</BSButton>
+                </BSForm>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
 @code {
+
+    bool collapseNavMenu = true;
+
+    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+
+    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+
+    void ConsoleWrite()
+    {
+        Console.WriteLine("Form succesfully submitted");
+    }
+
+    void SaveProfileToTables(MouseEventArgs e)
+    {
+        TravelBureau TB = new TravelBureau(formsModelVal.Email, formsModelVal.Password, DaService);
+        TB.InsertIntoDatabase();
+    }
+
+    public class FormsModelVal
+    {
+        [Required]
+        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(20, ErrorMessage = "password too long (20 character limit).")]
+        public string Password { get; set; }
+
+        [Required]
+        public Boolean Valid { get; set; }
+    }
+    public FormsModelVal formsModelVal = new FormsModelVal();
 
 }

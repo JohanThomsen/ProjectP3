@@ -93,6 +93,7 @@ namespace TravelClubProto.Data
                             matchingDestination.ID = Convert.ToInt32(Reader["DestinationID"]);
                             matchingDestination.Hotel = Reader["Hotel"] as string;
                             matchingDestination.Location = Reader["Location"] as string;
+                            matchingDestination.Country = Reader["Country"] as string;
                         }
                         myConnection.Close();
                     }
