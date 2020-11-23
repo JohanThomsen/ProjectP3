@@ -1,5 +1,9 @@
 ﻿@page "/DeleteButtons"
 @using TravelClubProto.Data
+@using MailKit.Security
+@using MimeKit
+@using MimeKit.Text
+@using MailKit.Net.Smtp
 @inject DataAccessService DaService
 
 <h3>DeleteButtons</h3>
@@ -24,6 +28,8 @@
 <button class="btn btn-danger" @onclick="StartGracePeriod">Test GracePeriod</button>
 <button class="btn btn-danger" @onclick="CompleteVacation">Test Complete</button>
 <button class="btn btn-danger" @onclick="ResetVacation">Test Reset</button>
+<br />
+<button class="btn btn-dark"  @onclick="EmailCreator">Send Mail</button>
 
 
 
@@ -149,6 +155,23 @@
     {
         List<Vacation> templit = await DaService.GetAllVacations(DaService);
         templit[0].State = "Proposed";
+    }
+
+    private void EmailCreator()
+    {
+        // create email message
+        var email = new MimeMessage();
+        email.From.Add(MailboxAddress.Parse("from_address@example.com"));
+        email.To.Add(MailboxAddress.Parse("to_address@example.com"));
+        email.Subject = "Test Email Subject";
+        email.Body = new TextPart(TextFormat.Html) { Text = $"<h1>The Vacation you have favourited has changed to whatever the fuck</h1>" };
+
+        // send email
+        using var smtp = new SmtpClient();
+        smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
+        smtp.Authenticate("mortimer55@ethereal.email", "bTsRwKbZBsxzt588RB");
+        smtp.Send(email);
+        smtp.Disconnect(true);
     }
 
 }
