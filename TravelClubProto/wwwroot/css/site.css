@@ -209,6 +209,31 @@ progress.progressBarJoinedUsersVS {
     width: 760px;
     top: -349px;
 }
+.mytravelbureaucontent{
+    position: relative;
+    background: #fff;
+    padding: 18px;
+    border: 1px solid #97aabf;
+    float: right;
+    width: 760px;
+    top: -183px;
+}
+.mytravelclubadmincontent {
+    position: relative;
+    background: #fff;
+    padding: 18px;
+    border: 1px solid #97aabf;
+    float: right;
+    width: 760px;
+    top: -239px;
+}
+.mytravelbureautext {
+    font-size: 12px;
+    font-size: 1.2rem;
+    line-height: 15px;
+    line-height: 1.5rem;
+    color: #000;
+}
 .mytravelclubjumbotron {
     box-sizing: border-box;
     padding: 11px;

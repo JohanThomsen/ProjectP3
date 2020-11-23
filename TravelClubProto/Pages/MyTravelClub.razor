@@ -165,37 +165,47 @@
 
 else if (DaService.LoggedInType == "TravelBureau")
 {
-<BSJumbotron>
+<BSJumbotron class="mytravelclubjumbotron">
     <div>
-        <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-            <BSNav IsList="true" IsVertical="true" class="mytravelclubmenulist">
-                <li class="mytravelclubmenulistitem">
-                    <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
-                        <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
-                    </NavLink>
-                </li>
-                <li class="mytravelclubmenulistitem">
-                    <NavLink class="textcolor" href="ProposeVacation">
-                        <span class="oi oi-cog" aria-hidden="true"></span> Tilbyd feriepakke
-                    </NavLink>
-                </li>
-                <li class="mytravelclubmenulistitem">
-                    <NavLink class="textcolor" href="AdminVacationBureau">
-                        <span class="oi oi-globe" aria-hidden="true"></span> Administrer feriepakker
-                    </NavLink>
-                </li>
-            </BSNav>
+        <div>
+
+            <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+                <BSNav IsList="true" IsVertical="true" class="mytravelclubmenulist">
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-person" aria-hidden="true"></span>
+                            </div>
+                            Mit TravelClub
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="ProposeVacation">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-cog" aria-hidden="true"></span>
+                            </div>
+                            Tilbyd feriepakke
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="AdminVacationBureau">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-globe" aria-hidden="true"></span>
+                            </div>
+                            Administrer feriepakker
+                        </NavLink>
+                    </li>
+                </BSNav>
+            </div>
+
         </div>
-
-
-        
-
-            <div Class="mytravelclubcontent">
+            <div Class="mytravelbureaucontent">
                 <h2 class="welcomemytravelclub">Hej, Velkommen til dit TravelClub</h2>
                 <div>
+                    
                     <div>
                         <div Class="mytravelclubcontentelements">
                             <div Class="iconcolumn">
@@ -209,15 +219,15 @@ else if (DaService.LoggedInType == "TravelBureau")
                                 <NavLink class="text-dark" href="Propose Vacation">
                                     <div>
                                         <h4 class="mytravelclubheaders">Tilbyd Feriepakke</h4>
-                                        <p class="mytravelclubtext">Klik her, for at oprette en ferie, og tilbyde den til TravelClub</p>
+                                        <p class="mytravelbureautext">Klik her, for at oprette en ferie, og tilbyde den til TravelClub</p>
                                     </div>
                                 </NavLink>
                             </div>
                         </div>
                     </div>
-                </div>
+                    
 
-                <div>
+                    
                     <div>
                         <div Class="mytravelclubcontentelements">
                             <div Class="iconcolumn">
@@ -231,12 +241,13 @@ else if (DaService.LoggedInType == "TravelBureau")
                                 <NavLink class="text-dark" href="AdminVacationBureau">
                                     <div>
                                         <h4 class="mytravelclubheaders">Administrer Feriepakker</h4>
-                                        <p class="mytravelclubtext">Klik her, for at administere dine tilbudte feriepakker</p>
+                                        <p class="mytravelbureautext">Klik her, for at administere dine tilbudte feriepakker</p>
                                     </div>
                                 </NavLink>
                             </div>
                         </div>
                     </div>
+                    
                 </div>
             </div>
     </div>
@@ -247,109 +258,123 @@ else if (DaService.LoggedInType == "TravelBureau")
 
 else if (DaService.LoggedInType == "TravelClub")
 {
-    <BSJumbotron>
+    <BSJumbotron class="mytravelclubjumbotron">
         <div>
-            <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+            <div>
+
+                <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
                         
                     <BSNav IsList="true" IsVertical="true" class="mytravelclubmenulist">
                         <li class="mytravelclubmenulistitem">
                             <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
-                                <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
+                                <div class="mytravelclubmenulisticon">
+                                    <span class="oi oi-person" aria-hidden="true"></span>
+                                </div>
+                                Mit TravelClub
                             </NavLink>
                         </li>
                         <li class="mytravelclubmenulistitem">
                             <NavLink class="textcolor" href="PublishVacation">
-                                <span class="oi oi-cog" aria-hidden="true"></span> Udgiv feriepakker
+                                <div class="mytravelclubmenulisticon">
+                                    <span class="oi oi-cog" aria-hidden="true"></span>
+                                </div>
+                                Udgiv feriepakker
                             </NavLink>
                         </li>
                         <li class="mytravelclubmenulistitem">
                             <NavLink class="textcolor" href="AdminVacationTravelClub">
-                                <span class="oi oi-globe" aria-hidden="true"></span> Administrer feriepakker
+                                <div class="mytravelclubmenulisticon">
+                                    <span class="oi oi-globe" aria-hidden="true"></span>
+                                </div>
+                                Administrer feriepakker
                             </NavLink>
                         </li>
                         <li class="mytravelclubmenulistitem">
                             <NavLink class="textcolor" href="AddTravelBureaus">
-                                <span class="oi oi-globe" aria-hidden="true"></span> Tilføj rejsebureau
+                                <div class="mytravelclubmenulisticon">
+                                    <span class="oi oi-globe" aria-hidden="true"></span>
+                                </div>
+                                Tilføj rejsebureau
                             </NavLink>
                         </li>
                     </BSNav> 
+                </div>
             </div>
 
-            <div>
-                <div Class="mytravelclubcontent">
-                    <h2 class="welcomemytravelclub">Hej, Velkommen til dit TravelClub</h2>
+            
+            <div Class="mytravelclubadmincontent">
+                <h2 class="welcomemytravelclub">Hej, Velkommen til dit TravelClub</h2>
+                <div>
                     <div>
-                        <div>
-                            <div Class="mytravelclubcontentelements">
-                                <div Class="iconcolumn">
-                                    <NavLink class="text-dark" href="PublishVacation">
-                                        <div>
-                                            <span class=" oi oi-cog"></span>
-                                        </div>
-                                    </NavLink>
-                                </div>
-                                <div>
-                                    <NavLink class="text-dark" href="PublishVacation">
-                                        <div>
-                                            <h4 class="mytravelclubheaders">Udgiv Feriepakke</h4>
-                                            <p class="mytravelclubtext">Klik her, for at udgive en feriepakke, som er tilbudt af et rejsebureau</p>
-                                        </div>
-                                    </NavLink>
-                                </div>
+                        <div Class="mytravelclubcontentelements">
+                            <div Class="iconcolumn">
+                                <NavLink class="text-dark" href="PublishVacation">
+                                    <div>
+                                        <span class=" oi oi-cog"></span>
+                                    </div>
+                                </NavLink>
+                            </div>
+                            <div>
+                                <NavLink class="text-dark" href="PublishVacation">
+                                    <div>
+                                        <h4 class="mytravelclubheaders">Udgiv Feriepakke</h4>
+                                        <p class="mytravelclubtext">Klik her, for at udgive en feriepakke, som er tilbudt af et rejsebureau</p>
+                                    </div>
+                                </NavLink>
                             </div>
                         </div>
                     </div>
+                    
 
+                    
                     <div>
-                        <div>
-                            <div Class="mytravelclubcontentelements">
-                                <div Class="iconcolumn">
-                                    <NavLink class="text-dark" href="AdminVacationTravelClub">
-                                        <div>
-                                            <span class="oi oi-globe"></span>
-                                        </div>
-                                    </NavLink>
-                                </div>
-                                <div>
-                                    <NavLink class="text-dark" href="AdminVacationTravelClub">
-                                        <div>
-                                            <h4 class="mytravelclubheaders">Administrer Feriepakker</h4>
-                                            <p class="mytravelclubtext">Klik her, for at administere allerede tilbudte feriepakker</p>
-                                        </div>
-                                    </NavLink>
-                                </div>
+                        <div Class="mytravelclubcontentelements">
+                            <div Class="iconcolumn">
+                                <NavLink class="text-dark" href="AdminVacationTravelClub">
+                                    <div>
+                                        <span class="oi oi-globe"></span>
+                                    </div>
+                                </NavLink>
+                            </div>
+                            <div>
+                                <NavLink class="text-dark" href="AdminVacationTravelClub">
+                                    <div>
+                                        <h4 class="mytravelclubheaders">Administrer Feriepakker</h4>
+                                        <p class="mytravelclubtext">Klik her, for at administere allerede tilbudte feriepakker</p>
+                                    </div>
+                                </NavLink>
                             </div>
                         </div>
                     </div>
+                    
 
+                    
                     <div>
-                        <div>
-                            <div Class="mytravelclubcontentelements">
-                                <div Class="iconcolumn">
-                                    <NavLink class="text-dark" href="AddTravelBureaus">
-                                        <div>
-                                            <span class="oi oi-globe"></span>
-                                        </div>
-                                    </NavLink>
-                                </div>
-                                <div>
-                                    <NavLink class="text-dark" href="AddTravelBureaus">
-                                        <div>
-                                            <h4 class="mytravelclubheaders">Tilføj rejsebureau</h4>
-                                            <p class="mytravelclubtext">Klik her, for at oprette et login til et rejsebureau</p>
-                                        </div>
-                                    </NavLink>
-                                </div>
+                        <div Class="mytravelclubcontentelements">
+                            <div Class="iconcolumn">
+                                <NavLink class="text-dark" href="AddTravelBureaus">
+                                    <div>
+                                        <span class="oi oi-globe"></span>
+                                    </div>
+                                </NavLink>
+                            </div>
+                            <div>
+                                <NavLink class="text-dark" href="AddTravelBureaus">
+                                    <div>
+                                        <h4 class="mytravelclubheaders">Tilføj rejsebureau</h4>
+                                        <p class="mytravelclubtext">Klik her, for at oprette et login til et rejsebureau</p>
+                                    </div>
+                                </NavLink>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
         </div>
-        
     </BSJumbotron>
 
 }
