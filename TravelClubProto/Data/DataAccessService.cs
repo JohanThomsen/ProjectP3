@@ -11,10 +11,9 @@ namespace TravelClubProto.Data
 {
     public class DataAccessService
     {
-        public bool LoggedIn { get; set; }
 
-        public int LoggedInAccountID { get; set; }
-        public string LoggedInType { get; set; }
+        //public Boolean LoggedIn { get { } set {  } }
+        public bool LoggedIn { get; set; }
 
 
         private IConfiguration config;

@@ -24,7 +24,7 @@ namespace TravelClubProto.Data
         private CustomerVacations customerVacations { get; set; }
 
         public PersonalInformation PI;
-        public TravelPreferences TP;
+        public TravelPreferences   TP;
 
         public Customer(string email, string password, DataAccessService daService) : base(email, password, daService)
         {

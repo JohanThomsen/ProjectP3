@@ -9,8 +9,7 @@ namespace TravelClubProto.Data
     {
         public string Name { get; set; }
 
-
-        public TravelBureau(string email, string password, DataAccessService daService) : base(email, password, daService)
+        TravelBureau(string email, string password, DataAccessService daService) : base(email, password, daService) 
         {
             Type = "TravelBureau";
         }
