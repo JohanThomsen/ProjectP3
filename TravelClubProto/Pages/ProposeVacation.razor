@@ -86,14 +86,18 @@
             <BSLabel For="minNumberOfUsers">Minimum antal deltagere</BSLabel>
             <BSInput Id="minNumberOfUsers" InputType="InputType.Number" PlaceHolder="0" @bind-Value="formsModelVal.minNumberOfUsers"></BSInput>
         </BSFormGroup>
-        <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm" IsInline="true">
+        <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm">
             <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                <BSLabel For="Price">Pris </BSLabel>
-                <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Prispunkt" @bind-Value="formsModelPrices.price"></BSInput>
+                <div class="PricePoint">
+                    <BSLabel For="Price">Pris </BSLabel>
+                    <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Prispunkt" @bind-Value="formsModelPrices.price"></BSInput>
+                </div>
             </BSFormGroup>
             <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                <BSLabel For="Break">Interval pris  </BSLabel>
-                <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Antal deltagere for pris" @bind-Value="formsModelPrices.breakPoint"></BSInput>
+                <div class="NumberOfParticipants">
+                    <BSLabel For="Break">Antal deltagere for pris </BSLabel>
+                    <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Antal deltagere for pris" @bind-Value="formsModelPrices.breakPoint"></BSInput>
+                </div>
             </BSFormGroup>
             <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
             <pre>@priceFeedback</pre>
