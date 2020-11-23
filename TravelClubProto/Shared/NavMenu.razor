@@ -7,6 +7,7 @@
 @using TravelClubProto.Data;
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject DataAccessService DaService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -58,7 +59,7 @@
         </div>
     </div>
 
-    
+
 
     @if (DaService.LoggedIn == false)
     {
@@ -80,10 +81,10 @@
         <div class="dropdown">
             <div class="HamburgerMenu">
                 <BSDropdown>
-                    <BSDropdownToggle class="btn btn-outline-info btn-lg UserIcon" type="button">                  
-                        <BSDropdownMenu Right="true">                        
-                            <BSDropdownItem Href="myProfile" @onclick="MyProfile">Min profil</BSDropdownItem>
-                            <BSDropdownItem Href="javascript:void(0);" @onclick="LogOut">Log ud</BSDropdownItem>
+                    <BSDropdownToggle class="btn btn-outline-info btn-lg UserIcon" type="button">
+                        <BSDropdownMenu Right="true">
+                            <BSDropdownItem Href="MyTravelClub" @onclick="OnToggleMyProfile">Min profil</BSDropdownItem>
+                            <BSDropdownItem Href="" @onclick="LogOut">Log ud</BSDropdownItem>
                         </BSDropdownMenu>
                     </BSDropdownToggle>
                 </BSDropdown>
@@ -145,7 +146,6 @@
 
                 @*Submit Button*@
                 <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
-
             </BSForm>
         </p>
     </BSModalBody>
@@ -175,7 +175,9 @@
 
     BSModal CreateProfileModal;
 
-    
+    Account acc;
+
+
     void OnToggleLogin(MouseEventArgs e)
     {
         LoginModal.Toggle();
@@ -188,12 +190,26 @@
 
     void OnToggleMyProfile(MouseEventArgs e)
     {
-        MyProfile();
+        MyProfile(DaService);
     }
 
-    void MyProfile()
+    async void MyProfile(DataAccessService daService)
     {
+        if (daService.LoggedIn == true)
+        {
+            string loginInfo = await localStorage.GetItemAsync<String>("login");
+            string[] loginresult = loginInfo.Split(",");
+            int ID = Convert.ToInt32(loginresult[0]);
+            DateTime expiry = Convert.ToDateTime(loginresult[1]);
+            if (expiry > DateTime.Now)
+            {
+                Login login = new Login();
+                acc = await login.GetAccountByID(daService, ID);
+                DaService.LoggedInType = acc.Type;
+            }
 
+
+        }
     }
 
     async void LogInToProfile(MouseEventArgs e)
@@ -206,7 +222,7 @@
         if (DaService.LoggedIn == false)
         {
             WarningBox.Toggle();
-            
+
         }
         else
         {
@@ -270,6 +286,6 @@
         [Required]
         public Boolean Valid { get; set; }
     }
-    FormsModelVal formsModelVal = new FormsModelVal();
+    public FormsModelVal formsModelVal = new FormsModelVal();
 
 }
