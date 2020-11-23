@@ -153,47 +153,50 @@
 
 
     @*Calculates progress bar fill value from joined user and stretch goals*@
-int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
-{
-    int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
-    int prevGoal = stretchGoals[prevIndex];
+    int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
+    {
+        int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
+        int prevGoal = stretchGoals[prevIndex];
 
-    if (joinedUsers >= currGoal)
-    {
-        return currGoal;
-    }
-    else if (currGoal.Equals(stretchGoals[0]))
-    {
-        return joinedUsers;
-    }
-    else
-    {
-        return joinedUsers - prevGoal;
-    }
-}
-
-public async void checkCookie()
-{
-    string cookie = await localStorage.GetItemAsStringAsync("login");
-    string[] splitCookie = cookie.Split(",");
-    if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
-    {
-        customerID = Convert.ToInt32(splitCookie[0]);
-    }
-}
-
-public void FavouriteVacation(Vacation vac)
-{
-    checkCookie();
-    if (DaService.LoggedIn == true) {
-        notloggedinfeedback = string.Empty;
-        vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
-    }
-    else
-    {
-        notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
-        LoginModal.Toggle();
+        if (joinedUsers >= currGoal)
+        {
+            return currGoal;
+        }
+        else if (currGoal.Equals(stretchGoals[0]))
+        {
+            return joinedUsers;
+        }
+        else
+        {
+            return joinedUsers - prevGoal;
+        }
     }
 
-}
+    public async void checkCookie()
+    {
+        string cookie = await localStorage.GetItemAsStringAsync("login");
+        if (cookie != null)
+        {
+            string[] splitCookie = cookie.Split(",");
+            if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
+            {
+                customerID = Convert.ToInt32(splitCookie[0]);
+            }
+        }
+    }
+
+    public void FavouriteVacation(Vacation vac)
+    {
+        checkCookie();
+        if (DaService.LoggedIn == true) {
+            notloggedinfeedback = string.Empty;
+            vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
+        }
+        else
+        {
+            notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
+            LoginModal.Toggle();
+        }
+
+    }
 }
