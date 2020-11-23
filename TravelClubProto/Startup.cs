@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Timers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -12,15 +12,21 @@ using Microsoft.Extensions.Hosting;
 using TravelClubProto.Data;
 using BlazorStrap;
 using Blazored.LocalStorage;
+using System.Threading.Tasks;
+using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace TravelClubProto
 
 {
     public class Startup
     {
+        private static Timer aTimer;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            aTimer = new Timer();
+            UpdateDatabaseForDeadline(aTimer);
         }
 
         public IConfiguration Configuration { get; }
@@ -62,5 +68,39 @@ namespace TravelClubProto
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
+
+        private void UpdateDatabaseForDeadline(Timer aTimer)
+        {
+            aTimer.Interval = 60000;
+            aTimer.Elapsed += OnTimedEvent;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+        }
+
+        private async void CheckForDeadlines()
+        {
+            DataAccessService DaService = new DataAccessService(Configuration);
+            List<Vacation> vacs = await DaService.GetAllVacations(DaService);
+
+            foreach (Vacation vacation in vacs)
+            {
+                if ((vacation.Dates["Deadline"] < DateTime.Now) && (vacation.State == "Published"))
+                {
+                    vacation.State = "GracePeriod";
+                }
+                else if ((vacation.Dates["GracePeriodLength"] < DateTime.Now) && (vacation.State == "GracePeriod"))
+                {
+                    vacation.State = "Deadline";
+                }
+            }
+        }
+
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            CheckForDeadlines();
+            Console.WriteLine($"Looping {e.SignalTime}");
+        }
+
+
     }
 }

@@ -38,6 +38,8 @@ namespace TravelClubProto.Data
 
                     //The built commands are executed
                     sqlCommand.ExecuteNonQuery();
+
+                    
                 }
                 //Catches the error and prints it
                 catch (Exception e)
@@ -61,9 +63,10 @@ namespace TravelClubProto.Data
                 using (var cmd = sc.CreateCommand())
                 {
                     sc.Open();
-                    cmd.CommandText = "SELECT COUNT(*) FROM [dbo].CustomerVacationRelations WHERE FK_CustomerID=@customerID AND RelationType=@oldRelation";
+                    cmd.CommandText = "SELECT COUNT(*) FROM [dbo].CustomerVacationRelations WHERE FK_CustomerID=@customerID AND RelationType=@oldRelation OR RelationType=@newRelation";
                     cmd.Parameters.AddWithValue("@customerID", customerID);
                     cmd.Parameters.AddWithValue("@oldRelation", oldRelation);
+                    cmd.Parameters.AddWithValue("@newRelation", newRelation);
                     int exists = (int)cmd.ExecuteScalar();
                     if (exists == 1)
                     {
