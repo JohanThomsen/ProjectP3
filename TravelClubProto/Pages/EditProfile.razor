@@ -8,95 +8,114 @@
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
-
-<h3>Mit TravelClub</h3>
-
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container">
-        <div class="row">
-            <div class="navbar-column">
+    <BSJumbotron Class="mytravelclubjumbotron">
+            <div>
                 <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-                    <ul class="navbar-nav flex-grow-1">
-                        <BSNav IsList="true" IsVertical="true">
-                            <li class="nav-item">
 
-                                <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
-                                    <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="MyProfile">
-                                    <span class="oi oi-cog" aria-hidden="true"></span> Min profil
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="JoinedVacations">
-                                    <span class="oi oi-globe" aria-hidden="true"></span> Tilmeldte feriepakker
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="PriceAgents">
-                                    <span class="oi oi-bell" aria-hidden="true"></span> Mine Prisagenter
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="FavouritedVacations">
-                                    <span class="oi oi-heart" aria-hidden="true"></span> Mine favoriserede feriepakker
-                                </NavLink>
-                            </li>
-                            <li class="nav-item" @onclick="LogOut">
-                                <NavLink class="nav-link text-dark" href="">
-                                    <span class="oi oi-account-logout" aria-hidden="true"></span> Log ud
-                                </NavLink>
-                            </li>
-                        </BSNav>
-                    </ul>
+
+                <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+                    <BSNav IsList="true" IsVertical="true" Class="mytravelclubmenulist">
+                        <li class="mytravelclubmenulistitem">
+                            <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
+                                <div class="mytravelclubmenulisticon">
+                                    <span class="oi oi-person" aria-hidden="true"></span>
+                                </div>
+                                Mit TravelClub
+                            </NavLink>
+                        </li>
+                        <li class="mytravelclubmenulistitem">
+                            <NavLink class="textcolor" href="EditProfile">
+                                <div class="mytravelclubmenulisticon">
+                                    <span class="oi oi-cog" aria-hidden="true"></span>
+                                </div>
+                                Min profil
+                            </NavLink>
+                        </li>
+                        <li class="mytravelclubmenulistitem">
+                            <NavLink class="textcolor" href="JoinedVacations">
+                                <div class="mytravelclubmenulisticon">
+                                    <span class="oi oi-globe" aria-hidden="true"></span>
+                                </div>
+                                Tilmeldte feriepakker
+                            </NavLink>
+                        </li>
+                        <li class="mytravelclubmenulistitem">
+                            <NavLink class="textcolor" href="PriceAgents">
+                                <div class="mytravelclubmenulisticon">
+                                    <span class="oi oi-bell" aria-hidden="true"></span>
+                                </div>
+                                Prisagenter
+                            </NavLink>
+                        </li>
+                        <li class="mytravelclubmenulistitem">
+                            <NavLink class="textcolor" href="FavouritedVacations">
+                                <div class="mytravelclubmenulisticon">
+                                    <span class="oi oi-heart" aria-hidden="true"></span>
+                                </div>
+                                Favoriserede feriepakker
+                            </NavLink>
+                        </li>
+                        <li class="mytravelclubmenulistitem" @onclick="LogOut">
+                            <NavLink class="textcolor" href="">
+                                <div class="mytravelclubmenulisticon">
+                                    <span class="oi oi-account-logout" aria-hidden="true"></span>
+                                </div>
+                                Log ud
+                            </NavLink>
+                        </li>
+                    </BSNav>
                 </div>
             </div>
-            <div class="">
-                <h4>Rediger din profil</h4>
-                <BSForm Model="formsModelVal" OnValidSubmit="ConsoleWrite">
-                    <BSFormGroup>
-                        <BSLabel For="exampleInputFullName">Fulde navn:</BSLabel>
-                        <BSInput Id="exampleInputFirstName" InputType="InputType.Text" PlaceHolder="Thomas Larsen" @bind-Value="formsModelVal.FullName"></BSInput>
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                    </BSFormGroup>
-                    <BSFormGroup>
-                        <BSLabel For="exampleInputEmail1">Email addresse</BSLabel>
-                        <BSInput Id="exampleInputEmail1" InputType="InputType.Email" PlaceHolder="" @bind-Value="formsModelVal.Email"></BSInput>
-                    </BSFormGroup>
-                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfile">Gem profil</BSButton>
-                </BSForm>
+                <div class="mytravelclubcontent">
+                    <h2 class="welcomemytravelclub">Rediger din profil</h2>
+                    <BSForm Model="formsModelVal" OnValidSubmit="ConsoleWrite">
+                        <BSFormGroup>
+                            <BSLabel For="exampleInputFullName">Fulde navn:</BSLabel>
+                            <BSInput Id="exampleInputFirstName" InputType="InputType.Text" PlaceHolder="Thomas Larsen" @bind-Value="formsModelVal.FullName"></BSInput>
+                        </BSFormGroup>
+                        <BSFormGroup>
+                            <BSLabel For="exampleInputEmail1">Email addresse</BSLabel>
+                            <BSInput Id="exampleInputEmail1" InputType="InputType.Email" PlaceHolder="" @bind-Value="formsModelVal.Email"></BSInput>
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        </BSFormGroup>
+                        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfile">Gem profil</BSButton>
+                        @*@foreach (Vacation vac in vacations )
+                    {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck">
+                        <label class="form-check-label" for="defaultCheck">
+                            @vac.Destination
+                        </label>
+                    </div>
+                    }*@
+                    </BSForm>
+                </div>
+        </BSJumbotron>
 
-            </div>
-        </div>
-    </div>
+    @code {
 
-</nav>
+        public List<Vacation> vacations;
 
+        bool collapseNavMenu = true;
 
-@code {
+        string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
 
-    public List<Vacation> vacations;
+        string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
 
-    bool collapseNavMenu = true;
+        void ToggleNavMenu()
+        {
+            collapseNavMenu = !collapseNavMenu;
+        }
 
-    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+        void LogOut(MouseEventArgs e)
+        {
+            DaService.LoggedIn = false;
+        }
 
-    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
-
-    void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
-    void LogOut(MouseEventArgs e)
-    {
-        DaService.LoggedIn = false;
-    }
+        async void SaveEditedProfile(DataAccessService daService)
+        {
 
     protected override async Task OnInitializedAsync()
     {
@@ -106,34 +125,31 @@
     async void SaveEditedProfile(DataAccessService daService)
     {
 
-        //customer.TP.Dest = formsModelVal
+        }
+
+
+        void SaveProfile(MouseEventArgs e)
+        {
+            SaveEditedProfile(DaService);
+        }
+
+        void ConsoleWrite()
+        {
+            Console.WriteLine("Form succesfully submitted");
+        }
+
+        public class FormsModelVal
+        {
+
+            [StringLength(50, ErrorMessage = "Name too long (50 character limit).")]
+            public string FullName { get; set; }
+
+            [StringLength(50, ErrorMessage = "Email too long (50 character limit).")]
+            public string Email { get; set; }
+
+
+
+        }
+        public FormsModelVal formsModelVal = new FormsModelVal();
 
     }
-
-
-    void SaveProfile(MouseEventArgs e)
-    {
-        SaveEditedProfile(DaService);
-    }
-
-    void ConsoleWrite()
-    {
-        Console.WriteLine("Form succesfully submitted");
-    }
-
-    public class FormsModelVal
-    {
-
-        [StringLength(50, ErrorMessage = "Name too long (50 character limit).")]
-        public string FullName { get; set; }
-
-        [StringLength(50, ErrorMessage = "Email too long (50 character limit).")]
-        public string Email { get; set; }
-
-
-
-    }
-    public FormsModelVal formsModelVal = new FormsModelVal();
-
-}
-

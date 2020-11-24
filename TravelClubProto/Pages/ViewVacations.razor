@@ -6,16 +6,27 @@
 @inject DataAccessService DaService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<h3>Se ferier</h3>
+<h3 class="page_title">Se ferier</h3>
 
 @foreach (Vacation vac in vacations)
 {
     int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
     int stretchGoalsMax = vac.StretchGoals.Max();
-<BSJumbotron>
-    <a class="" href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
-        <div class="ViewVacationImage">
-            <BSFigureImage src="@vac.ImageLink" />
+    <BSJumbotron>
+
+        <a class="" href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
+            <div class="ViewVacationImage">
+                <BSFigureImage src="@vac.ImageLink" />
+            </div>
+        </a>
+        <div class="ViewDescriptionRow">
+            <div class="VacationHotelColumn">
+                <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+                <h10>ID:  @vac.ID </h10>
+
+                <h2>Feriebeskrivelse: </h2>
+                <p>@vac.Description</p>
+            </div>
         </div>
     </a>
     <div class="ViewDescriptionRow">
@@ -39,16 +50,16 @@
             <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
         }
 
-        
+
     </p>
-    
+
     <div>
         @for (int i = 0; i < vac.StretchGoals.Count; i++)
         {
             <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
 
         }
-        
+
         @if ( vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
         {
             <BSButton class="btn btn-outline-info btn-lg HeartIconFill" @onclick="@(e => UnFavouriteVacation(vac))"></BSButton>
@@ -58,12 +69,12 @@
         <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
         }
         <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
-        
-        
-        
-        
+
+
+
+
     </div>
-    
+
 
     @*MODAL FOR LOGIN PROMPT*@
     <BSModal @ref="LoginModal" IsCentered="true">
@@ -102,7 +113,6 @@
         <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
         <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
     </BSModal>
-
 
     <h6>Deadline: @vac.Dates["Deadline"]</h6>
 </BSJumbotron>
@@ -182,33 +192,24 @@
 
 
     @*Calculates progress bar fill value from joined user and stretch goals*@
-int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
-{
-    int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
-    int prevGoal = stretchGoals[prevIndex];
+    int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
+    {
+        int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
+        int prevGoal = stretchGoals[prevIndex];
 
-    if (joinedUsers >= currGoal)
-    {
-        return currGoal;
+        if (joinedUsers >= currGoal)
+        {
+            return currGoal;
+        }
+        else if (currGoal.Equals(stretchGoals[0]))
+        {
+            return joinedUsers;
+        }
+        else
+        {
+            return joinedUsers - prevGoal;
+        }
     }
-    else if (currGoal.Equals(stretchGoals[0]))
-    {
-        return joinedUsers;
-    }
-    else
-    {
-        return joinedUsers - prevGoal;
-    }
-}
-
-public void UnFavouriteVacation(Vacation vac)
-{
-    if(DaService.LoggedIn == true)
-    {
-        notloggedinfeedback = string.Empty;
-        vac.TravelGroup.LeaveVacation(customerID);
-    }
-}
 
 public void FavouriteVacation(Vacation vac)
 {
@@ -219,13 +220,29 @@ public void FavouriteVacation(Vacation vac)
     }
     else
     {
-        notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
-        LoginModal.Toggle();
+        string cookie = await localStorage.GetItemAsStringAsync("login");
+        if (cookie != null)
+        {
+            string[] splitCookie = cookie.Split(",");
+            if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
+            {
+                customerID = Convert.ToInt32(splitCookie[0]);
+            }
+        }
     }
 
-}
+    public void FavouriteVacation(Vacation vac)
+    {
+        checkCookie();
+        if (DaService.LoggedIn == true) {
+            notloggedinfeedback = string.Empty;
+            vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
+        }
+        else
+        {
+            notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
+            LoginModal.Toggle();
+        }
 
-
-
-
+    }
 }

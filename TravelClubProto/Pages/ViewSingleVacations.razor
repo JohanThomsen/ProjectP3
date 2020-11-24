@@ -17,7 +17,7 @@
 
 
 
-<h3>Se ferier</h3>
+<h3 class="page_title">Se ferier</h3>
 
 <p>@VacationID</p>
 
@@ -48,28 +48,25 @@
             
             <div class="ParticipantDetailColumn">
                 <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-                <p>
-                    @for (int i = 0; i < @vac.Prices.Count; i++)
-                    {
-                        string priceIntervalHolder = "";
-                        priceIntervalHolder += vac.Prices[i] + "kr.";
-                        <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
-                    }
-                </p>
-                <span class="progressBarGenerator">
+          
+                <span class="progressBarGeneratorVS">
                     @for (int i = 0; i < vac.StretchGoals.Count; i++)
                     {
-                        <progress class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
-
+                        <span class="progStretchGoal">
+                            <div>
+                                @(vac.Prices[i]+ " kr.")
+                            </div>
+                            <progress role="progressbar" class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)><span>@vac.StretchGoals[i]</span></progress>
+                        </span>
                     }
                 </span>
+
 
                 <br />
 
                 <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
                 <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
 
-                
                 @*MODAL FOR LOGIN PROMPT*@
                 <BSModal @ref="LoginModal" IsCentered="true">
                     <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
@@ -111,6 +108,7 @@
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
                 <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
+                <h6>Deadline: @vac.Dates["Deadline"]</h6>
             </div>
         </div>
     </div>

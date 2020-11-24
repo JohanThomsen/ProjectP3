@@ -9,8 +9,7 @@
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
-
-<h3>ProposeVacation</h3>
+<h3 class="page_title">Foreslå Ferie</h3>
 
 <BSJumbotron>
     <BSModal @ref="DestinationModal" IsCentered="true">
@@ -95,22 +94,33 @@
             <BSLabel For="minNumberOfUsers">Minimum antal deltagere</BSLabel>
             <BSInput Id="minNumberOfUsers" InputType="InputType.Number" PlaceHolder="0" @bind-Value="formsModelVal.minNumberOfUsers"></BSInput>
         </BSFormGroup>
-        <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm" IsInline="true">
-            <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                <BSLabel For="Price">Pris </BSLabel>
-                <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Prispunkt" @bind-Value="formsModelPrices.price"></BSInput>
-            </BSFormGroup>
-            <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                <BSLabel For="Break">Interval pris  </BSLabel>
-                <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Antal deltagere for pris" @bind-Value="formsModelPrices.breakPoint"></BSInput>
-            </BSFormGroup>
-            <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
-            <pre>@priceFeedback</pre>
-        </BSForm>
+        <BSRow>
+            <BSCol>
+                <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm">
+                    <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                        <div class="PricePoint">
+                            <BSLabel For="Price">Pris </BSLabel>
+                            <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Prispunkt" @bind-Value="formsModelPrices.price"></BSInput>
+                        </div>
+                    </BSFormGroup>
+                    <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                        <div class="NumberOfParticipants">
+                            <BSLabel For="Break">Antal deltagere for pris </BSLabel>
+                            <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Antal deltagere for pris" @bind-Value="formsModelPrices.breakPoint"></BSInput>
+                        </div>
+                    </BSFormGroup>
+                    <div class="AddPriceButton">
+                        <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
+                    </div>
+                </BSForm>
+            </BSCol>
+            <BSCol>
+                    <pre class="textAddprice">@priceFeedback </pre>
+            </BSCol>
+        </BSRow>
         <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilføj ferie</BSButton>
     </BSForm>
 </BSJumbotron>
-  
 
 @code {
     public string destinationFeedback;

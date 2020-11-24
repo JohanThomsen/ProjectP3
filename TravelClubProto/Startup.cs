@@ -1,20 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Timers;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TravelClubProto.Data;
 using BlazorStrap;
 using Blazored.LocalStorage;
-using System.Threading.Tasks;
-using System.Data;
-using Microsoft.Data.SqlClient;
+using MimeKit;
+using MimeKit.Text;
+using MailKit.Security;
+using MailKit.Net.Smtp;
 
 namespace TravelClubProto
 
@@ -87,10 +85,12 @@ namespace TravelClubProto
                 if ((vacation.Dates["Deadline"] < DateTime.Now) && (vacation.State == "Published"))
                 {
                     vacation.State = "GracePeriod";
+                    EmailCreator("GracePeriod");
                 }
                 else if ((vacation.Dates["GracePeriodLength"] < DateTime.Now) && (vacation.State == "GracePeriod"))
                 {
                     vacation.State = "Deadline";
+                    EmailCreator("Deadline");
                 }
             }
         }
@@ -101,6 +101,22 @@ namespace TravelClubProto
             Console.WriteLine($"Looping {e.SignalTime}");
         }
 
+        private void EmailCreator(string statechange)
+        {
+            // create email message
+            var email = new MimeMessage();
+            email.From.Add(MailboxAddress.Parse("from_address@example.com"));
+            email.To.Add(MailboxAddress.Parse("to_address@example.com"));
+            email.Subject = "Test Email Subject";
+            email.Body = new TextPart(TextFormat.Html) { Text = $"<h1>The Vacation you have favourited has changed to {statechange}</h1>" };
+
+            // send email
+            using var smtp = new SmtpClient();
+            smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
+            smtp.Authenticate("mortimer55@ethereal.email", "bTsRwKbZBsxzt588RB");
+            smtp.Send(email);
+            smtp.Disconnect(true);
+        }
 
     }
 }

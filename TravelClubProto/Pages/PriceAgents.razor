@@ -8,83 +8,95 @@
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
 
-<h3>Mit TravelClub</h3>
+<BSJumbotron Class="mytravelclubjumbotron">
+    <div>
+        <div>
+            <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm">
-                <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-                    <ul class="navbar-nav flex-grow-1">
-                        <BSNav IsList="true" IsVertical="true">
-                            <li class="nav-item">
 
-                                <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
-                                    <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="MyProfile">
-                                    <span class="oi oi-cog" aria-hidden="true"></span> Min profil
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="JoinedVacations">
-                                    <span class="oi oi-globe" aria-hidden="true"></span> Tilmeldte feriepakker
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="PriceAgents">
-                                    <span class="oi oi-bell" aria-hidden="true"></span> Mine Prisagenter
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="FavouritedVacations">
-                                    <span class="oi oi-heart" aria-hidden="true"></span> Mine favoriserede feriepakker
-                                </NavLink>
-                            </li>
-                            <li class="nav-item" @onclick="LogOut">
-                                <NavLink class="nav-link text-dark" href="">
-                                    <span class="oi oi-account-logout" aria-hidden="true"></span> Log ud
-                                </NavLink>
-                            </li>
-                        </BSNav>
-                    </ul>
-                </div>
+            <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+                <BSNav IsList="true" IsVertical="true" Class="mytravelclubmenulist">
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-person" aria-hidden="true"></span>
+                            </div>
+                            Mit TravelClub
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="EditProfile">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-cog" aria-hidden="true"></span>
+                            </div>
+                            Min profil
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="JoinedVacations">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-globe" aria-hidden="true"></span>
+                            </div>
+                            Tilmeldte feriepakker
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="PriceAgents">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-bell" aria-hidden="true"></span>
+                            </div>
+                            Prisagenter
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="FavouritedVacations">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-heart" aria-hidden="true"></span>
+                            </div>
+                            Favoriserede feriepakker
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem" @onclick="LogOut">
+                        <NavLink class="textcolor" href="">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-account-logout" aria-hidden="true"></span>
+                            </div>
+                            Log ud
+                        </NavLink>
+                    </li>
+                </BSNav>
             </div>
-            <div class="col-sm">
-                <h4>Dine prisagenter</h4>
-                <ul>
-                    @*@foreach (int item in FavouritedVacs)
+        </div>
+        <div class="mytravelclubcontent">
+            <h2 class="welcomemytravelclub">Dine prisagenter</h2>
+            <ul>
+                @*@foreach (int item in FavouritedVacs)
                     {
                         <li>@item</li>
                     }*@
-                </ul>
-            </div>
+            </ul>
         </div>
     </div>
+   </BSJumbotron>
 
-</nav>
 
+    @code {
+        bool collapseNavMenu = true;
 
-@code {
-    bool collapseNavMenu = true;
+        string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
 
-    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+        string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
 
-    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+        void ToggleNavMenu()
+        {
+            collapseNavMenu = !collapseNavMenu;
+        }
 
-    void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
+        void LogOut(MouseEventArgs e)
+        {
+            DaService.LoggedIn = false;
+        }
+
     }
-
-    void LogOut(MouseEventArgs e)
-    {
-        DaService.LoggedIn = false;
-    }
-
-}
