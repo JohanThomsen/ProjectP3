@@ -22,10 +22,31 @@
 *{
     box-sizing: border-box;
 }
+
+
+/*Participated Vacation
+----------------------------------------------------------------------------------*/
+.PartipatedVacationImage {
+    width: 50%;
+    float:right;
+    margin-bottom:1%;
+}
+
+
+.ParticipatedDescriptionRow{
+    width:19%;
+    float:left;
+
+}
+
+.jumbotronParticipated {
+    margin-top: 12%;
+    margin-right: 5.5%;
+}
 /*Index Page Appearance
 ----------------------------------------------------------------------------------*/
-.SearchFields{
-    position:relative;
+.SearchFields {
+    position: relative;
     height: inherit;
 }
 
