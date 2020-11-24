@@ -10,7 +10,7 @@ namespace TravelClubProto.Data
     public class TravelGroup
     {
         public int FK_VacationID { get; }
-        DataAccessService DaService {get; set;}
+        DataAccessService DaService { get; set; }
         public TravelGroup(int fK_VacationID, DataAccessService daService)
         {
             FK_VacationID = fK_VacationID;
@@ -39,7 +39,7 @@ namespace TravelClubProto.Data
                     //The built commands are executed
                     sqlCommand.ExecuteNonQuery();
 
-                    
+
                 }
                 //Catches the error and prints it
                 catch (Exception e)
@@ -52,7 +52,33 @@ namespace TravelClubProto.Data
                 }
             }
         }
-        
+
+        public async Task<bool> CheckForRelation(int customerID, string relation)
+        {
+            bool succes = false;
+            try
+            {
+                using var sc = new SqlConnection(DaService.ConnectionString);
+                using var cmd = sc.CreateCommand();
+                sc.Open();
+                cmd.CommandText = "SELECT COUNT(*) FROM [dbo].CustomerVacationRelations WHERE FK_CustomerID=@customerID AND RelationType=@relation";
+                cmd.Parameters.AddWithValue("@customerID", customerID);
+                cmd.Parameters.AddWithValue("@relation", relation);
+
+                int exists = (int)cmd.ExecuteScalar();
+                if (exists == 1)
+                {
+                    succes = true;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return (succes);
+        }
+
+
         public bool CheckForAndChangeRelations(int customerID, string newRelation)
         {
             string oldRelation = (newRelation == "Joined") ? "Favourited" : "Joined";

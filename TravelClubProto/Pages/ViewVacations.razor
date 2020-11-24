@@ -39,19 +39,31 @@
             <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
         }
 
-
+        
     </p>
-    <span class="progressBarGenerator">
+    
+    <div>
         @for (int i = 0; i < vac.StretchGoals.Count; i++)
         {
             <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
 
         }
-        <span>
-            <BSButton @onclick="@(e => FavouriteVacation(vac))" Color="Color.Primary">Favorisere ferie</BSButton>
-            <a class="btn btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
-        </span>
-    </span>
+        
+        @if ( vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
+        {
+            <BSButton class="btn btn-outline-info btn-lg HeartIconFill" @onclick="@(e => UnFavouriteVacation(vac))"></BSButton>
+        }
+        else
+        {
+        <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
+        }
+        <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
+        
+        
+        
+        
+    </div>
+    
 
     @*MODAL FOR LOGIN PROMPT*@
     <BSModal @ref="LoginModal" IsCentered="true">
@@ -97,9 +109,9 @@
 }
 
 @code {
-    BSModal LoginModal;
-    BSModal WarningBox { get; set; }
-    int customerID;
+        BSModal LoginModal;
+        BSModal WarningBox { get; set; }
+        int customerID = -1;
     public List<Vacation> vacations;
     string notloggedinfeedback;
 
@@ -149,6 +161,19 @@
         Console.WriteLine("Form succesfully submitted");
     }
 
+    public async void checkCookie()
+    {
+        string cookie = await localStorage.GetItemAsync<String>("login");
+
+        if (cookie != null)
+        {
+            string[] splitCookie = cookie.Split(",");
+            if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
+            {
+                customerID = Convert.ToInt32(splitCookie[0]);
+            }
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -176,20 +201,19 @@ int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
     }
 }
 
-public async void checkCookie()
+public void UnFavouriteVacation(Vacation vac)
 {
-    string cookie = await localStorage.GetItemAsStringAsync("login");
-    string[] splitCookie = cookie.Split(",");
-    if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
+    if(DaService.LoggedIn == true)
     {
-        customerID = Convert.ToInt32(splitCookie[0]);
+        notloggedinfeedback = string.Empty;
+        vac.TravelGroup.LeaveVacation(customerID);
     }
 }
 
 public void FavouriteVacation(Vacation vac)
 {
     checkCookie();
-    if (DaService.LoggedIn == true) {
+    if (DaService.LoggedIn == true && customerID != -1) {
         notloggedinfeedback = string.Empty;
         vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
     }
