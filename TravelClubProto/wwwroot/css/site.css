@@ -4,11 +4,51 @@
     background-color: #f7fbfc;
     border: 1px solid rgb(149, 168, 189);
     border-radius:0;
+    padding:0;
 }
 
 *{
     box-sizing: border-box;
 }
+/*Index Page Appearance
+----------------------------------------------------------------------------------*/
+.SearchFields{
+    position:relative;
+    height: inherit;
+}
+
+.IndexHeaderBox {
+    position: relative;
+    width: 100%;
+    height: 329px;
+}
+
+.IndexBackgroundImage{
+    position: relative;
+    width: 100%;
+    height:100%;
+}
+.FormsCollection{
+    position: absolute;
+    top: 72%;
+    flex-wrap:nowrap; /*forcing into one line*/
+    left:4.5%;
+    width: 88%;
+}
+
+.home-search > input{
+    border-radius:0;
+    margin:0.5%;
+    height:3rem;
+}
+
+.FormsCollection > button {
+    height:3rem;
+    margin:0.5%;
+    width:200%;
+    overflow-x:visible;
+}
+
 
 /*Progressbar Appearance
 --------------------------------------------------------------------------------*/
@@ -18,14 +58,14 @@
 }
 progress.progressBarJoinedUsers {
     -webkit-appearance: none;
-    height: 2em;
-    width: 6em;
+    height: 2rem;
+    width: 6rem;
 }
 
 progress.progressBarJoinedUsersVS {
     -webkit-appearance: none;
-    height: 2em;
-    width: 5em;
+    height: 2rem;
+    width: 5rem;
 }
 
 .progressBarJoinedUsers::-webkit-progress-bar {
@@ -49,20 +89,9 @@ progress.progressBarJoinedUsersVS {
     background-color: rgba(30,144,255,1);
 }
 
-.progressBarJoinedUsers[value]::-webkit-progress-value::before {
-    content: attr(content);
-    position: absolute;
-    right: 0;
-    top: -125%;
-}
 .progStretchGoal{
     float:left;
 }
-
-.progStretchGoalVS{
-    float: left;
-}
-
 /*View singele vacations layout*/
 
 .ViewSingleVacationHotel {
@@ -107,7 +136,7 @@ progress.progressBarJoinedUsersVS {
     border: 1px solid rgb(149, 168, 189)
 }
 
-.Column {
+.IndexDisplayColumn {
     float: left;
     width: 19%;
     margin: 0.5%;
@@ -115,7 +144,7 @@ progress.progressBarJoinedUsersVS {
 
 /* Clear floats after the columns
 ------------------------------------------------------------------------*/
-.Row:after {
+.IndexDisplayRow:after {
     content: "";
     display: table;
     clear: both;
@@ -165,13 +194,20 @@ a {
 /*Nav bar appearance
 ----------------------------------------------------------*/
 
+.navbar{
+    background-color: white;
+}
+
+
+.Logo1{
+    float: left;
+    height:3em;
+}
 
 .nav-link text-dark Nav Bar {
     padding-bottom: 5px;
     border-bottom: 2px solid;
 }
-
-
 
 .nav-pills, .nav-pills .show > .nav-link {
     color: #fff;
