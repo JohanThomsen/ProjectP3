@@ -87,7 +87,6 @@ namespace TravelClubProto.Data
                             user.ID = Convert.ToInt32(Reader["AccountID"]);
                             if (Reader["Email"] as string == user.Email && Reader["Password"] as string == user.Password)
                             {
-                                daService.LoggedIn = true;
                                 daService.LoggedInAccountID = user.ID;
 
                                 myConnection.Close();
