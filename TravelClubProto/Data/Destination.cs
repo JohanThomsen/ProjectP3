@@ -8,13 +8,14 @@ using TravelClubProto.Data;
 
 namespace TravelClubProto
 {
-    public class Destination
+    public class Destination : IEquatable<Destination>
     {
         public int ID { get; set; }
         public string Location { get; set; }
         public string Hotel { get; set; }
         public DateTime AddDate { get; set; }
         public string Country { get; set; }
+        public string CountryLocationHotel => $"{Country} ({Location}) : {Hotel}"; 
         public DataAccessService DaService;
         public List<Activity> Activities { get; set; }
 
@@ -123,6 +124,23 @@ namespace TravelClubProto
             //Waits for Task to be finished and then returns the list of Destinations
             return await Task.FromResult(activities);
         }
-        
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Destination);
+        }
+
+        public bool Equals(Destination other)
+        {
+            return other != null &&
+                   ID == other.ID &&
+                   AddDate == other.AddDate &&
+                   CountryLocationHotel == other.CountryLocationHotel;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ID, AddDate, CountryLocationHotel);
+        }
     }
 }
