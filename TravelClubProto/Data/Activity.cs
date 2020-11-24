@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TravelClubProto.Data
 {
-    public class Activity
+    public class Activity : IEquatable<Activity>
     {
 
         public string Type { get; set; }
@@ -50,6 +50,22 @@ namespace TravelClubProto.Data
             {
                 con.Close();
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Activity);
+        }
+
+        public bool Equals(Activity other)
+        {
+            return other != null &&
+                   Type == other.Type;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Type);
         }
     }
 }

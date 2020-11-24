@@ -1,23 +1,15 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-.AddPriceButton{
-    margin-top:1%;
-    margin-bottom:1%;
+
+.header{
+    background-color: white;
+    padding-top: 100px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
 }
 
-.textAddprice {
-    font-family: Arial;
-    font-size:medium;
-    float: left;
-}
-
-.PricePoint {
-    width: 50%;
-}
-
-.NumberOfParticipants{
-    width:50%;
-}
 
 .jumbotron {
     background-color: #f7fbfc;
@@ -30,10 +22,31 @@
 *{
     box-sizing: border-box;
 }
+
+
+/*Participated Vacation
+----------------------------------------------------------------------------------*/
+.PartipatedVacationImage {
+    width: 50%;
+    float:right;
+    margin-bottom:1%;
+}
+
+
+.ParticipatedDescriptionRow{
+    width:19%;
+    float:left;
+
+}
+
+.jumbotronParticipated {
+    margin-top: 12%;
+    margin-right: 5.5%;
+}
 /*Index Page Appearance
 ----------------------------------------------------------------------------------*/
-.SearchFields{
-    position:relative;
+.SearchFields {
+    position: relative;
     height: inherit;
 }
 
@@ -69,7 +82,16 @@
     overflow-x:visible;
 }
 
+.IndexDisplayColumn {
+    float: left;
+    margin: 0.5%;
+}
 
+.IndexDisplayRow::after {
+    content: "";
+    display: table;
+    clear: both;
+}
 /*Progressbar Appearance
 --------------------------------------------------------------------------------*/
 .progressBarGeneratorVS{
@@ -102,7 +124,7 @@ progress.progressBarJoinedUsersVS {
     background-color: rgba(30,144,255,0.1);
     background-image: none;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25) inset;
-    
+
 }
 
 .progressBarJoinedUsersVS::-webkit-progress-value {
@@ -162,13 +184,6 @@ progress.progressBarJoinedUsersVS {
 }
 
 
-/* Clear floats after the columns
-------------------------------------------------------------------------*/
-.IndexDisplayRow:after {
-    content: "";
-    display: table;
-    clear: both;
-}
 
 .mytravelclubcontentelementsleft {
     position: relative;
@@ -181,7 +196,7 @@ progress.progressBarJoinedUsersVS {
     margin-bottom: 1%;
     margin-left: 1%;
     text-decoration: none;
-    -webkit-transition: all .15s ease-out; 
+    -webkit-transition: all .15s ease-out;
     -moz-transition: all .15s ease-out;
     -o-transition: all .15s ease-out;
      transition: all .15s ease-out;
@@ -197,7 +212,7 @@ progress.progressBarJoinedUsersVS {
     margin-bottom: 1%;
     margin-left: 1%;
     text-decoration: none;
-    -webkit-transition: all .15s ease-out; 
+    -webkit-transition: all .15s ease-out;
     -moz-transition: all .15s ease-out;
     -o-transition: all .15s ease-out;
     transition: all .15s ease-out;
@@ -208,6 +223,30 @@ progress.progressBarJoinedUsersVS {
     margin-top: 1%;
     float: right;
 }
+
+
+/*Propose vacations page appearance*/
+.AddPriceButton{
+    margin-top:1%;
+    margin-bottom:1%;
+}
+
+.textAddprice {
+    font-family: Arial;
+    font-size:medium;
+    float: left;
+}
+
+.PricePoint {
+    width: 50%;
+}
+
+.NumberOfParticipants{
+    width:50%;
+}
+
+/*My travel club page appearabce
+----------------------------------------------------------------*/
 
 .mytravelclubmenulist {
     display: table-cell;
@@ -379,11 +418,11 @@ progress.progressBarJoinedUsersVS {
     }
 
 .UserIcon {
-    
+
     margin-right: 20px;
     background: url(https://www.flaticon.com/svg/static/icons/svg/74/74472.svg) no-repeat 5%;
     border: none;
-    
+
 }
 
 .dropdown-toggle::before, .dropdown-toggle::after{
@@ -418,6 +457,12 @@ a {
     background-color: white;
 }
 
+.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+    font-size: 50px;
+    }
 
 .Logo1{
     float: left;
