@@ -1,23 +1,15 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-.AddPriceButton{
-    margin-top:1%;
-    margin-bottom:1%;
+
+.header{
+    background-color: white;
+    padding-top: 100px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
 }
 
-.textAddprice {
-    font-family: Arial;
-    font-size:medium;
-    float: left;
-}
-
-.PricePoint {
-    width: 50%;
-}
-
-.NumberOfParticipants{
-    width:50%;
-}
 
 .jumbotron {
     background-color: #f7fbfc;
@@ -69,7 +61,16 @@
     overflow-x:visible;
 }
 
+.IndexDisplayColumn {
+    float: left;
+    margin: 0.5%;
+}
 
+.IndexDisplayRow::after {
+    content: "";
+    display: table;
+    clear: both;
+}
 /*Progressbar Appearance
 --------------------------------------------------------------------------------*/
 .progressBarGeneratorVS{
@@ -156,20 +157,7 @@ progress.progressBarJoinedUsersVS {
     border: 1px solid rgb(149, 168, 189)
 }
 
-<<<<<<< HEAD
-.IndexDisplayColumn {
-    float: left;
-    margin: 0.5;
-}
 
-
-/* Clear floats after the columns
-------------------------------------------------------------------------*/
-.IndexDisplayRow:after {
-    content: "";
-    display: table;
-    clear: both;
-}
 
 .mytravelclubcontentelements {
     position: relative;
@@ -193,6 +181,30 @@ progress.progressBarJoinedUsersVS {
     margin-top: 1%;
     float: right;
 }
+
+
+/*Propose vacations page appearance*/
+.AddPriceButton{
+    margin-top:1%;
+    margin-bottom:1%;
+}
+
+.textAddprice {
+    font-family: Arial;
+    font-size:medium;
+    float: left;
+}
+
+.PricePoint {
+    width: 50%;
+}
+
+.NumberOfParticipants{
+    width:50%;
+}
+
+/*My travel club page appearabce
+----------------------------------------------------------------*/
 
 .mytravelclubmenulist {
     display: table-cell;
@@ -296,33 +308,6 @@ progress.progressBarJoinedUsersVS {
     margin:3%;
 }
 
-.navbar-column{
-    float: left;
-}
-
-.header{
-    background-color: white;
-    padding-top: 100px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-
-}
-
-
-/* Clear floats after the columns */
-.Row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-.navbar-brand {
-    white-space: normal;
-    text-align: center;
-    word-break: break-all;
-    font-size: 50px;
-    }
 
 .UserIcon {
     
@@ -364,6 +349,12 @@ a {
     background-color: white;
 }
 
+.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+    font-size: 50px;
+    }
 
 .Logo1{
     float: left;

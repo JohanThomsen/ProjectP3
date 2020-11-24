@@ -1,39 +1,48 @@
 ﻿@page "/"
 
+@using Microsoft.Extensions.Configuration;
+@using System.Collections.Generic;
+@using System.Data;
+@using Microsoft.Data.SqlClient;
+@using System.Threading.Tasks;
+@using Microsoft.EntityFrameworkCore.Migrations.Operations;
+@using TravelClubProto.Data;
+@inject DataAccessService DaService
+
 <div class="SearchFields">
-   
+
     <BSJumbotron Class="IndexHeaderBox" IsFluid="true">
-        <BSImage  Class="IndexBackgroundImage" src="https://1051435491.rsc.cdn77.org/Global/images/egypt/hotel-hrg/hurghada-marriott-beach-resort/amisol-egypt-hurghada-marriott-beach-resort-lunchbar.jpg" alt="Alternate Text"/>
-            <BSForm Model="@formsModelVal">
-                <BSBasicForm Class="FormsCollection"IsInline="true">
-                    <BSFormGroup Class="home-search">
-                        <BSLabel for="InputEmail"></BSLabel>
-                        <BSInput id="InputEmail" InputType="InputType.Text" PlaceHolder="Afrejselufthavn" @bind-Value="formsModelVal.Afrejselufthavn"></BSInput>
-                    </BSFormGroup>
+        <BSImage Class="IndexBackgroundImage" src="https://1051435491.rsc.cdn77.org/Global/images/egypt/hotel-hrg/hurghada-marriott-beach-resort/amisol-egypt-hurghada-marriott-beach-resort-lunchbar.jpg" alt="Alternate Text" />
+        <BSForm Model="@formsModelVal">
+            <BSBasicForm Class="FormsCollection" IsInline="true">
+                <BSFormGroup Class="home-search">
+                    <BSLabel for="InputEmail"></BSLabel>
+                    <BSInput id="InputEmail" InputType="InputType.Text" PlaceHolder="Afrejselufthavn" @bind-Value="formsModelVal.Afrejselufthavn"></BSInput>
+                </BSFormGroup>
 
-                    <BSFormGroup Class="home-search">
-                        <BSLabel for="InputPassword"></BSLabel>
-                        <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Rejsemål" @bind-Value="formsModelVal.Rejsemål"></BSInput>
-                    </BSFormGroup>
+                <BSFormGroup Class="home-search">
+                    <BSLabel for="InputPassword"></BSLabel>
+                    <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Rejsemål" @bind-Value="formsModelVal.Rejsemål"></BSInput>
+                </BSFormGroup>
 
-                    <BSFormGroup Class="home-search">
-                        <BSLabel for="InputEmail"></BSLabel>
-                        <BSInput id="InputEmail" InputType="InputType.Text" PlaceHolder="Afrejse dato" @bind-Value="formsModelVal.AfrejseDato"></BSInput>
-                    </BSFormGroup>
+                <BSFormGroup Class="home-search">
+                    <BSLabel for="InputEmail"></BSLabel>
+                    <BSInput id="InputEmail" InputType="InputType.Text" PlaceHolder="Afrejse dato" @bind-Value="formsModelVal.AfrejseDato"></BSInput>
+                </BSFormGroup>
 
-                    <BSFormGroup Class="home-search">
-                        <BSLabel for="InputPassword"></BSLabel>
-                        <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Hjemrejse dato" @bind-Value="formsModelVal.HjemrejseDato"></BSInput>
-                    </BSFormGroup>
+                <BSFormGroup Class="home-search">
+                    <BSLabel for="InputPassword"></BSLabel>
+                    <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Hjemrejse dato" @bind-Value="formsModelVal.HjemrejseDato"></BSInput>
+                </BSFormGroup>
 
-                    <BSFormGroup Class="home-search">
-                        <BSLabel for="InputPassword"></BSLabel>
-                        <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Antal deltagere" @bind-Value="formsModelVal.AntalDeltagere"></BSInput>
-                    </BSFormGroup>
+                <BSFormGroup Class="home-search">
+                    <BSLabel for="InputPassword"></BSLabel>
+                    <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Antal deltagere" @bind-Value="formsModelVal.AntalDeltagere"></BSInput>
+                </BSFormGroup>
 
-                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Søg</BSButton>
-                </BSBasicForm>
-            </BSForm>
+                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Søg</BSButton>
+            </BSBasicForm>
+        </BSForm>
     </BSJumbotron>
 </div>
 
@@ -48,7 +57,15 @@
 
 <div class="IndexVacationViews">
     <BSJumbotron IsFluid="true" Class="ImageContainer">
+        @foreach (Vacation vac in vacations)
+        {
+            <BSFigure>
+                <div>
 
+                </div>
+
+            </BSFigure>
+        }
         <BSFigure Class="VacFigures">
             <div class="IndexDisplayRow">
                 <div class="IndexDisplayColumn">
@@ -111,25 +128,31 @@
 
 @code
 {
+    List<Vacation> vacations;
+    protected override async Task OnInitializedAsync()
+    {
+        vacations = await DaService.GetAllVacations(DaService);
+    }
+
     public class FormsModelVal
     {
-        
+
         [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
         public string Afrejselufthavn { get; set; }
 
-        
+
         [StringLength(50, ErrorMessage = "password too long (20 character limit).")]
         public string Rejsemål { get; set; }
 
-        
+
         [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
         public string AfrejseDato { get; set; }
 
-        
+
         [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
         public string HjemrejseDato { get; set; }
 
-       
+
         [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
         public int AntalDeltagere { get; set; }
 
