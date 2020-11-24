@@ -57,16 +57,18 @@
 
 <div class="IndexVacationViews">
     <BSJumbotron IsFluid="true" Class="ImageContainer">
-        @foreach (Vacation vac in vacations)
-        {
-            <BSFigure>
-                <div>
-
-                </div>
-
-            </BSFigure>
-        }
         <BSFigure Class="VacFigures">
+            @foreach (Vacation vac in vacations.Take(10))
+            {
+                <div class="VacFigureImg">
+                    <a href="/SingleVacation/@vac.ID.ToString()">
+                        <BSFigureImage src=@vac.ImageLink />
+                        <BSFigureCaption>@vac.Destination </BSFigureCaption>
+                    </a>
+                </div>
+            }
+        </BSFigure>
+        @*<BSFigure Class="VacFigures">
             <div class="IndexDisplayRow">
                 <div class="IndexDisplayColumn">
                     <BSFigureImage src="https://info.bravotours.dk/wp-content/uploads/2015/06/PMI_Alcudia-266031752-770x475.jpg" />
@@ -113,12 +115,12 @@
                 </div>
             </div>
 
-
-
-
-
-
         </BSFigure>
+
+            *@
+
+
+
     </BSJumbotron>
 </div>
 
@@ -132,6 +134,19 @@
     protected override async Task OnInitializedAsync()
     {
         vacations = await DaService.GetAllVacations(DaService);
+    }
+
+    int GetVacCount()
+    {
+        Console.WriteLine(vacations.Count);
+        if (vacations.Count < 10)
+        {
+            return vacations.Count;
+        }
+        else
+        {
+            return 10;
+        }
     }
 
     public class FormsModelVal

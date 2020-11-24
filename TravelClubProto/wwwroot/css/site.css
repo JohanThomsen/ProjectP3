@@ -57,11 +57,18 @@
 .FormsCollection > button {
     height:3rem;
     margin:0.5%;
-    width:200%;
-    overflow-x:visible;
 }
 
-.IndexDisplayColumn {
+.VacFigureImg{
+    position: relative;
+    width:19%;
+    height:7.5%;
+    float: left;
+    margin:0.5%;
+    top:auto;
+}
+
+/*.IndexDisplayColumn {
     float: left;
     margin: 0.5%;
 }
@@ -69,7 +76,7 @@
 .IndexDisplayRow::after {
     content: "";
     display: table;
-    clear: both;
+    clear: both;*/
 }
 /*Progressbar Appearance
 --------------------------------------------------------------------------------*/
