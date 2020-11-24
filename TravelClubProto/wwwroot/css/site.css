@@ -1,10 +1,30 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+.AddPriceButton{
+    margin-top:1%;
+    margin-bottom:1%;
+}
+
+.textAddprice {
+    font-family: Arial;
+    font-size:medium;
+    float: left;
+}
+
+.PricePoint {
+    width: 50%;
+}
+
+.NumberOfParticipants{
+    width:50%;
+}
+
 .jumbotron {
     background-color: #f7fbfc;
     border: 1px solid rgb(149, 168, 189);
     border-radius:0;
     padding:0;
+    border-radius: 0;
 }
 
 *{
@@ -136,11 +156,12 @@ progress.progressBarJoinedUsersVS {
     border: 1px solid rgb(149, 168, 189)
 }
 
+<<<<<<< HEAD
 .IndexDisplayColumn {
     float: left;
-    width: 19%;
-    margin: 0.5%;
+    margin: 0.5;
 }
+
 
 /* Clear floats after the columns
 ------------------------------------------------------------------------*/
@@ -150,6 +171,151 @@ progress.progressBarJoinedUsersVS {
     clear: both;
 }
 
+.mytravelclubcontentelements {
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #97aabf;
+    float: left;
+    width: 333px;
+    padding: 20px;
+    padding-left: 100px;
+    margin-bottom: 10px;
+    margin-left: 16px;
+    text-decoration: none;
+    -webkit-transition: all .15s ease-out;
+    -moz-transition: all .15s ease-out;
+    -o-transition: all .15s ease-out;
+    transition: all .15s ease-out;
+}
+.ViewVacationImage {
+    background: top center;
+    width: 50%;
+    margin-top: 1%;
+    float: right;
+}
+
+.mytravelclubmenulist {
+    display: table-cell;
+    background-color: #30343e;
+    color: inherit;
+    width: 245px;
+}
+.mytravelclubmenulisticon {
+    position: absolute;
+    top: 9px;
+    left: 19px;
+    font-size: 18px;
+    font-size: 1.8rem;
+    color:#fff;
+}
+.mytravelclubmenulistitem {
+    font-size: 14px;
+    line-height: 17px;
+    color: #fff;
+    position: relative;
+    padding: 11px 15px;
+    padding-left: 47px;
+    width: 100%;
+    float: left;
+    border-bottom: 1px solid #3e4349;
+    text-decoration: none;
+    -webkit-transition: all .15s ease-out;
+    -moz-transition: all .15s ease-out;
+    -o-transition: all .15s ease-out;
+    transition: all .15s ease-out;
+}
+.textcolor {
+    display: block;
+    padding: .5rem 1rem;
+    color: #fff;
+}
+    .textcolor:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
+.mytravelclubcontent {
+    position: relative;
+    background: #fff;
+    padding: 18px;
+    border: 1px solid #97aabf;
+    float: right;
+    width: 760px;
+    top: -349px;
+}
+.mytravelclubjumbotron {
+    box-sizing: border-box;
+    padding: 11px;
+    float: left;
+    width: 100%;
+    position: relative;
+    background-color:#fff
+}
+.iconcolumn {
+    position: absolute;
+    top: 21px;
+    left: 20px;
+    font-size: 40px;
+    font-size: 4rem;
+}
+.welcomemytravelclub {
+    position: relative;
+    border-bottom: 2px solid #009ee0;
+    padding-top: 10px;
+    padding-bottom: 12px;
+    margin-bottom: 15px;
+    float: left;
+    width: 100%;
+}
+.mytravelclubheaders {
+    font-size: 18px;
+    font-size: 1.1rem;
+    line-height: 21px;
+    line-height: 2.1rem;
+    font-weight: bold;
+    color: #000;
+    display: block;
+    padding-bottom: 6px;
+}
+.mytravelclubtext {
+    font-size: 12px;
+    font-size: 1.1rem;
+    line-height: 15px;
+    line-height: 1.5rem;
+    color: #000;
+}
+
+.menu-column {
+    width: 60%;
+    float: inherit;
+    display:block;
+}
+.borderlines {
+    border: solid;
+    border-color:black;
+    border-width:1px;
+    margin:3%;
+}
+
+.navbar-column{
+    float: left;
+}
+
+.header{
+    background-color: white;
+    padding-top: 100px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
+}
+
+
+/* Clear floats after the columns */
+.Row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
 
 .navbar-brand {
     white-space: normal;
@@ -269,6 +435,7 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
+    font-family: Arial;
 }
 
 .footer {
@@ -285,4 +452,10 @@ body {
 
 .form-control {
     width: 100% !important;
+}
+
+.page_title {
+    text-align: center;
+    background: rgba(227,154,26,0.95);
+    color: white;
 }
