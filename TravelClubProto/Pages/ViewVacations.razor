@@ -22,7 +22,7 @@
             <h6>Aktiviteter </h6>
             @foreach (Activity act in activeActivities)
             {
-                <input type="checkbox" @onchange="eventArgs => { CheckboxClickedAct(act.Type, eventArgs.Value); }" />@act.Type<br />
+                <input type="checkbox" @onchange="eventArgs => { CheckboxClickedAct(act, eventArgs.Value); }" />@act.Type<br />
             }
             <h6>Lufthavne </h6>
             @foreach (string departureAirport in activeAirports)
@@ -315,8 +315,8 @@
         UpdateViewedVacation();
     }
 
-    public List<string> ChosenActivities { get; set; } = new List<string>();
-    void CheckboxClickedAct(string value, object checkedValue)
+    public List<Activity> ChosenActivities { get; set; } = new List<Activity>();
+    void CheckboxClickedAct(Activity value, object checkedValue)
     {
 
         if ((bool)checkedValue)
@@ -359,50 +359,35 @@
 
     private void UpdateViewedVacation()
     {
-        if (ChosenCountries.Count == 0 && ChosenActivities.Count == 0 && ChosenAirports.Count == 0)
-        {
-            ViewedVacations = vacations.ToList();
-        } else
-        {
-            ViewedVacations.Clear();
-        }
-        foreach (Vacation vac in vacations)
-        {
-            foreach (string country in ChosenCountries)
-            {
-                if (vac.Destination.Country == country)
-                {
-                    if (!(ViewedVacations.Contains(vac)))
-                    {
-                        ViewedVacations.Add(vac);
-                    }
-                }
-            }
+        ViewedVacations = vacations.ToList();
 
-            foreach (string actString in ChosenActivities)
-            {
-                foreach (Activity act in vac.Destination.Activities)
-                {
-                    if (actString == act.Type)
-                    {
-                        if (!(ViewedVacations.Contains(vac)))
-                        {
-                            ViewedVacations.Add(vac);
-                        }
-                    }
-                }
-            }
 
-            foreach (string airportString in ChosenAirports)
+        if (ChosenCountries.Count() > 0)
+        {
+            ViewedVacations = ViewedVacations.Where(v => ChosenCountries.Contains(v.Destination.Country)).ToList();
+        }
+
+        if (ChosenActivities.Count() > 0)
+        {
+            List<Vacation> foundVacs = new List<Vacation>();
+            foreach (Activity actString in ChosenActivities)
             {
-                if (vac.DepartureAirport == airportString)
+                foreach (Vacation vac in ViewedVacations)
                 {
-                    if (!(ViewedVacations.Contains(vac)))
+                    if (vac.Destination.Activities.Contains(actString))
                     {
-                        ViewedVacations.Add(vac);
+                        foundVacs.Add(vac);
                     }
                 }
             }
+            ViewedVacations = foundVacs.ToList();
         }
+
+        if (ChosenAirports.Count > 0)
+        {
+            ViewedVacations = ViewedVacations.Where(v => ChosenAirports.Contains(v.DepartureAirport)).ToList();
+        }
+
+        ViewedVacations = ViewedVacations.Distinct().ToList();
     }
 }
