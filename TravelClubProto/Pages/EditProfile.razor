@@ -94,62 +94,59 @@
                 </div>
         </BSJumbotron>
 
-    @code {
+@code {
 
-        public List<Vacation> vacations;
+    public List<Vacation> vacations;
 
-        bool collapseNavMenu = true;
+    bool collapseNavMenu = true;
 
-        string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
 
-        string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
 
-        void ToggleNavMenu()
-        {
-            collapseNavMenu = !collapseNavMenu;
-        }
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
 
-        void LogOut(MouseEventArgs e)
-        {
-            DaService.LoggedIn = false;
-        }
+    void LogOut(MouseEventArgs e)
+    {
+        DaService.LoggedIn = false;
+    }
 
-        async void SaveEditedProfile(DataAccessService daService)
-        {
+    async void SaveEditedProfile(DataAccessService daService)
+    {
+    }
 
     protected override async Task OnInitializedAsync()
     {
         vacations = await DaService.GetAllVacations(DaService);
     }
 
-    async void SaveEditedProfile(DataAccessService daService)
+
+    void SaveProfile(MouseEventArgs e)
+    {
+        SaveEditedProfile(DaService);
+    }
+
+    void ConsoleWrite()
+    {
+        Console.WriteLine("Form succesfully submitted");
+    }
+
+    public class FormsModelVal
     {
 
-        }
+        [StringLength(50, ErrorMessage = "Name too long (50 character limit).")]
+        public string FullName { get; set; }
+
+        [StringLength(50, ErrorMessage = "Email too long (50 character limit).")]
+        public string Email { get; set; }
 
 
-        void SaveProfile(MouseEventArgs e)
-        {
-            SaveEditedProfile(DaService);
-        }
-
-        void ConsoleWrite()
-        {
-            Console.WriteLine("Form succesfully submitted");
-        }
-
-        public class FormsModelVal
-        {
-
-            [StringLength(50, ErrorMessage = "Name too long (50 character limit).")]
-            public string FullName { get; set; }
-
-            [StringLength(50, ErrorMessage = "Email too long (50 character limit).")]
-            public string Email { get; set; }
-
-
-
-        }
-        public FormsModelVal formsModelVal = new FormsModelVal();
 
     }
+    public FormsModelVal formsModelVal = new FormsModelVal();
+
+}
+

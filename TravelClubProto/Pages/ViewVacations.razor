@@ -28,7 +28,6 @@
                 <p>@vac.Description</p>
             </div>
         </div>
-    </a>
     <div class="ViewDescriptionRow">
         <div class="VacationHotelColumn">
             <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
@@ -60,7 +59,7 @@
 
         }
 
-        @if ( vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
+        @if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
         {
             <BSButton class="btn btn-outline-info btn-lg HeartIconFill" @onclick="@(e => UnFavouriteVacation(vac))"></BSButton>
         }
@@ -70,11 +69,8 @@
         }
         <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
 
-
-
-
     </div>
-
+     
 
     @*MODAL FOR LOGIN PROMPT*@
     <BSModal @ref="LoginModal" IsCentered="true">
@@ -122,8 +118,8 @@
         BSModal LoginModal;
         BSModal WarningBox { get; set; }
         int customerID = -1;
-    public List<Vacation> vacations;
-    string notloggedinfeedback;
+        public List<Vacation> vacations;
+        string notloggedinfeedback;
 
     void OnToggleLogin(MouseEventArgs e)
     {
@@ -191,7 +187,7 @@
     }
 
 
-    @*Calculates progress bar fill value from joined user and stretch goals*@
+                    @*Calculates progress bar fill value from joined user and stretch goals*@
     int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
     {
         int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
@@ -211,25 +207,37 @@
         }
     }
 
-public void FavouriteVacation(Vacation vac)
-{
-    checkCookie();
-    if (DaService.LoggedIn == true && customerID != -1) {
-        notloggedinfeedback = string.Empty;
-        vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
-    }
-    else
+    public void UnFavouriteVacation(Vacation vac)
     {
-        string cookie = await localStorage.GetItemAsStringAsync("login");
-        if (cookie != null)
+        if (DaService.LoggedIn == true)
         {
-            string[] splitCookie = cookie.Split(",");
-            if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
-            {
-                customerID = Convert.ToInt32(splitCookie[0]);
-            }
+            notloggedinfeedback = string.Empty;
+            vac.TravelGroup.LeaveVacation(customerID);
+        }
+        else
+        {
         }
     }
+    //public void FavouriteVacation(Vacation vac)
+    //{
+    //    checkCookie();
+    //    if (DaService.LoggedIn == true && customerID != -1) {
+    //        notloggedinfeedback = string.Empty;
+    //        vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
+    //    }
+    //    else
+    //    {
+    //        string cookie = await localStorage.GetItemAsStringAsync("login");
+    //        if (cookie != null)
+    //        {
+    //            string[] splitCookie = cookie.Split(",");
+    //            if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
+    //            {
+    //                customerID = Convert.ToInt32(splitCookie[0]);
+    //            }
+    //        }
+    //    }
+    //}
 
     public void FavouriteVacation(Vacation vac)
     {
@@ -245,4 +253,5 @@ public void FavouriteVacation(Vacation vac)
         }
 
     }
+
 }
