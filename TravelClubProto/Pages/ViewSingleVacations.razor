@@ -125,6 +125,9 @@
     public List<Vacation> vacations;
     string notloggedinfeedback;
 
+    [Parameter]
+    public string VacationID { get; set; }
+
     void OnToggleLogin(MouseEventArgs e)
     {
         LoginModal.Toggle();
@@ -221,8 +224,7 @@
     }
 
 
-    [Parameter]
-    public string VacationID { get; set; }
+
 
 
     @*Calculates progress bar fill value from joined user and stretch goals*@
