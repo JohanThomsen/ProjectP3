@@ -37,34 +37,6 @@ namespace TravelClubProto.Data
             }
         }
 
-        public void InsertNewDestination(string hotel, string location)
-        {
-
-            //Connects to the azure sql database
-            SqlConnection con = new SqlConnection(ConnectionString);
-            try
-            {
-                //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string query = "INSERT INTO [dbo].[Destination] (Hotel, Location) VALUES(@Hotel, @Location)";
-                //SqlCommand is used to build up commands
-                SqlCommand sqlCommand = new SqlCommand(query, con);
-                con.Open();
-                sqlCommand.Parameters.AddWithValue("@Hotel", hotel);
-                sqlCommand.Parameters.AddWithValue("@Location", location);
-                //The built commands are executed
-                sqlCommand.ExecuteNonQuery();
-            }
-            //Catches the error and prints it
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            finally
-            {
-                con.Close();
-            }
-        }
-
         public async Task<List<Destination>> GetAllDestinations(DataAccessService DaService)
         {
             List<Destination> Destinations = new List<Destination>();
@@ -97,24 +69,6 @@ namespace TravelClubProto.Data
             return await Task.FromResult(Destinations);
         }
 
-        public void DeleteDestinationByLocation(string location)
-        {
-            try
-            {
-                using (var sc = new SqlConnection(ConnectionString))
-                using (var cmd = sc.CreateCommand())
-                {
-                    sc.Open();
-                    cmd.CommandText = "DELETE FROM [dbo].Destination WHERE Location=@location";
-                    cmd.Parameters.AddWithValue("@location", location);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
 
         public async Task<List<Activity>> GetAllActivities(DataAccessService DaService)
         {
@@ -294,7 +248,5 @@ namespace TravelClubProto.Data
             }
             return count;
         }
-    }
-
-   
+    } 
 }
