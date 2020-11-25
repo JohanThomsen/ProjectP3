@@ -9,44 +9,6 @@
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
 
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm">
-                <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-                    <ul class="navbar-nav flex-grow-1">
-                        <BSNav IsList="true" IsVertical="true">
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
-                                    <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="ProposeVacation">
-                                    <span class="oi oi-cog" aria-hidden="true"></span> Foreslå feriepakker
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="AdminVacationBureau">
-                                    <span class="oi oi-globe" aria-hidden="true"></span> Administrer feriepakker
-                                </NavLink>
-                            </li>
-                        </BSNav>
-                    </ul>
-                </div>
-            </div>
-            <div class="vacation-column">
-                <h4>Administrer rejsepakker</h4>
-                <ul>
-                    @foreach (Vacation vac in vacations)
-                    {
-                        if (vac.State == "Proposed" || vac.State == "published" || vac.State == "GracePeriod")
-                        {
-                            <!-- vac.Destination.AddActivity(); -->
-
 <BSJumbotron class="mytravelclubjumbotron">
     <div>
         <div>
@@ -134,52 +96,43 @@
         </div>
     </div>
 </BSJumbotron>
+
 @code {
 
-    bool collapseNavMenu = true;
+        bool collapseNavMenu = true;
 
-    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+        string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
 
-    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+        string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
 
-    public List<Vacation> vacations;
+        int ID;
 
-    void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
+        string loginInfo;
 
-    protected override async Task OnInitializedAsync()
-    {
-        vacations = await DaService.GetAllVacations(DaService);
-    }
+        string[] loginresult;
 
-    void ChangeVacState(Vacation vac, string state)
-    {
-        vac.State = state;
-    }
+        Account acc;
 
-    bool collapseNavMenu = true;
+        List<Vacation> vacations = new List<Vacation>();
 
-    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+        void ToggleNavMenu()
+        {
+            collapseNavMenu = !collapseNavMenu;
+        }
 
-    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+        protected override async Task OnInitializedAsync()
+        {
+            vacations = await DaService.GetAllVacations(DaService);
+        }
 
-    int ID;
+        void ChangeVacState(Vacation vac, string state)
+        {
+            vac.State = state;
+        }
 
-    string loginInfo;
 
-    string[] loginresult;
-
-    Account acc;
-
-    void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
-    void LogOut(MouseEventArgs e)
-    {
-        DaService.LoggedIn = false;
-    }
+        void LogOut(MouseEventArgs e)
+        {
+            DaService.LoggedIn = false;
+        }
 }
