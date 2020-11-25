@@ -1,5 +1,4 @@
-﻿@page "/JoinedVacations"
-
+﻿@page "/ParticipatedVacations"
 @using Microsoft.Extensions.Configuration;
 @using System.Collections.Generic;
 @using System.Data;
@@ -8,6 +7,8 @@
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
 
 <BSJumbotron Class="mytravelclubjumbotron">
     <div>
@@ -15,8 +16,6 @@
             <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-
             <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
                 <BSNav IsList="true" IsVertical="true" Class="mytravelclubmenulist">
                     <li class="mytravelclubmenulistitem">
@@ -78,82 +77,66 @@
                 </BSNav>
             </div>
         </div>
-        <div class="mytravelclubcontent">
-            <h2 class="welcomemytravelclub">Dine tilmeldte Feriepakker</h2>
-            <ul>
-                @foreach (int item in JoinedVacs)
+    </div>
+    <div class="mytravelclubcontent">
+        <h2 class="welcomemytravelclub">Dine gennemførte rejser</h2>
+        <ul>
+            @foreach (int item in ParticipatedVacs)
+            {
+                foreach (Vacation vac in vacations)
                 {
-                    foreach (Vacation vac in vacations)
+                    if (item == vac.ID)
                     {
-                        if (item == vac.ID)
-                        {
-                            <!-- vac.Destination.AddActivity(); -->
+                        <!-- vac.Destination.AddActivity(); -->
+                        <BSJumbotron Class="jumbotronParticipated">
+                            <div class="PartipatedVacationImage">
+                                <BSFigureImage src="@vac.ImageLink" />
+                            </div>
 
-                            <BSJumbotron>
+                            <div class="ParticipatedDescriptionRow">
+                                <div class="VacationHotelColumn">
+                                    <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+                                    <h10>ID:  @vac.ID </h10>
 
-                                <div class="ViewVacationImage">
-                                    <BSFigureImage src="@vac.ImageLink" />
+                                    <h2>Feriebeskrivelse: </h2>
+                                    <p>@vac.Description</p>
                                 </div>
-
-                                <div class="ViewDescriptionRow">
-                                    <div class="VacationHotelColumn">
-                                        <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                                        <h10>ID:  @vac.ID </h10>
-
-                                        <h2>Feriebeskrivelse: </h2>
-                                        <p>@vac.Description</p>
-                                    </div>
-                                </div>
-
-                                <br />
-
-                                <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-                                <p>
-                                    @for (int i = 0; i < @vac.Prices.Count; i++)
-                                    {
-                                        string priceIntervalHolder = "";
-                                        priceIntervalHolder += vac.Prices[i] + "kr.";
-                                        <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
-                                    }
-                                </p>
-                                <h6>Deadline: @vac.Dates["Deadline"]</h6>
-                            </BSJumbotron>
-                        }
+                            </div>
+                        </BSJumbotron>
                     }
                 }
-            </ul>
-        </div>
+            }
+        </ul>
     </div>
-    </BSJumbotron>
+</BSJumbotron>
 
+@code {
 
-    @code {
-        public List<int> JoinedVacs = new List<int>();
-        public List<Vacation> vacations;
+    public List<int> ParticipatedVacs = new List<int>();
+    public List<Vacation> vacations;
 
-        protected override async Task OnInitializedAsync()
-        {
-            JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Joined");
-            vacations = await DaService.GetAllVacations(DaService);
-
-        }
-
-        CustomerVacations CustomerVac => new CustomerVacations(DaService);
-
-        bool collapseNavMenu = true;
-
-        string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
-
-        string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
-
-        void ToggleNavMenu()
-        {
-            collapseNavMenu = !collapseNavMenu;
-        }
-
-        void LogOut(MouseEventArgs e)
-        {
-            DaService.LoggedIn = false;
-        }
-
+    protected override async Task OnInitializedAsync()
+    {
+        ParticipatedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Participated");
+        vacations = await DaService.GetAllVacations(DaService);
     }
+
+    CustomerVacations CustomerVac => new CustomerVacations(DaService);
+
+    bool collapseNavMenu = true;
+
+    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+
+    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    void LogOut(MouseEventArgs e)
+    {
+        DaService.LoggedIn = false;
+    }
+}
+

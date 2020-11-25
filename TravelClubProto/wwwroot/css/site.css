@@ -57,20 +57,17 @@
 .FormsCollection > button {
     height:3rem;
     margin:0.5%;
-    width:200%;
-    overflow-x:visible;
 }
 
-.IndexDisplayColumn {
+.VacFigureImg{
+    position: relative;
+    width:19%;
+    height:7.5%;
     float: left;
-    margin: 0.5%;
+    margin:0.5%;
+    
 }
 
-.IndexDisplayRow::after {
-    content: "";
-    display: table;
-    clear: both;
-}
 /*Progressbar Appearance
 --------------------------------------------------------------------------------*/
 .progressBarGeneratorVS{
@@ -113,7 +110,8 @@ progress.progressBarJoinedUsersVS {
 .progStretchGoal{
     float:left;
 }
-/*View singele vacations layout*/
+/*View singele vacations layout
+-----------------------------------------------------------*/
 
 .ViewSingleVacationHotel {
     margin: 1%;
@@ -183,7 +181,8 @@ progress.progressBarJoinedUsersVS {
 }
 
 
-/*Propose vacations page appearance*/
+/*Propose vacations page appearance
+-----------------------------------------------------------------*/
 .AddPriceButton{
     margin-top:1%;
     margin-bottom:1%;
