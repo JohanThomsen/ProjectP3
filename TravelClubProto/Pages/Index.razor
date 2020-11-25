@@ -10,46 +10,34 @@
             <BSForm Model="@formsModelVal">
                 <BSBasicForm IsInline="true">
 
+                    <BSFormGroup Class="home-search">
+                        <BlazoredTypeahead SearchMethod="SearchVacationAirport" @bind-Value="formsModelVal.Afrejselufthavn" Context="Departure" EnableDropDown="true" ShowDropDownOnFocus="true">
+                            <SelectedTemplate>@Departure</SelectedTemplate>
+                            <ResultTemplate>@Departure</ResultTemplate>
+                        </BlazoredTypeahead>
+                    </BSFormGroup>
 
-                    <BlazoredTypeahead SearchMethod="SearchVacationAirport" @bind-Value="formsModelVal.Afrejselufthavn" Context="Departure" EnableDropDown="true" ShowDropDownOnFocus="true">
-                        <SelectedTemplate>@Departure</SelectedTemplate>
-                        <ResultTemplate>@Departure</ResultTemplate>
-                    </BlazoredTypeahead>
-
-                    <BlazoredTypeahead SearchMethod="SearchVacationDestination" @bind-Value="formsModelVal.Rejsemål" Context="Destination">
-                        <SelectedTemplate>@Destination</SelectedTemplate>
-                        <ResultTemplate>@Destination</ResultTemplate>
-                    </BlazoredTypeahead>
-
+                    <BSFormGroup Class="home-search">
+                        <BlazoredTypeahead SearchMethod="SearchVacationDestination" @bind-Value="formsModelVal.Rejsemål" Context="Destination" EnableDropDown="true" ShowDropDownOnFocus="true">
+                            <SelectedTemplate>@Destination</SelectedTemplate>
+                            <ResultTemplate>@Destination</ResultTemplate>
+                        </BlazoredTypeahead>
+                    </BSFormGroup>
+    
                     <BSFormGroup Class="home-search">
                         <BSLabel for="InputEmail"></BSLabel>
-                        <BSInput id="InputEmail" InputType="InputType.Text" PlaceHolder="Afrejselufthavn" @bind-Value="formsModelVal.Afrejselufthavn"></BSInput>
+                        <BSInput id="InputEmail" InputType="InputType.Date" PlaceHolder="Afrejse dato" @bind-Value="formsModelVal.AfrejseDato"></BSInput>
                     </BSFormGroup>
 
                     <BSFormGroup Class="home-search">
                         <BSLabel for="InputPassword"></BSLabel>
-                        <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Rejsemål" @bind-Value="formsModelVal.Rejsemål"></BSInput>
+                        <BSInput id="InputPassword" InputType="InputType.Date" PlaceHolder="Hjemrejse dato" @bind-Value="formsModelVal.HjemrejseDato"></BSInput>
                     </BSFormGroup>
-
-                    <BSFormGroup Class="home-search">
-                        <BSLabel for="InputEmail"></BSLabel>
-                        <BSInput id="InputEmail" InputType="InputType.Text" PlaceHolder="Afrejse dato" @bind-Value="formsModelVal.AfrejseDato"></BSInput>
-                    </BSFormGroup>
-
-                    <BSFormGroup Class="home-search">
-                        <BSLabel for="InputPassword"></BSLabel>
-                        <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Hjemrejse dato" @bind-Value="formsModelVal.HjemrejseDato"></BSInput>
-                    </BSFormGroup>
-
-                    <BSFormGroup Class="home-search">
-                        <BSLabel for="InputPassword"></BSLabel>
-                        <BSInput id="InputPassword" InputType="InputType.Text" PlaceHolder="Antal deltagere" @bind-Value="formsModelVal.AntalDeltagere"></BSInput>
-                    </BSFormGroup>
-
+                    <a class="btn btn-primary" href="/vacationView/@formsModelVal.Afrejselufthavn/@formsModelVal.Rejsemål/@formsModelVal.AfrejseDato.ToBinary().ToString()/@formsModelVal.HjemrejseDato.ToBinary().ToString()" role="button">Se mere</a>
                     <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Søg</BSButton>
                 </BSBasicForm>
             </BSForm>
-            <h1 class=""></h1>
+            <h1 class=""> @formErrorInput</h1>
             <p class=""></p>
         </BSContainer>
     </BSJumbotron>
@@ -103,9 +91,9 @@
 
         foreach (Vacation vac in vacations)
         {
-            if (!(destinations.Contains(vac.Destination.CountryLocationHotel)))
+            if (!(destinations.Contains(vac.Destination.Country)))
             {
-                destinations.Add(vac.Destination.CountryLocationHotel);
+                destinations.Add(vac.Destination.Country);
             }
         }
     }
@@ -143,18 +131,14 @@
         [StringLength(50, ErrorMessage = "password too long (20 character limit).")]
         public string Rejsemål { get; set; }
 
+        public DateTime AfrejseDato { get; set; } = DateTime.Now;
 
-        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
-        public string AfrejseDato { get; set; }
+        public DateTime HjemrejseDato { get; set; } = DateTime.Now;
 
-
-        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
-        public string HjemrejseDato { get; set; }
-
-
-        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
         public int AntalDeltagere { get; set; }
 
     }
     FormsModelVal formsModelVal = new FormsModelVal();
+
+    string formErrorInput = "";
 }
