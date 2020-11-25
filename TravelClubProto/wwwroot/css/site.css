@@ -155,18 +155,34 @@ progress.progressBarJoinedUsersVS {
     border: 1px solid rgb(149, 168, 189)
 }
 
+.mytravelclubcontentelementsright {
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #97aabf;
+    float: right;
+    width: 49%;
+    padding: 1%;
+    padding-left: 19%;
+    margin-bottom: 1%;
+    margin-left: 1%;
+    text-decoration: none;
+    -webkit-transition: all .15s ease-out;
+    -moz-transition: all .15s ease-out;
+    -o-transition: all .15s ease-out;
+    transition: all .15s ease-out;
+}
 
 
-.mytravelclubcontentelements {
+.mytravelclubcontentelementsleft {
     position: relative;
     background-color: #fff;
     border: 1px solid #97aabf;
     float: left;
-    width: 333px;
-    padding: 20px;
-    padding-left: 100px;
-    margin-bottom: 10px;
-    margin-left: 16px;
+    width: 49%;
+    padding: 1%;
+    padding-left: 19%;
+    margin-bottom: 1%;
+    margin-left: 1%;
     text-decoration: none;
     -webkit-transition: all .15s ease-out;
     -moz-transition: all .15s ease-out;
@@ -245,52 +261,69 @@ progress.progressBarJoinedUsersVS {
         text-decoration: underline;
     }
 .mytravelclubcontent {
-    position: relative;
+    position: inherit;
     background: #fff;
-    padding: 18px;
+    padding: 1%;
     border: 1px solid #97aabf;
     float: right;
-    width: 760px;
-    top: -349px;
+    width: 73%;
+    margin-top: -32.3%;
 }
 .mytravelbureaucontent{
-    position: relative;
+    position: inherit;
     background: #fff;
-    padding: 18px;
+    padding: 1%;
     border: 1px solid #97aabf;
     float: right;
-    width: 760px;
-    top: -183px;
+    width: 69%;
+    margin-top: -17.2%;
 }
 .mytravelclubadmincontent {
-    position: relative;
+    position: inherit;
     background: #fff;
-    padding: 18px;
+    padding: 1%;
     border: 1px solid #97aabf;
     float: right;
-    width: 760px;
-    top: -239px;
+    width: 72%;
+    margin-top: -24.1%;
 }
+.mytravelclubadminmenulist {
+    display: table-cell;
+    background-color: #30343e;
+    color: inherit;
+    width: 27%;
+    float: left;
+    position: inherit;
+    margin-right: 73%;
+}
+
+.mytravelbureaumenulist {
+    display: table-cell;
+    background-color: #30343e;
+    color: inherit;
+    width: 39%;
+    float: left;
+    position: inherit;
+    margin-right: 61%;
+}
+
 .mytravelbureautext {
-    font-size: 12px;
     font-size: 1.2rem;
-    line-height: 15px;
     line-height: 1.5rem;
     color: #000;
 }
 .mytravelclubjumbotron {
     box-sizing: border-box;
-    padding: 11px;
+    padding: 2%;
     float: left;
     width: 100%;
-    position: relative;
-    background-color:#fff
+    position: inherit;
+    background-color: #fff;
 }
 .iconcolumn {
     position: absolute;
-    top: 21px;
-    left: 20px;
-    font-size: 40px;
+    top: 25%;
+    left: 8%;
     font-size: 4rem;
 }
 .welcomemytravelclub {
@@ -303,19 +336,15 @@ progress.progressBarJoinedUsersVS {
     width: 100%;
 }
 .mytravelclubheaders {
-    font-size: 18px;
     font-size: 1.1rem;
-    line-height: 21px;
     line-height: 2.1rem;
     font-weight: bold;
     color: #000;
     display: block;
-    padding-bottom: 6px;
+    padding-bottom: 1%;
 }
 .mytravelclubtext {
-    font-size: 12px;
     font-size: 1.1rem;
-    line-height: 15px;
     line-height: 1.5rem;
     color: #000;
 }
