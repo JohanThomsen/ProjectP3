@@ -9,6 +9,8 @@
 @inject DataAccessService DaService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
     <BSJumbotron Class="mytravelclubjumbotron">
+        <div>
+
             <div>
                 <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
                     <span class="navbar-toggler-icon"></span>
@@ -57,6 +59,14 @@
                                 Favoriserede feriepakker
                             </NavLink>
                         </li>
+                        <li class="mytravelclubmenulistitem">
+                            <NavLink class="textcolor" href="ParticipatedVacations">
+                                <div class="mytravelclubmenulisticon">
+                                    <span class="oi oi-globe" aria-hidden="true"></span>
+                                </div>
+                                Gennemførte rejser
+                            </NavLink>
+                        </li>
                         <li class="mytravelclubmenulistitem" @onclick="LogOut">
                             <NavLink class="textcolor" href="">
                                 <div class="mytravelclubmenulisticon">
@@ -68,31 +78,34 @@
                     </BSNav>
                 </div>
             </div>
-                <div class="mytravelclubcontent">
-                    <h2 class="welcomemytravelclub">Rediger din profil</h2>
-                    <BSForm Model="formsModelVal" OnValidSubmit="ConsoleWrite">
-                        <BSFormGroup>
-                            <BSLabel For="exampleInputFullName">Fulde navn:</BSLabel>
-                            <BSInput Id="exampleInputFirstName" InputType="InputType.Text" PlaceHolder="Thomas Larsen" @bind-Value="formsModelVal.FullName"></BSInput>
-                        </BSFormGroup>
-                        <BSFormGroup>
-                            <BSLabel For="exampleInputEmail1">Email addresse</BSLabel>
-                            <BSInput Id="exampleInputEmail1" InputType="InputType.Email" PlaceHolder="" @bind-Value="formsModelVal.Email"></BSInput>
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                        </BSFormGroup>
-                        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfile">Gem profil</BSButton>
-                        @*@foreach (Vacation vac in vacations )
-                    {
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck">
-                        <label class="form-check-label" for="defaultCheck">
-                            @vac.Destination
-                        </label>
-                    </div>
-                    }*@
-                    </BSForm>
+            <div class="mytravelclubcontent">
+                <h2 class="welcomemytravelclub">Rediger din profil</h2>
+                <BSForm Model="formsModelVal" OnValidSubmit="ConsoleWrite">
+                    <BSFormGroup>
+                        <BSLabel For="exampleInputFullName">Fulde navn:</BSLabel>
+                        <BSInput Id="exampleInputFirstName" InputType="InputType.Text" PlaceHolder="Thomas Larsen" @bind-Value="formsModelVal.FullName"></BSInput>
+                    </BSFormGroup>
+                    <BSFormGroup>
+                        <BSLabel For="exampleInputEmail1">Email addresse</BSLabel>
+                        <BSInput Id="exampleInputEmail1" InputType="InputType.Email" PlaceHolder="" @bind-Value="formsModelVal.Email"></BSInput>
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </BSFormGroup>
+                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfile">Gem profil</BSButton>
+                    @*@foreach (Vacation vac in vacations )
+                {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck">
+                    <label class="form-check-label" for="defaultCheck">
+                        @vac.Destination
+                    </label>
                 </div>
-        </BSJumbotron>
+                }*@
+                </BSForm>
+
+            </div>
+        </div>
+
+    </BSJumbotron>
 
 @code {
 

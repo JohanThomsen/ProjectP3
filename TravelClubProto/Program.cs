@@ -23,6 +23,7 @@ namespace TravelClubProto
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStaticWebAssets();
                 });
     }
 }

@@ -47,48 +47,93 @@
                         {
                             <!-- vac.Destination.AddActivity(); -->
 
-                            <BSJumbotron>
+<BSJumbotron class="mytravelclubjumbotron">
+    <div>
+        <div>
 
-                                <div class="ViewVacationImage">
-                                    <BSFigureImage src="@vac.ImageLink" />
-                                </div>
-
-                                <div class="ViewDescriptionRow">
-                                    <div class="VacationHotelColumn">
-                                        <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                                        <h10>ID:  @vac.ID </h10>
-
-                                        <h2>Feriebeskrivelse: </h2>
-                                        <p>@vac.Description</p>
-                                    </div>
-                                </div>
-
-                                <br />
-
-                                <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-                                <p>
-                                    @for (int i = 0; i < @vac.Prices.Count; i++)
-                                    {
-                                        string priceIntervalHolder = "";
-                                        priceIntervalHolder += vac.Prices[i] + "kr.";
-                                        <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
-                                    }
-                                </p>
-                                <h6>Deadline: @vac.Dates["Deadline"]</h6>
-
-                                <BSButton @onclick="@(e => ChangeVacState(vac, "Cancelled"))">Fjern</BSButton>
-                            </BSJumbotron>
-                        }
-
-                    }
-                </ul>
+            <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+                <BSNav IsList="true" IsVertical="true" class="mytravelbureaumenulist">
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-person" aria-hidden="true"></span>
+                            </div>
+                            Mit TravelClub
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="ProposeVacation">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-cog" aria-hidden="true"></span>
+                            </div>
+                            Tilbyd feriepakke
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="AdminVacationBureau">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-globe" aria-hidden="true"></span>
+                            </div>
+                            Administrer feriepakker
+                        </NavLink>
+                    </li>
+                </BSNav>
             </div>
         </div>
+        <div class="mytravelbureaucontent">
+            <h2 class="welcomemytravelclub"> Administrer feriepakker</h2>
+             <ul>
+
+
+                @foreach (Vacation vac in vacations)
+                {
+                    if (vac.State == "Proposed" || vac.State == "published" || vac.State == "GracePeriod")
+                    {
+                        <!-- vac.Destination.AddActivity(); -->
+
+                        <BSJumbotron class="mytravelclubjumbotron">
+
+                        <div class="ViewVacationImage">
+                            <BSFigureImage src="@vac.ImageLink" />
+                        </div>
+
+                        <div class="ViewDescriptionRow">
+                            <div class="VacationHotelColumn">
+                                <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+                                <h10>ID:  @vac.ID </h10>
+
+                                <h2>Feriebeskrivelse: </h2>
+                                <p>@vac.Description</p>
+                            </div>
+                        </div>
+
+                        <br />
+
+                        <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+                        <p>
+                            @for (int i = 0; i < @vac.Prices.Count; i++)
+                            {
+                                string priceIntervalHolder = "";
+                                priceIntervalHolder += vac.Prices[i] + "kr.";
+                                <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
+                            }
+                        </p>
+                        <h6>Deadline: @vac.Dates["Deadline"]</h6>
+
+                        <BSButton @onclick="@(e => ChangeVacState(vac, "Cancelled"))">Fjern</BSButton>
+
+                        </BSJumbotron>
+                    }
+
+                }
+             </ul>
+
+        </div>
     </div>
-</nav>
-
-
-
+</BSJumbotron>
 @code {
 
     bool collapseNavMenu = true;
@@ -113,5 +158,28 @@
     {
         vac.State = state;
     }
-}
 
+    bool collapseNavMenu = true;
+
+    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+
+    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+
+    int ID;
+
+    string loginInfo;
+
+    string[] loginresult;
+
+    Account acc;
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    void LogOut(MouseEventArgs e)
+    {
+        DaService.LoggedIn = false;
+    }
+}

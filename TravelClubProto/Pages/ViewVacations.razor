@@ -6,120 +6,179 @@
 @inject DataAccessService DaService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<h3 class="page_title">Se ferier</h3>
+<h3>Se ferier</h3>
 
-@foreach (Vacation vac in vacations)
-{
-    int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
-    int stretchGoalsMax = vac.StretchGoals.Max();
-    <BSJumbotron>
 
-        <a class="" href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
-            <div class="ViewVacationImage">
-                <BSFigureImage src="@vac.ImageLink" />
-            </div>
-        </a>
-        <div class="ViewDescriptionRow">
-            <div class="VacationHotelColumn">
-                <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                <h10>ID:  @vac.ID </h10>
-
-                <h2>Feriebeskrivelse: </h2>
-                <p>@vac.Description</p>
-            </div>
+<button class="btn btn-danger" @onclick="OrderByPrice">Order by Price</button>
+<button class="btn btn-danger" @onclick="OrderByDeadline">Order by Deadline date</button>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-2">
+            <h6>Lande</h6>
+            @foreach (Destination dest in activeDestinations)
+            {
+                <input type="checkbox" @onchange="eventArgs => { CheckboxClickedDest(dest.Country, eventArgs.Value); }" />@dest.Country<br />
+            }
+            <h6>Aktiviteter </h6>
+            @foreach (Activity act in activeActivities)
+            {
+                <input type="checkbox" @onchange="eventArgs => { CheckboxClickedAct(act, eventArgs.Value); }" />@act.Type<br />
+            }
+            <h6>Lufthavne </h6>
+            @foreach (string departureAirport in activeAirports)
+            {
+                <input type="checkbox" @onchange="eventArgs => { CheckboxClickedAirport(departureAirport, eventArgs.Value); }" />@departureAirport<br />
+            }
         </div>
-    <div class="ViewDescriptionRow">
-        <div class="VacationHotelColumn">
-            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-            <h10>ID:  @vac.ID </h10>
+        <div class="col-sm-10">
+            @foreach (Vacation vac in ViewedVacations)
+            {
+                int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
+                int stretchGoalsMax = vac.StretchGoals.Max();
+                <BSJumbotron>
+                    <a class="" href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
+                        <div class="ViewVacationImage">
+                            <BSFigureImage src="@vac.ImageLink" />
+                        </div>
+                    </a>
+                    <div class="ViewDescriptionRow">
+                        <div class="VacationHotelColumn">
+                            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+                            <h10>ID:  @vac.ID </h10>
 
-            <h2>Feriebeskrivelse: </h2>
-            <p>@vac.Description</p>
+                            <h2>Feriebeskrivelse: </h2>
+                            <p>@vac.Description</p>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+                    <p>
+                        @for (int i = 0; i < @vac.Prices.Count; i++)
+                        {
+                            string priceIntervalHolder = "";
+                            priceIntervalHolder += vac.Prices[i] + "kr.";
+                            <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
+                        }
+
+
+                    </p>
+                    <span class="progressBarGenerator">
+                        @for (int i = 0; i < vac.StretchGoals.Count; i++)
+                        {
+                            <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+
+                        }
+                        <span>
+                        <div>
+                            @for (int i = 0; i < vac.StretchGoals.Count; i++)
+                            {
+                                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+
+                            }
+
+                            @if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
+                            {
+                                <BSButton class="btn btn-outline-info btn-lg HeartIconFill" @onclick="@(e => UnFavouriteVacation(vac))"></BSButton>
+                            }
+                            else
+                            {
+                            <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
+                            }
+                            <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
+
+                        </div>
+                        </span>
+                    </span>
+
+                    @*MODAL FOR LOGIN PROMPT*@
+                    <BSModal @ref="LoginModal" IsCentered="true">
+                        <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
+                        <BSModalBody>
+                            <p>
+                                @notloggedinfeedback <br /><br />
+                                <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite" Context="login">
+
+                                    <BSFormGroup>
+                                        @*Input for user email*@
+                                        <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                                        <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                                    </BSFormGroup>
+
+                                    <BSFormGroup>
+                                        @*Input for user password*@
+                                        <BSLabel for="InputPassword">Kodeord</BSLabel>
+                                        <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                                    </BSFormGroup>
+
+                                    <BSFormGroup IsCheck="true">
+                                        @*Remember me check box*@
+                                        <BSInput Id="ModalCheck" InputType="InputType.Checkbox" @bind-Value="formsModelVal.Valid"></BSInput>
+                                        <BSLabel IsCheck="true" For="ModalCheck">Husk mig</BSLabel>
+                                    </BSFormGroup>
+
+                                    @*Submit Button*@
+                                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
+                                </BSForm>
+                            </p>
+                        </BSModalBody>
+                    </BSModal>
+
+                    <BSModal @ref="WarningBox" Size="Size.Medium">
+                        <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
+                        <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
+                    </BSModal>
+
+
+                    <h6>Deadline: @vac.Dates["Deadline"]</h6>
+                </BSJumbotron>
+            }
         </div>
     </div>
-
-    <br />
-
-    <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-    <p>
-        @for (int i = 0; i < @vac.Prices.Count; i++)
-        {
-            string priceIntervalHolder = "";
-            priceIntervalHolder += vac.Prices[i] + "kr.";
-            <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
-        }
+</div>
 
 
-    </p>
 
-    <div>
-        @for (int i = 0; i < vac.StretchGoals.Count; i++)
-        {
-            <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
-
-        }
-
-        @if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
-        {
-            <BSButton class="btn btn-outline-info btn-lg HeartIconFill" @onclick="@(e => UnFavouriteVacation(vac))"></BSButton>
-        }
-        else
-        {
-        <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
-        }
-        <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
-
-    </div>
-
-
-    @*MODAL FOR LOGIN PROMPT*@
-    <BSModal @ref="LoginModal" IsCentered="true">
-        <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
-        <BSModalBody>
-            <p>
-                @notloggedinfeedback <br /><br />
-                <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
-
-                    <BSFormGroup>
-                        @*Input for user email*@
-                        <BSLabel for="InputEmail">Email-adresse</BSLabel>
-                        <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
-                    </BSFormGroup>
-
-                    <BSFormGroup>
-                        @*Input for user password*@
-                        <BSLabel for="InputPassword">Kodeord</BSLabel>
-                        <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
-                    </BSFormGroup>
-
-                    <BSFormGroup IsCheck="true">
-                        @*Remember me check box*@
-                        <BSInput Id="ModalCheck" InputType="InputType.Checkbox" @bind-Value="formsModelVal.Valid"></BSInput>
-                        <BSLabel IsCheck="true" For="ModalCheck">Husk mig</BSLabel>
-                    </BSFormGroup>
-
-                    @*Submit Button*@
-                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
-                </BSForm>
-            </p>
-        </BSModalBody>
-    </BSModal>
-
-    <BSModal @ref="WarningBox" Size="Size.Medium">
-        <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
-        <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
-    </BSModal>
-
-    <h6>Deadline: @vac.Dates["Deadline"]</h6>
-</BSJumbotron>
-}
 
 @code {
-        BSModal LoginModal;
-        BSModal WarningBox { get; set; }
-        int customerID = -1;
-        public List<Vacation> vacations;
+    BSModal LoginModal;
+    BSModal WarningBox { get; set; }
+    int customerID;
+    public List<Vacation> ViewedVacations;
+    public List<Vacation> vacations;
+    public List<Destination> destinations;
+    public List<Destination> activeDestinations = new List<Destination>();
+    public List<Activity> activeActivities = new List<Activity>();
+    public List<string> activeAirports = new List<string>();
     string notloggedinfeedback;
+
+    protected override async Task OnInitializedAsync()
+    {
+        vacations = await DaService.GetAllVacations(DaService);
+        destinations = await DaService.GetAllDestinations(DaService);
+        ViewedVacations = vacations.ToList();
+        foreach (Vacation vacation in vacations)
+        {
+            if (!(activeDestinations.Contains(vacation.Destination)))
+            {
+                activeDestinations.Add(vacation.Destination);
+            }
+
+            foreach (Activity act in vacation.Destination.Activities)
+            {
+                if (!(activeActivities.Contains(act)))
+                {
+                    activeActivities.Add(act);
+                }
+            }
+
+            if (!(activeAirports.Contains(vacation.DepartureAirport)))
+            {
+                activeAirports.Add(vacation.DepartureAirport);
+            }
+        }
+    }
 
     void OnToggleLogin(MouseEventArgs e)
     {
@@ -181,13 +240,8 @@
         }
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        vacations = await DaService.GetAllVacations(DaService);
-    }
 
-
-                    @*Calculates progress bar fill value from joined user and stretch goals*@
+    //Calculates progress bar fill value from joined user and stretch goals
     int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
     {
         int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
@@ -218,11 +272,12 @@
         {
         }
     }
-    
+
     public void FavouriteVacation(Vacation vac)
     {
         checkCookie();
-        if (DaService.LoggedIn == true) {
+        if (DaService.LoggedIn == true)
+        {
             notloggedinfeedback = string.Empty;
             vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
         }
@@ -231,5 +286,138 @@
             notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
             LoginModal.Toggle();
         }
+    }
+
+    public void OrderByPrice()
+    {
+        ViewedVacations = ViewedVacations.OrderBy(v => v.Prices[0]).ToList();
+    }
+
+    public void OrderByPriceDescending()
+    {
+        ViewedVacations = ViewedVacations.OrderByDescending(v => v.Prices[0]).ToList();
+    }
+
+    public void OrderByDeadline()
+    {
+        ViewedVacations = ViewedVacations.OrderBy(v => v.Dates["Deadline"]).ToList();
+    }
+
+    public void OrderByDeadlineDescending()
+    {
+        ViewedVacations = ViewedVacations.OrderByDescending(v => v.Dates["Deadline"]).ToList();
+    }
+
+    public class FilterModelValues
+    {
+        [Required]
+        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(20, ErrorMessage = "password too long (20 character limit).")]
+        public string Password { get; set; }
+
+        [Required]
+        public Boolean Valid { get; set; }
+    }
+    FilterModelValues FilterModelVal = new FilterModelValues();
+
+
+    public List<string> ChosenCountries { get; set; } = new List<string>();
+    void CheckboxClickedDest(string value, object checkedValue)
+    {
+
+        if ((bool)checkedValue)
+        {
+            if (!ChosenCountries.Contains(value))
+            {
+                ChosenCountries.Add(value);
+            }
+        }
+        else
+        {
+            if (ChosenCountries.Contains(value))
+            {
+                ChosenCountries.Remove(value);
+            }
+        }
+        UpdateViewedVacation();
+    }
+
+    public List<Activity> ChosenActivities { get; set; } = new List<Activity>();
+    void CheckboxClickedAct(Activity value, object checkedValue)
+    {
+
+        if ((bool)checkedValue)
+        {
+            if (!ChosenActivities.Contains(value))
+            {
+                ChosenActivities.Add(value);
+            }
+        }
+        else
+        {
+            if (ChosenActivities.Contains(value))
+            {
+                ChosenActivities.Remove(value);
+            }
+        }
+        UpdateViewedVacation();
+    }
+
+    public List<string> ChosenAirports { get; set; } = new List<string>();
+    void CheckboxClickedAirport(string value, object checkedValue)
+    {
+
+        if ((bool)checkedValue)
+        {
+            if (!ChosenAirports.Contains(value))
+            {
+                ChosenAirports.Add(value);
+            }
+        }
+        else
+        {
+            if (ChosenAirports.Contains(value))
+            {
+                ChosenAirports.Remove(value);
+            }
+        }
+        UpdateViewedVacation();
+    }
+
+    private void UpdateViewedVacation()
+    {
+        ViewedVacations = vacations.ToList();
+
+
+        if (ChosenCountries.Count() > 0)
+        {
+            ViewedVacations = ViewedVacations.Where(v => ChosenCountries.Contains(v.Destination.Country)).ToList();
+        }
+
+        if (ChosenActivities.Count() > 0)
+        {
+            List<Vacation> foundVacs = new List<Vacation>();
+            foreach (Activity actString in ChosenActivities)
+            {
+                foreach (Vacation vac in ViewedVacations)
+                {
+                    if (vac.Destination.Activities.Contains(actString))
+                    {
+                        foundVacs.Add(vac);
+                    }
+                }
+            }
+            ViewedVacations = foundVacs.ToList();
+        }
+
+        if (ChosenAirports.Count > 0)
+        {
+            ViewedVacations = ViewedVacations.Where(v => ChosenAirports.Contains(v.DepartureAirport)).ToList();
+        }
+
+        ViewedVacations = ViewedVacations.Distinct().ToList();
     }
 }

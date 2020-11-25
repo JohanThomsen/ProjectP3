@@ -9,117 +9,160 @@
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
-<h3 class="page_title">Foreslå Ferie</h3>
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<BSJumbotron>
-    <BSModal @ref="DestinationModal" IsCentered="true">
-        <BSModalHeader OnClick="@OnToggleAddDestination">Opret Destination</BSModalHeader>
-        <BSModalBody>
-            <BSForm Model="formsModelDest" OnValidSubmit="ValidDestSubmitted">
-                <BSFormGroup>
-                    <BSLabel For="Country">Land</BSLabel>
-                    <BSInput Id="Country" InputType="InputType.Text" PlaceHolder="Indtast Land" @bind-Value="formsModelDest.Country"></BSInput>
-                </BSFormGroup>
-                <BSFormGroup>
-                    <BSLabel For="Location">Location</BSLabel>
-                    <BSInput Id="Location" InputType="InputType.Text" PlaceHolder="Indtast Lokation" @bind-Value="formsModelDest.Location"></BSInput>
-                </BSFormGroup>
-                <BSFormGroup>
-                    <BSLabel For="Hotel">Hotel</BSLabel>
-                    <BSInput Id="Hotel" InputType="InputType.Text" PlaceHolder="Indtast Hotel" @bind-Value="formsModelDest.Hotel"></BSInput>
-                </BSFormGroup>
-                <BSForm Model="formsModelAct" OnValidSubmit="ActivitySubmitted" Context="PricesForm" IsInline="true">
-                    <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                        <BSLabel For="Activity">Tilføj Aktivitet </BSLabel>
-                        <BSInput Id="Activity" InputType="InputType.Text" PlaceHolder="Aktivitet" @bind-Value="formsModelAct.Type"></BSInput>
-                    </BSFormGroup>
-                    <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj Aktivitet  </BSButton>
-                    <pre>@activityFeedback</pre>
-                </BSForm>
-                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
-            </BSForm>
-        </BSModalBody>
-    </BSModal>
 
-    <BSForm Model="formsModelVal" OnValidSubmit="ValidFormSubmitted">
-        <BSDropdown IsOpen="@IsOpen1">
-            <BSDropdownToggle Color="Color.Primary" @onclick="onClick1">Destination</BSDropdownToggle>
-            <BSDropdownMenu @bind-IsOpen="@IsOpen1">
-                @foreach (Destination destination in destinations)
-                {
-                    <BSDropdownItem IsButton="true" @onclick="@(e => getDestinationInfo(destination))">Land: @destination.Country . Lokation : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
-                    <BSDropdownItem IsDivider="true"></BSDropdownItem>
-                }
-            </BSDropdownMenu>
-            <pre> @destinationFeedback</pre>
-        </BSDropdown>
-        <BSButton @onclick="OnToggleAddDestination" Color="Color.Secondary">Tilføj ny destination</BSButton>
-        <BSFormGroup>
-            <BSLabel For="Description">Beskrivelse</BSLabel>
-            <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
-        </BSFormGroup>
-        <BSFormGroup>
-            <BSLabel For="PublisherID">Input en relevant account ID. (Dette skal gøre automatisk senere, lige midlertidig løsning)</BSLabel>
-            <BSInput InputType="InputType.Number" Id="PublisherID" @bind-Value="@formsModelVal.PublisherID"></BSInput>
-        </BSFormGroup>
-        <BSFormGroup>
-            <BSLabel For="DepartureAirport">Afrejse Lufthavn</BSLabel>
-            <BSInput InputType="InputType.Text" Id="DepartureAirport" @bind-Value="@formsModelVal.DepartureAirport"></BSInput>
-        </BSFormGroup>
-        <BSFormGroup>
-            <BSLabel For="TravelDate">Afrejse Dato</BSLabel>
-            <BSInput InputType="InputType.Date" Id="TravelDate" @bind-Value="@formsModelVal.TravelDate"></BSInput>
-        </BSFormGroup>
-        <BSFormGroup>
-            <BSLabel For="LeaveDate">Hjemrejse Dato</BSLabel>
-            <BSInput InputType="InputType.Date" Id="LeaveDate" @bind-Value="@formsModelVal.LeaveDate"></BSInput>
-        </BSFormGroup>
-        <BSFormGroup>
-            <BSLabel For="Deadline">Tilmeldingsfrist</BSLabel>
-            <BSInput InputType="InputType.Date" Id="Deadline" @bind-Value="@formsModelVal.Deadline"></BSInput>
-        </BSFormGroup>
-        <BSFormGroup>
-            <BSLabel For="TravelBureauWebsiteLink">Link til ferie på egen hjemmeside</BSLabel>
-            <BSInput InputType="InputType.Text" Id="TravelBureauWebsiteLink" @bind-Value="@formsModelVal.TravelBureauWebsiteLink"></BSInput>
-        </BSFormGroup>
-        <BSFormGroup>
-            <BSLabel For="GraceperiodLength">Betalingsperiode</BSLabel>
-            <BSInput Id="GraceperiodLength" InputType="InputType.Number" PlaceHolder="Længde i dage" @bind-Value="formsModelVal.GraceperiodLength"></BSInput>
-        </BSFormGroup>
-        <BSFormGroup>
-            <BSLabel For="ImageLink">Billede</BSLabel>
-            <BSInput Id="ImageLink" InputType="InputType.Text" PlaceHolder="Webadresse til billede" @bind-Value="formsModelVal.ImageLink"></BSInput>
-        </BSFormGroup>
-        <BSFormGroup>
-            <BSLabel For="minNumberOfUsers">Minimum antal deltagere</BSLabel>
-            <BSInput Id="minNumberOfUsers" InputType="InputType.Number" PlaceHolder="0" @bind-Value="formsModelVal.minNumberOfUsers"></BSInput>
-        </BSFormGroup>
-        <BSRow>
-            <BSCol>
-                <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm">
-                    <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                        <div class="PricePoint">
-                            <BSLabel For="Price">Pris </BSLabel>
-                            <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Prispunkt" @bind-Value="formsModelPrices.price"></BSInput>
-                        </div>
+<BSJumbotron class="mytravelclubjumbotron">
+    <div>
+        <div>
+
+            <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+                <BSNav IsList="true" IsVertical="true" class="mytravelbureaumenulist">
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-person" aria-hidden="true"></span>
+                            </div>
+                            Mit TravelClub
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="ProposeVacation">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-cog" aria-hidden="true"></span>
+                            </div>
+                            Tilbyd feriepakke
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="AdminVacationBureau">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-globe" aria-hidden="true"></span>
+                            </div>
+                            Administrer feriepakker
+                        </NavLink>
+                    </li>
+                </BSNav>
+            </div>
+        </div>
+
+
+        <div class="mytravelbureaucontent">
+
+          <h2 class="welcomemytravelclub">Foreslå Ferie</h2>
+        <BSModal @ref="DestinationModal" IsCentered="true">
+            <BSModalHeader OnClick="@OnToggleAddDestination">Opret Destination</BSModalHeader>
+            <BSModalBody>
+                <BSForm Model="formsModelDest" OnValidSubmit="ValidDestSubmitted">
+                    <BSFormGroup>
+                        <BSLabel For="Country">Land</BSLabel>
+                        <BSInput Id="Country" InputType="InputType.Text" PlaceHolder="Indtast Land" @bind-Value="formsModelDest.Country"></BSInput>
                     </BSFormGroup>
-                    <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                        <div class="NumberOfParticipants">
-                            <BSLabel For="Break">Antal deltagere for pris </BSLabel>
-                            <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Antal deltagere for pris" @bind-Value="formsModelPrices.breakPoint"></BSInput>
-                        </div>
+                    <BSFormGroup>
+                        <BSLabel For="Location">Location</BSLabel>
+                        <BSInput Id="Location" InputType="InputType.Text" PlaceHolder="Indtast Lokation" @bind-Value="formsModelDest.Location"></BSInput>
                     </BSFormGroup>
-                    <div class="AddPriceButton">
-                        <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
-                    </div>
+                    <BSFormGroup>
+                        <BSLabel For="Hotel">Hotel</BSLabel>
+                        <BSInput Id="Hotel" InputType="InputType.Text" PlaceHolder="Indtast Hotel" @bind-Value="formsModelDest.Hotel"></BSInput>
+                    </BSFormGroup>
+                    <BSForm Model="formsModelAct" OnValidSubmit="ActivitySubmitted" Context="PricesForm" IsInline="true">
+                        <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                            <BSLabel For="Activity">Tilføj Aktivitet </BSLabel>
+                            <BSInput Id="Activity" InputType="InputType.Text" PlaceHolder="Aktivitet" @bind-Value="formsModelAct.Type"></BSInput>
+                        </BSFormGroup>
+                        <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj Aktivitet  </BSButton>
+                        <pre>@activityFeedback</pre>
+                    </BSForm>
+                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
                 </BSForm>
-            </BSCol>
-            <BSCol>
+            </BSModalBody>
+        </BSModal>
+
+        <BSForm Model="formsModelVal" OnValidSubmit="ValidFormSubmitted">
+            <BSDropdown IsOpen="@IsOpen1">
+                <BSDropdownToggle Color="Color.Primary" @onclick="onClick1">Destination</BSDropdownToggle>
+                <BSDropdownMenu @bind-IsOpen="@IsOpen1">
+                    @foreach (Destination destination in destinations)
+                    {
+                        <BSDropdownItem IsButton="true" @onclick="@(e => getDestinationInfo(destination))">Land: @destination.Country . Lokation : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
+                        <BSDropdownItem IsDivider="true"></BSDropdownItem>
+                    }
+                </BSDropdownMenu>
+                <pre> @destinationFeedback</pre>
+            </BSDropdown>
+            <BSButton @onclick="OnToggleAddDestination" Color="Color.Secondary">Tilføj ny destination</BSButton>
+            <BSFormGroup>
+                <BSLabel For="Description">Beskrivelse</BSLabel>
+                <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="PublisherID">Input en relevant account ID. (Dette skal gøre automatisk senere, lige midlertidig løsning)</BSLabel>
+                <BSInput InputType="InputType.Number" Id="PublisherID" @bind-Value="@formsModelVal.PublisherID"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="DepartureAirport">Afrejse Lufthavn</BSLabel>
+                <BSInput InputType="InputType.Text" Id="DepartureAirport" @bind-Value="@formsModelVal.DepartureAirport"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="TravelDate">Afrejse Dato</BSLabel>
+                <BSInput InputType="InputType.Date" Id="TravelDate" @bind-Value="@formsModelVal.TravelDate"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="LeaveDate">Hjemrejse Dato</BSLabel>
+                <BSInput InputType="InputType.Date" Id="LeaveDate" @bind-Value="@formsModelVal.LeaveDate"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="Deadline">Tilmeldingsfrist</BSLabel>
+                <BSInput InputType="InputType.Date" Id="Deadline" @bind-Value="@formsModelVal.Deadline"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="TravelBureauWebsiteLink">Link til ferie på egen hjemmeside</BSLabel>
+                <BSInput InputType="InputType.Text" Id="TravelBureauWebsiteLink" @bind-Value="@formsModelVal.TravelBureauWebsiteLink"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="GraceperiodLength">Betalingsperiode</BSLabel>
+                <BSInput Id="GraceperiodLength" InputType="InputType.Number" PlaceHolder="Længde i dage" @bind-Value="formsModelVal.GraceperiodLength"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="ImageLink">Billede</BSLabel>
+                <BSInput Id="ImageLink" InputType="InputType.Text" PlaceHolder="Webadresse til billede" @bind-Value="formsModelVal.ImageLink"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="minNumberOfUsers">Minimum antal deltagere</BSLabel>
+                <BSInput Id="minNumberOfUsers" InputType="InputType.Number" PlaceHolder="0" @bind-Value="formsModelVal.minNumberOfUsers"></BSInput>
+            </BSFormGroup>
+            <BSRow>
+                <BSCol>
+                    <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm">
+                        <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                            <div class="PricePoint">
+                                <BSLabel For="Price">Pris </BSLabel>
+                                <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Prispunkt" @bind-Value="formsModelPrices.price"></BSInput>
+                            </div>
+                        </BSFormGroup>
+                        <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                            <div class="NumberOfParticipants">
+                                <BSLabel For="Break">Antal deltagere for pris </BSLabel>
+                                <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Antal deltagere for pris" @bind-Value="formsModelPrices.breakPoint"></BSInput>
+                            </div>
+                        </BSFormGroup>
+                        <div class="AddPriceButton">
+                            <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
+                        </div>
+                    </BSForm>
+                </BSCol>
+                <BSCol>
                     <pre class="textAddprice">@priceFeedback </pre>
-            </BSCol>
-        </BSRow>
-        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilføj ferie</BSButton>
-    </BSForm>
+                </BSCol>
+            </BSRow>
+            <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilføj ferie</BSButton>
+        </BSForm>
+        </div>
+    </div>
 </BSJumbotron>
 
 @code {
@@ -319,4 +362,28 @@
 
 
     FormsModelPrices formsModelPrices = new FormsModelPrices();
+
+    bool collapseNavMenu = true;
+
+    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+
+    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+
+    int ID;
+
+    string loginInfo;
+
+    string[] loginresult;
+
+    Account acc;
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    void LogOut(MouseEventArgs e)
+    {
+        DaService.LoggedIn = false;
+    }
 }

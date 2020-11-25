@@ -9,66 +9,83 @@
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
 
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm">
-                <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-                    <ul class="navbar-nav flex-grow-1">
-                        <BSNav IsList="true" IsVertical="true">
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="MyTravelClub" Match="NavLinkMatch.All">
-                                    <span class="oi oi-person" aria-hidden="true"></span> Mit TravelClub
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="PublishVacation">
-                                    <span class="oi oi-cog" aria-hidden="true"></span> Udgiv feriepakker
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="AdminVacationTravelClub">
-                                    <span class="oi oi-globe" aria-hidden="true"></span> Administrer feriepakker
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link text-dark" href="AddTravelBureaus">
-                                    <span class="oi oi-globe" aria-hidden="true"></span> Tilføj rejsebureauer
-                                </NavLink>
-                            </li>
-                        </BSNav>
-                    </ul>
-                </div>
+<BSJumbotron class="mytravelclubjumbotron">
+    <div>
+        <div>
+
+            <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+
+                <BSNav IsList="true" IsVertical="true" class="mytravelclubadminmenulist">
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-person" aria-hidden="true"></span>
+                            </div>
+                            Mit TravelClub
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="PublishVacation">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-cog" aria-hidden="true"></span>
+                            </div>
+                            Udgiv feriepakker
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="AdminVacationTravelClub">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-globe" aria-hidden="true"></span>
+                            </div>
+                            Administrer feriepakker
+                        </NavLink>
+                    </li>
+                    <li class="mytravelclubmenulistitem">
+                        <NavLink class="textcolor" href="AddTravelBureaus">
+                            <div class="mytravelclubmenulisticon">
+                                <span class="oi oi-globe" aria-hidden="true"></span>
+                            </div>
+                            Tilføj rejsebureau
+                        </NavLink>
+                    </li>
+                </BSNav>
             </div>
-            <div class="vacation-column">
-                <h4>Tilføj rejsebureauer</h4>
-                <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+        </div>
 
-                    <BSFormGroup>
-                        @*Input for user email*@
-                        <BSLabel for="InputEmail">Email-adresse</BSLabel>
-                        <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
-                    </BSFormGroup>
 
-                    <BSFormGroup>
-                        @*Input for user password*@
-                        <BSLabel for="InputPassword">Kodeord</BSLabel>
-                        <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
-                    </BSFormGroup>
-
-                    @*Submit Button*@
-                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret rejsebureau</BSButton>
-                </BSForm>
+        <div Class="mytravelclubadmincontent">
+            <h2 class="welcomemytravelclub">Opret login til rejsebureau</h2>
+            <div>
+                @* Her indsættes højresiden af pagen *@
             </div>
         </div>
     </div>
-</nav>
+</BSJumbotron>
 
 
 @code {
+    bool collapseNavMenu = true;
+
+    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+
+    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+
+    int ID;
+
+    string loginInfo;
+
+    string[] loginresult;
+
+    Account acc;
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
 
     bool collapseNavMenu = true;
 
@@ -108,4 +125,9 @@
     }
     public FormsModelVal formsModelVal = new FormsModelVal();
 
+
+    void LogOut(MouseEventArgs e)
+    {
+        DaService.LoggedIn = false;
+    }
 }

@@ -1,23 +1,15 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-.AddPriceButton{
-    margin-top:1%;
-    margin-bottom:1%;
+
+.header{
+    background-color: white;
+    padding-top: 100px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
 }
 
-.textAddprice {
-    font-family: Arial;
-    font-size:medium;
-    float: left;
-}
-
-.PricePoint {
-    width: 50%;
-}
-
-.NumberOfParticipants{
-    width:50%;
-}
 
 .jumbotron {
     background-color: #f7fbfc;
@@ -76,10 +68,16 @@
 .FormsCollection > button {
     height:3rem;
     margin:0.5%;
-    width:200%;
-    overflow-x:visible;
 }
 
+.VacFigureImg{
+    position: relative;
+    width:19%;
+    height:7.5%;
+    float: left;
+    margin:0.5%;
+    
+}
 
 /*Progressbar Appearance
 --------------------------------------------------------------------------------*/
@@ -123,7 +121,8 @@ progress.progressBarJoinedUsersVS {
 .progStretchGoal{
     float:left;
 }
-/*View singele vacations layout*/
+/*View singele vacations layout
+-----------------------------------------------------------*/
 
 .ViewSingleVacationHotel {
     margin: 1%;
@@ -167,20 +166,7 @@ progress.progressBarJoinedUsersVS {
     border: 1px solid rgb(149, 168, 189)
 }
 
-<<<<<<< HEAD
-.IndexDisplayColumn {
-    float: left;
-    margin: 0.5;
-}
 
-
-/* Clear floats after the columns
-------------------------------------------------------------------------*/
-.IndexDisplayRow:after {
-    content: "";
-    display: table;
-    clear: both;
-}
 
 .mytravelclubcontentelements {
     position: relative;
@@ -204,6 +190,31 @@ progress.progressBarJoinedUsersVS {
     margin-top: 1%;
     float: right;
 }
+
+
+/*Propose vacations page appearance
+-----------------------------------------------------------------*/
+.AddPriceButton{
+    margin-top:1%;
+    margin-bottom:1%;
+}
+
+.textAddprice {
+    font-family: Arial;
+    font-size:medium;
+    float: left;
+}
+
+.PricePoint {
+    width: 50%;
+}
+
+.NumberOfParticipants{
+    width:50%;
+}
+
+/*My travel club page appearabce
+----------------------------------------------------------------*/
 
 .mytravelclubmenulist {
     display: table-cell;
@@ -252,6 +263,31 @@ progress.progressBarJoinedUsersVS {
     float: right;
     width: 760px;
     top: -349px;
+}
+.mytravelbureaucontent{
+    position: relative;
+    background: #fff;
+    padding: 18px;
+    border: 1px solid #97aabf;
+    float: right;
+    width: 760px;
+    top: -183px;
+}
+.mytravelclubadmincontent {
+    position: relative;
+    background: #fff;
+    padding: 18px;
+    border: 1px solid #97aabf;
+    float: right;
+    width: 760px;
+    top: -239px;
+}
+.mytravelbureautext {
+    font-size: 12px;
+    font-size: 1.2rem;
+    line-height: 15px;
+    line-height: 1.5rem;
+    color: #000;
 }
 .mytravelclubjumbotron {
     box-sizing: border-box;
@@ -307,33 +343,6 @@ progress.progressBarJoinedUsersVS {
     margin:3%;
 }
 
-.navbar-column{
-    float: left;
-}
-
-.header{
-    background-color: white;
-    padding-top: 100px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-
-}
-
-
-/* Clear floats after the columns */
-.Row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-.navbar-brand {
-    white-space: normal;
-    text-align: center;
-    word-break: break-all;
-    font-size: 50px;
-    }
 
 .UserIcon {
     
@@ -413,6 +422,12 @@ a {
     background-color: white;
 }
 
+.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+    font-size: 50px;
+    }
 
 .Logo1{
     float: left;
