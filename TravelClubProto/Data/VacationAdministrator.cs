@@ -62,7 +62,6 @@ namespace TravelClubProto.Data
                         if (oldState == "GracePeriod")
                         {
                             CompleteVacation(state);
-                            
                         }
                         else
                         {
@@ -106,32 +105,13 @@ namespace TravelClubProto.Data
             //TODO add stuff for TravelBureau
         }
 
-        
+
 
         private void CompleteVacation(string state)
         {
             AddDateTimeAndChangeDate(state, "CompletionDate");
-            ParticipatedVacation();
-            
-        }
 
-        private void ParticipatedVacation()
-        {
-            try
-            {
-                using (var sc = new SqlConnection(DaService.ConnectionString))
-                using (var cmd = sc.CreateCommand())
-                {
-                    sc.Open();
-                    cmd.CommandText = "UPDATE [dbo].CustomerVacationRelations SET RelationType = 'Participated' WHERE FK_VacationID=@VacID";
-                    cmd.Parameters.AddWithValue("@VacID", VacID);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            DeleteVacationRelation();
         }
 
 

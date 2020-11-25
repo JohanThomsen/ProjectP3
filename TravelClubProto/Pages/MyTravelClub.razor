@@ -42,7 +42,7 @@
                                 <div class="mytravelclubmenulisticon">
                                     <span class="oi oi-globe" aria-hidden="true"></span>
                                 </div>
-                                Tilmeldte feriepakker
+                                 Tilmeldte feriepakker
                             </NavLink>
                         </li>
                         <li class="mytravelclubmenulistitem">
@@ -50,7 +50,7 @@
                                 <div class="mytravelclubmenulisticon">
                                     <span class="oi oi-bell" aria-hidden="true"></span>
                                 </div>
-                                Prisagenter
+                                Prisagenter 
                             </NavLink>
                         </li>
                         <li class="mytravelclubmenulistitem">
@@ -58,15 +58,7 @@
                                 <div class="mytravelclubmenulisticon">
                                     <span class="oi oi-heart" aria-hidden="true"></span>
                                 </div>
-                                Favoriserede feriepakker
-                            </NavLink>
-                        </li>
-                        <li class="mytravelclubmenulistitem">
-                            <NavLink class="textcolor" href="ParticipatedVacations">
-                                <div class="mytravelclubmenulisticon">
-                                    <span class="oi oi-globe" aria-hidden="true"></span>
-                                </div>
-                                Gennemførte rejser
+                                 Favoriserede feriepakker
                             </NavLink>
                         </li>
                         <li class="mytravelclubmenulistitem" @onclick="LogOut">
@@ -74,7 +66,7 @@
                                 <div class="mytravelclubmenulisticon">
                                     <span class="oi oi-account-logout" aria-hidden="true"></span>
                                 </div>
-                                Log ud
+                                 Log ud
                             </NavLink>
                         </li>
                     </BSNav>
@@ -86,7 +78,7 @@
             <h2 class="welcomemytravelclub">Hej, Velkommen til dit TravelClub</h2>
                 <div>
                     <div>
-                        <div Class="mytravelclubcontentelementsleft">
+                        <div Class="mytravelclubcontentelements">
                             <div Class="iconcolumn">
                                 <NavLink class="text-dark" href="MyProfile">
                                     <div>
@@ -105,7 +97,7 @@
                         </div>
                     </div>
                     <div>
-                        <div Class="mytravelclubcontentelementsright">
+                        <div Class="mytravelclubcontentelements">
                             <div Class="iconcolumn">
                                 <NavLink class="text-dark" href="JoinedVacations">
                                     <div>
@@ -127,7 +119,7 @@
 
                 <div>
                     <div>
-                        <div Class="mytravelclubcontentelementsleft">
+                        <div Class="mytravelclubcontentelements">
                             <div Class="iconcolumn">
                                 <NavLink class="text-dark" href="PriceAgents">
                                     <div>
@@ -146,7 +138,7 @@
                         </div>
                     </div>
                     <div>
-                        <div Class="mytravelclubcontentelementsright">
+                        <div Class="mytravelclubcontentelements">
                             <div Class="iconcolumn">
                                 <NavLink class="text-dark" href="FavouritedVacations">
                                     <div>
@@ -181,7 +173,7 @@ else if (DaService.LoggedInType == "TravelBureau")
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-                <BSNav IsList="true" IsVertical="true" class="mytravelbureaumenulist">
+                <BSNav IsList="true" IsVertical="true" class="mytravelclubmenulist">
                     <li class="mytravelclubmenulistitem">
                         <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
                             <div class="mytravelclubmenulisticon">
@@ -215,7 +207,7 @@ else if (DaService.LoggedInType == "TravelBureau")
                 <div>
                     
                     <div>
-                        <div Class="mytravelclubcontentelementsleft">
+                        <div Class="mytravelclubcontentelements">
                             <div Class="iconcolumn">
                                 <NavLink class="text-dark" href="ProposeVacation">
                                     <div>
@@ -237,7 +229,7 @@ else if (DaService.LoggedInType == "TravelBureau")
 
                     
                     <div>
-                        <div Class="mytravelclubcontentelementsright">
+                        <div Class="mytravelclubcontentelements">
                             <div Class="iconcolumn">
                                 <NavLink class="text-dark" href="AdminVacationBureau">
                                     <div>
@@ -275,7 +267,7 @@ else if (DaService.LoggedInType == "TravelClub")
                 </button>
                 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
                         
-                    <BSNav IsList="true" IsVertical="true" class="mytravelclubadminmenulist">
+                    <BSNav IsList="true" IsVertical="true" class="mytravelclubmenulist">
                         <li class="mytravelclubmenulistitem">
                             <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
                                 <div class="mytravelclubmenulisticon">
@@ -317,7 +309,7 @@ else if (DaService.LoggedInType == "TravelClub")
                 <h2 class="welcomemytravelclub">Hej, Velkommen til dit TravelClub</h2>
                 <div>
                     <div>
-                        <div Class="mytravelclubcontentelementsleft">
+                        <div Class="mytravelclubcontentelements">
                             <div Class="iconcolumn">
                                 <NavLink class="text-dark" href="PublishVacation">
                                     <div>
@@ -339,7 +331,7 @@ else if (DaService.LoggedInType == "TravelClub")
 
                     
                     <div>
-                        <div Class="mytravelclubcontentelementsright">
+                        <div Class="mytravelclubcontentelements">
                             <div Class="iconcolumn">
                                 <NavLink class="text-dark" href="AdminVacationTravelClub">
                                     <div>
@@ -361,7 +353,7 @@ else if (DaService.LoggedInType == "TravelClub")
 
                     
                     <div>
-                        <div Class="mytravelclubcontentelementsleft">
+                        <div Class="mytravelclubcontentelements">
                             <div Class="iconcolumn">
                                 <NavLink class="text-dark" href="AddTravelBureaus">
                                     <div>

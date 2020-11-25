@@ -10,5 +10,6 @@ namespace TravelClubProto.Data
     public class CustomerStateChanger
     {
         public Dictionary<DateTime, string> ChangeDateAndType = new Dictionary<DateTime, string>();
+
     }
 }

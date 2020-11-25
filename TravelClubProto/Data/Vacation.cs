@@ -8,7 +8,7 @@ using Microsoft.Data.SqlClient;
 namespace TravelClubProto.Data
 {
     
-    public class Vacation : IEquatable<Vacation>
+    public class Vacation
     {
         //Hej Bang :D
         public Dictionary<string, DateTime> Dates = new Dictionary<string, DateTime>();
@@ -31,26 +31,6 @@ namespace TravelClubProto.Data
         public DataAccessService DaService { get; set; }
         private VacationAdministrator VacAdmin { get; set; }
         public TravelGroup TravelGroup { get; }
-        public async Task<decimal> CurrentPrice()
-        {
-            int users = await NumberOfJoinedUsers();
-            decimal currentPrice = Prices[0];
-            for (int i = 0; i < Prices.Count; i++)
-            {
-                if (users >= StretchGoals[i])
-                {
-                    currentPrice = Prices[i];
-                }
-            }
-
-            return await Task.FromResult(currentPrice);
-        }
-
-        public async Task<int> NumberOfJoinedUsers()
-        {
-            int users = (await TravelGroup.GetUserIDsFromRelation(ID, "Joined").ConfigureAwait(false)).Count;
-            return await Task.FromResult(users);
-        }
 
         private string _state;
         public string State
@@ -113,7 +93,6 @@ namespace TravelClubProto.Data
                             matchingDestination.ID = Convert.ToInt32(Reader["DestinationID"]);
                             matchingDestination.Hotel = Reader["Hotel"] as string;
                             matchingDestination.Location = Reader["Location"] as string;
-                            matchingDestination.Country = Reader["Country"] as string;
                         }
                         myConnection.Close();
                     }
@@ -301,27 +280,7 @@ namespace TravelClubProto.Data
                 {
                     con.Close();
                 }
-            } 
-        }
-        private async Task<int> GetNumberOfJoinedUsers()
-        {
-            return (await TravelGroup.GetUserIDsFromRelation(ID, "Joined").ConfigureAwait(false)).Count;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Vacation);
-        }
-
-        public bool Equals(Vacation other)
-        {
-            return other != null &&
-                   ID == other.ID;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ID);
+            }
         }
     }
 }
