@@ -31,7 +31,7 @@ namespace TravelClubProto.Data
             DaService    = daService;
             LoginDate    = CreationDate;
         }
-        public void InsertIntoDatabase()
+        public virtual void InsertIntoDatabase()
         {
             //Connects to the azure sql database
             SqlConnection con = new SqlConnection(DaService.ConnectionString);
@@ -62,50 +62,5 @@ namespace TravelClubProto.Data
                 con.Close();
             }
         }
-
-        public async static Task<int> FindAccountInDatabase(string email, string password, DataAccessService daService)
-        {
-
-            Account user = new Customer(email, password, daService);
-            daService.LoggedIn = false;
-            try
-            {
-                using (SqlConnection myConnection = new SqlConnection(daService.ConnectionString))
-                {
-                    //The * means all. So data from [dbo].[Destination] table are selected by the database
-                    string query = "SELECT * FROM [dbo].[Account] WHERE Email=@Email AND Password=@Password";
-                    SqlCommand sqlCommand = new SqlCommand(query, myConnection);
-                    sqlCommand.Parameters.AddWithValue("@Email", email);
-                    sqlCommand.Parameters.AddWithValue("@Password", password);
-                    myConnection.Open();
-                    //Reads all the executed sql commands
-                    using (SqlDataReader Reader = sqlCommand.ExecuteReader())
-                    {
-                        // Reads all data and converts to object and type matches
-                        while (Reader.Read())
-                        {
-                            user.ID = Convert.ToInt32(Reader["AccountID"]);
-                            if (Reader["Email"] as string == user.Email && Reader["Password"] as string == user.Password)
-                            {
-                                daService.LoggedIn = true;
-                                daService.LoggedInAccountID = user.ID;
-
-                                myConnection.Close();
-                                return await Task.FromResult(user.ID);
-                            }
-                       
-                        }
-                        myConnection.Close();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            return await Task.FromResult(-1);
-        }
-
-
     }
 }

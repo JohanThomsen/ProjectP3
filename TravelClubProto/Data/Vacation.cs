@@ -10,7 +10,6 @@ namespace TravelClubProto.Data
     
     public class Vacation : IEquatable<Vacation>
     {
-        //Hej Bang :D
         public Dictionary<string, DateTime> Dates = new Dictionary<string, DateTime>();
 
         //public Dictionary<int, decimal> Prices = new Dictionary<int, decimal>();
@@ -33,7 +32,7 @@ namespace TravelClubProto.Data
         public TravelGroup TravelGroup { get; }
         public async Task<decimal> CurrentPrice()
         {
-            int users = await NumberOfJoinedUsers();
+            int users = await TravelGroup.NumberOfJoinedUsers();
             decimal currentPrice = Prices[0];
             for (int i = 0; i < Prices.Count; i++)
             {
@@ -44,12 +43,6 @@ namespace TravelClubProto.Data
             }
 
             return await Task.FromResult(currentPrice);
-        }
-
-        public async Task<int> NumberOfJoinedUsers()
-        {
-            int users = (await TravelGroup.GetUserIDsFromRelation(ID, "Joined").ConfigureAwait(false)).Count;
-            return await Task.FromResult(users);
         }
 
         private string _state;

@@ -139,7 +139,7 @@
 
         }
 
-        CustomerVacations CustomerVac => new CustomerVacations(DaService);
+        CustomerVacations CustomerVac => new CustomerVacations(DaService, DaService.LoggedInAccountID);
 
         bool collapseNavMenu = true;
 

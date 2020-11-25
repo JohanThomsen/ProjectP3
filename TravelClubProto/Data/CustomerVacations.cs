@@ -15,15 +15,12 @@ namespace TravelClubProto.Data
     {
 
         public int CustomerID { get; set; }
-        public List<int> JoinedVacations;
 
-        //public List<int> FavouritedVacations = new List<int>();
-
-        public List<int> CustomerCompletedVacations;
         public DataAccessService DaService { get; set; }
-        public CustomerVacations(DataAccessService daService)
+        public CustomerVacations(DataAccessService daService, int customerID)
         {
             DaService = daService;
+            CustomerID = customerID;
         }
 
         public async Task<List<int>> GetRelatedVacationsForCustomer(int customerID, string relation)

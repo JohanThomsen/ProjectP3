@@ -217,7 +217,7 @@
     async void LogInToProfile(MouseEventArgs e)
     {
         //returnerer ID ved succes og -1 ved fail
-        int ID = await Account.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
+        int ID = await DaService.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
 
         LoginModal.Toggle();
 
