@@ -1,23 +1,27 @@
-﻿@page "/vacationView"
-
+﻿@page "/vacationView/{DepartureAirportPara}/{CountryPara}/{DepartureDatePara}/{ArrivalDatePara}"
+@page "/vacationView"
 @using TravelClubProto.Data
 @using TravelClubProto.Pages
-@using Microsoft.AspNetCore
+@using Microsoft.AspNetCore;
+@using BlazorStrap;
+@using Blazored;
 @inject DataAccessService DaService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IJSRuntime JS;
 
 <h3>Se ferier</h3>
-
 
 <button class="btn btn-danger" @onclick="OrderByPrice">Order by Price</button>
 <button class="btn btn-danger" @onclick="OrderByDeadline">Order by Deadline date</button>
 <div class="container">
     <div class="row">
         <div class="col-sm-2">
+            <h6>Afrejse Dato</h6>
+            <input type="date" id="start" name="trip-start" @onchange="eventArgs => { ArrivalDateUpdate( eventArgs.Value); }" min=@DateTime.Now>
             <h6>Lande</h6>
             @foreach (Destination dest in activeDestinations)
             {
-                <input type="checkbox" @onchange="eventArgs => { CheckboxClickedDest(dest.Country, eventArgs.Value); }" />@dest.Country<br />
+                <input type="checkbox" id="@dest.Country" @ref="destinationCheckbox[dest.Country]" @onchange="eventArgs => { CheckboxClickedDest(dest.Country, eventArgs.Value); }" />@dest.Country<br />
             }
             <h6>Aktiviteter </h6>
             @foreach (Activity act in activeActivities)
@@ -27,10 +31,12 @@
             <h6>Lufthavne </h6>
             @foreach (string departureAirport in activeAirports)
             {
-                <input type="checkbox" @onchange="eventArgs => { CheckboxClickedAirport(departureAirport, eventArgs.Value); }" />@departureAirport<br />
+                <input type="checkbox" id="@departureAirport" @ref="departureAirportCheckbox[departureAirport]" @onchange="eventArgs => { CheckboxClickedAirport(departureAirport, eventArgs.Value); }" />@departureAirport<br />
             }
+
         </div>
         <div class="col-sm-10">
+            <h2>@noSearchFeedback</h2>
             @foreach (Vacation vac in ViewedVacations)
             {
                 int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
@@ -152,9 +158,46 @@
     public List<Activity> activeActivities = new List<Activity>();
     public List<string> activeAirports = new List<string>();
     string notloggedinfeedback;
+    string noSearchFeedback;
+    private string DepartureAirportSearch;
+    private string CountrySearch;
+    private DateTime departureDateSearch;
+    private DateTime arrivalDateSearch;
+    private int minimumJoinedUsers;
+    private Dictionary<string, ElementReference> destinationCheckbox = new Dictionary<string, ElementReference>();
+    private Dictionary<string, ElementReference> departureAirportCheckbox = new Dictionary<string, ElementReference>();
 
+    [Parameter]
+    public string DepartureAirportPara { get; set; }
+
+    [Parameter]
+    public string CountryPara { get; set; }
+
+    [Parameter]
+    public string DepartureDatePara { get; set; }
+
+    [Parameter]
+    public string ArrivalDatePara { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        GetSearchParams();
+
+
+        UpdateViewedVacation(true);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            FillCheckBox();
+        }
+    }
     protected override async Task OnInitializedAsync()
     {
+        departureDateSearch = DateTime.Now;
         vacations = await DaService.GetAllVacations(DaService);
         destinations = await DaService.GetAllDestinations(DaService);
         ViewedVacations = vacations.ToList();
@@ -178,6 +221,7 @@
                 activeAirports.Add(vacation.DepartureAirport);
             }
         }
+
     }
 
     void OnToggleLogin(MouseEventArgs e)
@@ -205,6 +249,33 @@
         }
     }
 
+    public void GetSearchParams()
+    {
+        departureDateSearch = DateTime.FromBinary(Convert.ToInt64(DepartureDatePara));
+        arrivalDateSearch = DateTime.FromBinary(Convert.ToInt64(ArrivalDatePara));
+        DepartureAirportSearch = DepartureAirportPara;
+        CountrySearch = CountryPara;
+    }
+
+    private void FillCheckBox()
+    {
+        foreach (KeyValuePair<string, ElementReference> item in destinationCheckbox)
+        {
+            if (item.Key == CountrySearch)
+            {
+                JS.InvokeAsync<string>(
+                "FillCheckBox", item.Key);
+            }
+        }
+        foreach (KeyValuePair<string, ElementReference> item in departureAirportCheckbox)
+        {
+            if (item.Key == DepartureAirportSearch)
+            {
+                JS.InvokeAsync<string>(
+                "FillCheckBox", item.Key);
+            }
+        }
+    }
 
     public class FormsModelVal
     {
@@ -323,11 +394,16 @@
     }
     FilterModelValues FilterModelVal = new FilterModelValues();
 
+    void ArrivalDateUpdate(object checkedValue)
+    {
+        departureDateSearch = DateTime.Parse((string)checkedValue);
+
+        UpdateViewedVacation(false);
+    }
 
     public List<string> ChosenCountries { get; set; } = new List<string>();
     void CheckboxClickedDest(string value, object checkedValue)
     {
-
         if ((bool)checkedValue)
         {
             if (!ChosenCountries.Contains(value))
@@ -342,7 +418,7 @@
                 ChosenCountries.Remove(value);
             }
         }
-        UpdateViewedVacation();
+        UpdateViewedVacation(false);
     }
 
     public List<Activity> ChosenActivities { get; set; } = new List<Activity>();
@@ -363,7 +439,7 @@
                 ChosenActivities.Remove(value);
             }
         }
-        UpdateViewedVacation();
+        UpdateViewedVacation(false);
     }
 
     public List<string> ChosenAirports { get; set; } = new List<string>();
@@ -384,11 +460,25 @@
                 ChosenAirports.Remove(value);
             }
         }
-        UpdateViewedVacation();
+        UpdateViewedVacation(false);
     }
 
-    private void UpdateViewedVacation()
+    private void UpdateViewedVacation(bool calledFromRender)
     {
+        if (calledFromRender)
+        {
+            if (DepartureAirportPara == null)
+            {
+                ViewedVacations = vacations.ToList();
+            }
+            else
+            {
+                CheckboxClickedDest(CountrySearch, true);
+                CheckboxClickedAirport(DepartureAirportPara, true);
+            }
+        }
+
+
         ViewedVacations = vacations.ToList();
 
 
@@ -418,6 +508,16 @@
             ViewedVacations = ViewedVacations.Where(v => ChosenAirports.Contains(v.DepartureAirport)).ToList();
         }
 
+        ViewedVacations = ViewedVacations.Where(v => v.Dates["TravelDate"] > departureDateSearch).ToList();
+
         ViewedVacations = ViewedVacations.Distinct().ToList();
+
+        if (ViewedVacations.Count == 0)
+        {
+            noSearchFeedback = "Der findes ingen rejser der passer til dine søge filtre";
+        } else
+        {
+            noSearchFeedback = "";
+        }
     }
 }
