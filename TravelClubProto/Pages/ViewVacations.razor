@@ -77,8 +77,24 @@
 
                         }
                         <span>
-                            <BSButton @onclick="@(e => FavouriteVacation(vac))" Color="Color.Primary">Favorisere ferie</BSButton>
-                            <a class="btn btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
+                        <div>
+                            @for (int i = 0; i < vac.StretchGoals.Count; i++)
+                            {
+                                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+
+                            }
+
+                            @if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
+                            {
+                                <BSButton class="btn btn-outline-info btn-lg HeartIconFill" @onclick="@(e => UnFavouriteVacation(vac))"></BSButton>
+                            }
+                            else
+                            {
+                            <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
+                            }
+                            <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
+
+                        </div>
                         </span>
                     </span>
 
@@ -283,6 +299,19 @@
         Console.WriteLine("Form succesfully submitted");
     }
 
+    public async void checkCookie()
+    {
+        string cookie = await localStorage.GetItemAsync<String>("login");
+
+        if (cookie != null)
+        {
+            string[] splitCookie = cookie.Split(",");
+            if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
+            {
+                customerID = Convert.ToInt32(splitCookie[0]);
+            }
+        }
+    }
 
 
     //Calculates progress bar fill value from joined user and stretch goals
@@ -305,13 +334,15 @@
         }
     }
 
-    public async void checkCookie()
+    public void UnFavouriteVacation(Vacation vac)
     {
-        string cookie = await localStorage.GetItemAsStringAsync("login");
-        string[] splitCookie = cookie.Split(",");
-        if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
+        if (DaService.LoggedIn == true)
         {
-            customerID = Convert.ToInt32(splitCookie[0]);
+            notloggedinfeedback = string.Empty;
+            vac.TravelGroup.LeaveVacation(customerID);
+        }
+        else
+        {
         }
     }
 
@@ -328,7 +359,6 @@
             notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
             LoginModal.Toggle();
         }
-
     }
 
     public void OrderByPrice()

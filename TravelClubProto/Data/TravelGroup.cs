@@ -10,17 +10,11 @@ namespace TravelClubProto.Data
     public class TravelGroup
     {
         public int FK_VacationID { get; }
-        DataAccessService DaService {get; set;}
+        DataAccessService DaService { get; set; }
         public TravelGroup(int fK_VacationID, DataAccessService daService)
         {
             FK_VacationID = fK_VacationID;
             DaService = daService;
-        }
-
-        public async Task<int> NumberOfJoinedUsers()
-        {
-            int users = (await GetUserIDsFromRelation(FK_VacationID, "Joined").ConfigureAwait(false)).Count;
-            return await Task.FromResult(users);
         }
 
         /// <summary>
@@ -45,15 +39,7 @@ namespace TravelClubProto.Data
                     //The built commands are executed
                     sqlCommand.ExecuteNonQuery();
 
-                    using (var sc2 = new SqlConnection(DaService.ConnectionString))
-                    using (var cmd2 = sc2.CreateCommand())
-                    {
-                        sc2.Open();
-                        cmd2.CommandText = "UPDATE [dbo].Vacation SET PriceChangeDate = @now WHERE ID=@FK_VacationID";
-                        cmd2.Parameters.AddWithValue("@now", DateTime.Now);
-                        cmd2.Parameters.AddWithValue("@FK_VacationID", FK_VacationID);
-                        cmd2.ExecuteNonQuery();
-                    }
+
                 }
                 //Catches the error and prints it
                 catch (Exception e)
@@ -65,10 +51,34 @@ namespace TravelClubProto.Data
                     con.Close();
                 }
             }
-
-
         }
-        
+
+        public async Task<bool> CheckForRelation(int customerID, string relation)
+        {
+            bool succes = false;
+            try
+            {
+                using var sc = new SqlConnection(DaService.ConnectionString);
+                using var cmd = sc.CreateCommand();
+                sc.Open();
+                cmd.CommandText = "SELECT COUNT(*) FROM [dbo].CustomerVacationRelations WHERE FK_CustomerID=@customerID AND RelationType=@relation";
+                cmd.Parameters.AddWithValue("@customerID", customerID);
+                cmd.Parameters.AddWithValue("@relation", relation);
+
+                int exists = (int)cmd.ExecuteScalar();
+                if (exists == 1)
+                {
+                    succes = true;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return (succes);
+        }
+
+
         public bool CheckForAndChangeRelations(int customerID, string newRelation)
         {
             string oldRelation = (newRelation == "Joined") ? "Favourited" : "Joined";
@@ -88,7 +98,7 @@ namespace TravelClubProto.Data
                     {
                         isRelated = true;
                         using (var sc2 = new SqlConnection(DaService.ConnectionString))
-                        using (var cmd2 = sc2.CreateCommand())
+                        using (var cmd2 = sc.CreateCommand())
                         {
                             sc2.Open();
                             cmd2.CommandText = "UPDATE [dbo].CustomerVacationRelations SET RelationType = @newRelation WHERE FK_CustomerID=@CustomerID";

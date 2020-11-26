@@ -65,7 +65,7 @@
                 <br />
 
                 <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
-                <BSButton @onclick="@(e => FavouriteVacation(vac))" Color="Color.Primary">Favorisere ferie</BSButton>
+                <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
 
                 @*MODAL FOR LOGIN PROMPT*@
                 <BSModal @ref="LoginModal" IsCentered="true">

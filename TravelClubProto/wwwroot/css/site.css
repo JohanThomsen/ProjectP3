@@ -19,6 +19,17 @@
     border-radius: 0;
 }
 
+.NavigationBar {
+    height: 100%; /* Full-height: remove this if you want "auto" height */
+    width: 160px; /* Set the width of the sidebar */
+    position: relative; /* Fixed Sidebar (stay in place on scroll) */
+    top: 0; /* Stay at the top */
+    left: 0;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px;
+}
+
+
 *{
     box-sizing: border-box;
 }
@@ -155,18 +166,34 @@ progress.progressBarJoinedUsersVS {
     border: 1px solid rgb(149, 168, 189)
 }
 
+.mytravelclubcontentelementsright {
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #97aabf;
+    float: right;
+    width: 49%;
+    padding: 1%;
+    padding-left: 19%;
+    margin-bottom: 1%;
+    margin-left: 1%;
+    text-decoration: none;
+    -webkit-transition: all .15s ease-out;
+    -moz-transition: all .15s ease-out;
+    -o-transition: all .15s ease-out;
+    transition: all .15s ease-out;
+}
 
 
-.mytravelclubcontentelements {
+.mytravelclubcontentelementsleft {
     position: relative;
     background-color: #fff;
     border: 1px solid #97aabf;
     float: left;
-    width: 333px;
-    padding: 20px;
-    padding-left: 100px;
-    margin-bottom: 10px;
-    margin-left: 16px;
+    width: 49%;
+    padding: 1%;
+    padding-left: 19%;
+    margin-bottom: 1%;
+    margin-left: 1%;
     text-decoration: none;
     -webkit-transition: all .15s ease-out;
     -moz-transition: all .15s ease-out;
@@ -245,52 +272,69 @@ progress.progressBarJoinedUsersVS {
         text-decoration: underline;
     }
 .mytravelclubcontent {
-    position: relative;
+    position: inherit;
     background: #fff;
-    padding: 18px;
+    padding: 1%;
     border: 1px solid #97aabf;
     float: right;
-    width: 760px;
-    top: -349px;
+    width: 73%;
+    margin-top: -32.3%;
 }
 .mytravelbureaucontent{
-    position: relative;
+    position: inherit;
     background: #fff;
-    padding: 18px;
+    padding: 1%;
     border: 1px solid #97aabf;
     float: right;
-    width: 760px;
-    top: -183px;
+    width: 69%;
+    margin-top: -17.2%;
 }
 .mytravelclubadmincontent {
-    position: relative;
+    position: inherit;
     background: #fff;
-    padding: 18px;
+    padding: 1%;
     border: 1px solid #97aabf;
     float: right;
-    width: 760px;
-    top: -239px;
+    width: 72%;
+    margin-top: -24.1%;
 }
+.mytravelclubadminmenulist {
+    display: table-cell;
+    background-color: #30343e;
+    color: inherit;
+    width: 27%;
+    float: left;
+    position: inherit;
+    margin-right: 73%;
+}
+
+.mytravelbureaumenulist {
+    display: table-cell;
+    background-color: #30343e;
+    color: inherit;
+    width: 39%;
+    float: left;
+    position: inherit;
+    margin-right: 61%;
+}
+
 .mytravelbureautext {
-    font-size: 12px;
     font-size: 1.2rem;
-    line-height: 15px;
     line-height: 1.5rem;
     color: #000;
 }
 .mytravelclubjumbotron {
     box-sizing: border-box;
-    padding: 11px;
+    padding: 2%;
     float: left;
     width: 100%;
-    position: relative;
-    background-color:#fff
+    position: inherit;
+    background-color: #fff;
 }
 .iconcolumn {
     position: absolute;
-    top: 21px;
-    left: 20px;
-    font-size: 40px;
+    top: 25%;
+    left: 8%;
     font-size: 4rem;
 }
 .welcomemytravelclub {
@@ -303,19 +347,15 @@ progress.progressBarJoinedUsersVS {
     width: 100%;
 }
 .mytravelclubheaders {
-    font-size: 18px;
     font-size: 1.1rem;
-    line-height: 21px;
     line-height: 2.1rem;
     font-weight: bold;
     color: #000;
     display: block;
-    padding-bottom: 6px;
+    padding-bottom: 1%;
 }
 .mytravelclubtext {
-    font-size: 12px;
     font-size: 1.1rem;
-    line-height: 15px;
     line-height: 1.5rem;
     color: #000;
 }
@@ -339,6 +379,44 @@ progress.progressBarJoinedUsersVS {
     background: url(https://www.flaticon.com/svg/static/icons/svg/74/74472.svg) no-repeat 5%;
     border: none;
     
+}
+
+.HeartIconNotFill {
+    background-color: #f7fbfc !important;
+    background: url(https://www.flaticon.com/svg/static/icons/svg/535/535285.svg) no-repeat 5%;
+    border: none;
+    background-size:100%;
+    height: 2em;
+    vertical-align: text-bottom;
+    
+}
+
+.InfoButton {
+    display: inline-block;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: bottom;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.HeartIconFill {
+    background-color: #f7fbfc !important;
+    background-size: 100%;
+    height: 2em;
+    background: url(https://www.flaticon.com/svg/static/icons/svg/535/535183.svg) no-repeat 5%;
+    border: none;
+    vertical-align:bottom;
 }
 
 .dropdown-toggle::before, .dropdown-toggle::after{

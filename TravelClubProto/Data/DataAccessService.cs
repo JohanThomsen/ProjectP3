@@ -12,7 +12,6 @@ namespace TravelClubProto.Data
     public class DataAccessService
     {
         public bool LoggedIn { get; set; }
-
         public int LoggedInAccountID { get; set; }
         public string LoggedInType { get; set; }
 

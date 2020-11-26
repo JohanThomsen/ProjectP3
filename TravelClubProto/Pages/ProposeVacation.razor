@@ -164,6 +164,7 @@
         </div>
     </div>
 </BSJumbotron>
+
 @code {
     public string destinationFeedback;
     public int activeDestination;
@@ -176,6 +177,18 @@
     BSModal DestinationModal;
 
     string inputFeedback = "Add a destination";
+
+    bool collapseNavMenu = true;
+
+    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+
+    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -348,25 +361,6 @@
 
 
     FormsModelPrices formsModelPrices = new FormsModelPrices();
-
-    bool collapseNavMenu = true;
-
-    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
-
-    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
-
-    int ID;
-
-    string loginInfo;
-
-    string[] loginresult;
-
-    Account acc;
-
-    void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
 
     void LogOut(MouseEventArgs e)
     {

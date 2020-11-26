@@ -9,7 +9,6 @@
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
 
-
 <BSJumbotron class="mytravelclubjumbotron">
     <div>
         <div>
@@ -48,8 +47,8 @@
         </div>
         <div class="mytravelbureaucontent">
             <h2 class="welcomemytravelclub"> Administrer feriepakker</h2>
-             <ul> 
-                
+             <ul>
+
 
                 @foreach (Vacation vac in vacations)
                 {
@@ -58,7 +57,7 @@
                         <!-- vac.Destination.AddActivity(); -->
 
                         <BSJumbotron class="mytravelclubjumbotron">
-                            
+
                         <div class="ViewVacationImage">
                             <BSFigureImage src="@vac.ImageLink" />
                         </div>
@@ -93,45 +92,47 @@
 
                 }
              </ul>
-            
+
         </div>
     </div>
 </BSJumbotron>
+
 @code {
-    public List<Vacation> vacations;
 
-    protected override async Task OnInitializedAsync()
-    {
-        vacations = await DaService.GetAllVacations(DaService);
-    }
+        bool collapseNavMenu = true;
 
-    void ChangeVacState(Vacation vac, string state)
-    {
-        vac.State = state;
-    }
+        string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
 
-    bool collapseNavMenu = true;
+        string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
 
-    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
+        int ID;
 
-    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+        string loginInfo;
 
-    int ID;
+        string[] loginresult;
 
-    string loginInfo;
+        Account acc;
 
-    string[] loginresult;
+        List<Vacation> vacations = new List<Vacation>();
 
-    Account acc;
+        void ToggleNavMenu()
+        {
+            collapseNavMenu = !collapseNavMenu;
+        }
 
-    void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
+        protected override async Task OnInitializedAsync()
+        {
+            vacations = await DaService.GetAllVacations(DaService);
+        }
 
-    void LogOut(MouseEventArgs e)
-    {
-        DaService.LoggedIn = false;
-    }
+        void ChangeVacState(Vacation vac, string state)
+        {
+            vac.State = state;
+        }
+
+
+        void LogOut(MouseEventArgs e)
+        {
+            DaService.LoggedIn = false;
+        }
 }
-

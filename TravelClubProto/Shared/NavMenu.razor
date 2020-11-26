@@ -208,22 +208,27 @@
                 acc = await DaService.GetAccountById(ID);
                 DaService.LoggedInType = acc.Type;
             }
-
-
         }
     }
 
     async void LogInToProfile(MouseEventArgs e)
     {
+        LoginModal.Toggle();
         //returnerer ID ved succes og -1 ved fail
         int ID = await DaService.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
 
-        LoginModal.Toggle();
+        if (ID != -1)
+        {
+            DaService.LoggedIn = true;
+        }
+        else
+        {
+            DaService.LoggedIn = false;
+        }
 
         if (DaService.LoggedIn == false)
         {
             WarningBox.Toggle();
-
         }
         else
         {

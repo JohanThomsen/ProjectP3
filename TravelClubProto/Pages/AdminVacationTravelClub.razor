@@ -81,11 +81,22 @@
 
     Account acc;
 
+    List<Vacation> vacations = new List<Vacation>();
+
     void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        vacations = await DaService.GetAllVacations(DaService);
+    }
+
+    void ChangeVacState(Vacation vac, string state)
+    {
+        vac.State = state;
+    }
     void LogOut(MouseEventArgs e)
     {
         DaService.LoggedIn = false;
