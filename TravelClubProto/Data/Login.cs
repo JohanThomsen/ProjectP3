@@ -31,7 +31,7 @@ namespace TravelClubProto.Data
                 {
                     if (row["Type"] as string == "Customer")
                     {
-                        Customer c = new Customer(row["Email"] as string, row["Password"] as string, DaService);
+                        Customer c = new Customer(Convert.ToInt32(row["AccountID"]), row["Email"] as string, row["Password"] as string, DaService);
                         c.PI.Name = row["Name"] as string;
                         c.LoginDate = Convert.ToDateTime(row["LoginDate"]);
                         c.Type = row["Type"] as string;
@@ -39,13 +39,13 @@ namespace TravelClubProto.Data
                     }
                     else if (row["Type"] as string == "TravelBureau")
                     {
-                        TravelBureau tb = new TravelBureau(row["Email"] as string, row["Password"] as string, DaService);
+                        TravelBureau tb = new TravelBureau(Convert.ToInt32(row["AccountID"]), row["Email"] as string, row["Password"] as string, DaService);
                         tb.Name = row["Name"] as string;
                         a = tb;
                     }
                     else if (row["Type"] as string == "TravelClub")
                     {
-                        TravelClub tc = new TravelClub(row["Email"] as string, row["Password"] as string, DaService);
+                        TravelClub tc = new TravelClub(Convert.ToInt32(row["AccountID"]), row["Email"] as string, row["Password"] as string, DaService);
                         a = tc;
                     } else
                     {

@@ -26,6 +26,16 @@ namespace TravelClubProto.Data
         public Account(string email, string password, DataAccessService daService)
         {
             CreationDate = DateTime.Now;
+            Email = email;
+            Password = password;
+            DaService = daService;
+            LoginDate = CreationDate;
+        }
+
+
+        public Account(int ID, string email, string password, DataAccessService daService)
+        {
+            CreationDate = DateTime.Now;
             Email        = email;
             Password     = password;
             DaService    = daService;

@@ -7,9 +7,13 @@ namespace TravelClubProto.Data
 {
     public class TravelClub : Account
     {
-        public TravelClub(string email, string password, DataAccessService daService) : base(email, password, daService) 
+        public TravelClub(int ID, string email, string password, DataAccessService daService) : base(ID, email, password, daService) 
         {
             Type = "TravelClub";
-        }        
+        }
+        public TravelClub(string email, string password, DataAccessService daService) : base(email, password, daService)
+        {
+            Type = "TravelClub";
+        }
     }
 }

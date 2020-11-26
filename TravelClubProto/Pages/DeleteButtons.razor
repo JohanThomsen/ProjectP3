@@ -29,7 +29,10 @@
 <button class="btn btn-danger" @onclick="CompleteVacation">Test Complete</button>
 <button class="btn btn-danger" @onclick="ResetVacation">Test Reset</button>
 <br />
-<button class="btn btn-dark"  @onclick="EmailCreator">Send Mail</button>
+<button class="btn btn-dark" @onclick="EmailCreator">Send Mail</button>
+<br />
+<button class="btn btn-info" @onclick="CreatePriceAgent">Create Price Agent</button>
+
 
 
 
@@ -174,4 +177,17 @@
         smtp.Disconnect(true);
     }
 
+    private void CreatePriceAgent()
+    {
+        Account temp = DaService.GetAccountById(DaService.LoggedInAccountID).GetAwaiter().GetResult();
+        if (temp is Customer)
+        {
+            List<string> actPreferences = new List<string>();
+            actPreferences.Add("Pool");
+            actPreferences.Add("Tivoli");
+            Customer cust = (Customer)temp;
+            cust.priceAgentManager.CreatePriceAgent(DaService.getDestinationByID(55).GetAwaiter().GetResult().CountryLocationHotel, actPreferences, 50000);
+            cust.priceAgentManager.GatherVacations();
+        }
+    }
 }

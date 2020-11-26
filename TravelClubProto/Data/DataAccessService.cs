@@ -113,7 +113,7 @@ namespace TravelClubProto.Data
                 //Structures the data such that it can be read 
                 da.Fill(dt);
                 //Reads data into designated class
-                vacations = await FillVacationList(dt, DaService);
+                vacations = await FillVacationList(dt);
                 
             }
             catch (Exception e)
@@ -124,16 +124,15 @@ namespace TravelClubProto.Data
             return await Task.FromResult(vacations);
         }
 
-        public async Task<List<Vacation>> FillVacationList(DataTable dt, DataAccessService DaService)
+        public async Task<List<Vacation>> FillVacationList(DataTable dt)
         {
             List<Vacation> vacations = new List<Vacation>();
             Vacation v;
             foreach (DataRow row in dt.Rows)
             {
-                v = new Vacation(DaService, Convert.ToInt32(row["ID"]), Convert.ToInt32(row["FK_DestinationID"]));
+                v = new Vacation(this, Convert.ToInt32(row["ID"]), Convert.ToInt32(row["FK_DestinationID"]));
                 v.State = row["State"] as string;
                 v.MinNumberOfUsers = Convert.ToInt32(row["MinNumberOfUsers"]);
-                v.MinNumberOfUsersExceeded = Convert.ToInt32(row["MinNumberOfUsersExceeded"]);
                 v.Dates.Add("ProposalDate", Convert.ToDateTime(row["ProposalDate"]));
                 if (!(row["PublishDate"] is DBNull)) v.Dates.Add("PublishDate", Convert.ToDateTime(row["PublishDate"]));
                 if (!(row["GracePeriodDate"] is DBNull)) v.Dates.Add("GracePeriodDate", Convert.ToDateTime(row["GracePeriodDate"]));
@@ -188,7 +187,6 @@ namespace TravelClubProto.Data
                 v = new Vacation(DaService, Convert.ToInt32(row["ID"]), Convert.ToInt32(row["FK_DestinationID"]));
                 v.State = row["State"] as string;
                 v.MinNumberOfUsers = Convert.ToInt32(row["MinNumberOfUsers"]);
-                v.MinNumberOfUsersExceeded = Convert.ToInt32(row["MinNumberOfUsersExceeded"]);
                 v.Dates.Add("ProposalDate", Convert.ToDateTime(row["ProposalDate"]));
                 if (!(row["PublishDate"] is DBNull)) v.Dates.Add("PublishDate", Convert.ToDateTime(row["PublishDate"]));
                 if (!(row["GracePeriodDate"] is DBNull)) v.Dates.Add("GracePeriodDate", Convert.ToDateTime(row["GracePeriodDate"]));
@@ -212,7 +210,6 @@ namespace TravelClubProto.Data
 
         public async Task<int> FindAccountInDatabase(string email, string password, DataAccessService daService)
         {
-
             Account user = new Customer(email, password, daService);
             daService.LoggedIn = false;
             try
@@ -240,7 +237,6 @@ namespace TravelClubProto.Data
                                 myConnection.Close();
                                 return await Task.FromResult(user.ID);
                             }
-
                         }
                         myConnection.Close();
                     }
@@ -252,6 +248,120 @@ namespace TravelClubProto.Data
             }
             return await Task.FromResult(-1);
         }
+
+        public async Task<Account> GetAccountById(int id)
+        {
+            Account foundAccount = null;
+            try
+            {
+                using (SqlConnection myConnection = new SqlConnection(ConnectionString))
+                {
+                    //The * means all. So data from [dbo].[Destination] table are selected by the database
+                    string query = "SELECT * FROM [dbo].[Account] WHERE AccountID=@id";
+                    SqlCommand sqlCommand = new SqlCommand(query, myConnection);
+                    sqlCommand.Parameters.AddWithValue("@id", id);
+                    myConnection.Open();
+                    //Reads all the executed sql commands
+                    using (SqlDataReader Reader = sqlCommand.ExecuteReader())
+                    {
+                        // Reads all data and converts to object and type matches
+                        while (Reader.Read())
+                        {
+
+                            switch (Reader["Type"] as string)
+                            {
+                                case "Customer":
+                                    foundAccount = new Customer(id, Reader["Email"] as string, Reader["Password"] as string, this);
+                                    break;
+                                case "TravelBureau":
+                                    foundAccount = new TravelBureau(id, Reader["Email"] as string, Reader["Password"] as string, this);
+                                    break;
+                                case "TravelClub":
+                                    foundAccount = new TravelClub(id, Reader["Email"] as string, Reader["Password"] as string, this);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        myConnection.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return await Task.FromResult(foundAccount);
+        }
+
+        public async Task<Destination> getDestinationByID(int id)
+        {
+            Destination matchingDestination = new Destination(this);
+            try
+            {
+                using (SqlConnection myConnection = new SqlConnection(ConnectionString))
+                {
+                    //The * means all. So data from [dbo].[Destination] table are selected by the database
+                    string query = "SELECT * FROM [dbo].[Destination] WHERE DestinationID=@DestinationID";
+                    SqlCommand sqlCommand = new SqlCommand(query, myConnection);
+                    sqlCommand.Parameters.AddWithValue("@DestinationID", id);
+                    myConnection.Open();
+                    //Reads all the executed sql commands
+                    using (SqlDataReader Reader = sqlCommand.ExecuteReader())
+                    {
+                        // Reads all data and converts to object and type matches
+                        while (Reader.Read())
+                        {
+                            matchingDestination.ID = Convert.ToInt32(Reader["DestinationID"]);
+                            matchingDestination.Hotel = Reader["Hotel"] as string;
+                            matchingDestination.Location = Reader["Location"] as string;
+                            matchingDestination.Country = Reader["Country"] as string;
+                        }
+                        myConnection.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            matchingDestination.Activities = await GetAllActivitiesByDestID(matchingDestination.ID);
+
+            return await Task.FromResult(matchingDestination);
+        }
+
+
+        public async Task<List<Activity>> GetAllActivitiesByDestID(int FK_DestinationID)
+        {
+            List<Activity> activities = new List<Activity>();
+            Activity a;
+            try
+            {
+                //Creates a table
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(ConnectionString);
+                //Gets data from the sql database
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].Activities WHERE FK_DestinationID = '{FK_DestinationID}'", con);
+                //Structures the data such that it can be read 
+                da.Fill(dt);
+                //Reads data into designated class
+                foreach (DataRow row in dt.Rows)
+                {
+                    a = new Activity(this);
+                    a.ID = Convert.ToInt32(row["ActivityID"]);
+                    a.Type = row["Type"] as string;
+                    activities.Add(a);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            //Waits for Task to be finished and then returns the list of Destinations
+            return await Task.FromResult(activities);
+        }
+
 
         public int ClearTable(string table)
         {

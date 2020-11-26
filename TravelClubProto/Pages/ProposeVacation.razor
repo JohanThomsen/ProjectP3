@@ -187,7 +187,6 @@
         Vacation v = new Vacation(Breaks, Prices, DaService);
         v.State = "Proposed";
         v.MinNumberOfUsers = formsModelVal.minNumberOfUsers;
-        v.MinNumberOfUsersExceeded = 0;
         v.Dates.Add("ProposalDate", DateTime.Now);
         v.Dates.Add("Deadline", formsModelVal.Deadline);
         v.Dates.Add("GracePeriodLength", formsModelVal.Deadline.AddDays(formsModelVal.GraceperiodLength));

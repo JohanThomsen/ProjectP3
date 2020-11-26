@@ -199,7 +199,7 @@
         if (DaService.LoggedIn == true)
         {
             notloggedinfeedback = string.Empty;
-            vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Joined");
+            vac.TravelGroup.ChangeVacationRelation(DaService.LoggedInAccountID, vac.ID, "Joined");
         }
         else
         {
@@ -214,7 +214,7 @@
         if (DaService.LoggedIn == true)
         {
             notloggedinfeedback = string.Empty;
-            vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
+            vac.TravelGroup.ChangeVacationRelation(DaService.LoggedInAccountID, vac.ID, "Favourited");
         }
         else
         {
@@ -227,7 +227,7 @@
 
 
 
-    @*Calculates progress bar fill value from joined user and stretch goals*@
+        @*Calculates progress bar fill value from joined user and stretch goals*@
     int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
     {
         int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
@@ -249,18 +249,18 @@
 
 
 
-    //async public void JoinVacation()
-    //{
-    //    List<Vacation> templit = await DaService.GetAllVacations(DaService);
-    //    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Joined");
-    //}
+//async public void JoinVacation()
+//{
+//    List<Vacation> templit = await DaService.GetAllVacations(DaService);
+//    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Joined");
+//}
 
-    //async public void FavouriteVacation()
-    //{
-    //    List<Vacation> templit = await DaService.GetAllVacations(DaService);
-    //    Console.WriteLine(templit[0].ID);
-    //    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Favourited");
-    //}
+//async public void FavouriteVacation()
+//{
+//    List<Vacation> templit = await DaService.GetAllVacations(DaService);
+//    Console.WriteLine(templit[0].ID);
+//    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Favourited");
+//}
 
 
 }

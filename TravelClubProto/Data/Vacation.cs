@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 
 namespace TravelClubProto.Data
 {
-    
+
     public class Vacation : IEquatable<Vacation>
     {
         public Dictionary<string, DateTime> Dates = new Dictionary<string, DateTime>();
@@ -19,7 +19,7 @@ namespace TravelClubProto.Data
         public Destination Destination { get; set; }
         public int ID { get; set; }
         public int MinNumberOfUsers { get; set; }
-        public int MinNumberOfUsersExceeded { get; set; }
+        public int MinNumberOfUsersExceeded => MinNumberOfUsers >= TravelGroup.NumberOfJoinedUsers().GetAwaiter().GetResult() ? 0 : 1;
         public string Description { get; set; }
         public int FK_DestinationID { get; set; }
         public int FK_PublisherID { get; set; }
@@ -81,76 +81,10 @@ namespace TravelClubProto.Data
             DaService = daService;
             VacAdmin = new VacationAdministrator(daService, ID);
             TravelGroup = new TravelGroup(ID, daService);
-            getDestination(daService);
+            Destination = DaService.getDestinationByID(FK_DestinationID).GetAwaiter().GetResult();
             getPrices();
         }
 
-        private async void getDestination(DataAccessService daService)
-        {
-            Destination matchingDestination = new Destination(daService);
-            try
-            {
-                using (SqlConnection myConnection = new SqlConnection(DaService.ConnectionString))
-                {
-                    //The * means all. So data from [dbo].[Destination] table are selected by the database
-                    string query = "SELECT * FROM [dbo].[Destination] WHERE DestinationID=@DestinationID";
-                    SqlCommand sqlCommand = new SqlCommand(query, myConnection);
-                    sqlCommand.Parameters.AddWithValue("@DestinationID", FK_DestinationID);
-                    myConnection.Open();
-                    //Reads all the executed sql commands
-                    using (SqlDataReader Reader = sqlCommand.ExecuteReader())
-                    {
-                        // Reads all data and converts to object and type matches
-                        while (Reader.Read())
-                        {
-                            matchingDestination.ID = Convert.ToInt32(Reader["DestinationID"]);
-                            matchingDestination.Hotel = Reader["Hotel"] as string;
-                            matchingDestination.Location = Reader["Location"] as string;
-                            matchingDestination.Country = Reader["Country"] as string;
-                        }
-                        myConnection.Close();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
-            matchingDestination.Activities = await GetAllActivitiesByDestID(matchingDestination.ID);
-
-            Destination = matchingDestination;
-        }
-
-        private async Task<List<Activity>> GetAllActivitiesByDestID(int FK_DestinationID)
-        {
-            List<Activity> activities = new List<Activity>();
-            Activity a;
-            try
-            {
-                //Creates a table
-                DataTable dt = new DataTable();
-                SqlConnection con = new SqlConnection(DaService.ConnectionString);
-                //Gets data from the sql database
-                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].Activities WHERE FK_DestinationID = '{FK_DestinationID}'", con);
-                //Structures the data such that it can be read 
-                da.Fill(dt);
-                //Reads data into designated class
-                foreach (DataRow row in dt.Rows)
-                {
-                    a = new Activity(DaService);
-                    a.ID = Convert.ToInt32(row["ActivityID"]);
-                    a.Type = row["Type"] as string;
-                    activities.Add(a);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            //Waits for Task to be finished and then returns the list of Destinations
-            return await Task.FromResult(activities);
-        }
 
         private void getPrices()
         {

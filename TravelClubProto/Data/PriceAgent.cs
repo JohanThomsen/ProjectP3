@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TravelClubProto.Data
 {
-    class PriceAgent
+    public class PriceAgent
     {
         public int PriceAgentID { get; set; }
         public int FK_CustomerID { get; set; }
@@ -117,7 +117,7 @@ namespace TravelClubProto.Data
                 //Structures the data such that it can be read 
                 da.Fill(dt);
                 //Reads data into designated class
-                vacations = await DaService.FillVacationList(dt, DaService);
+                vacations = await DaService.FillVacationList(dt);
             }
             catch (Exception e)
             {
@@ -132,29 +132,36 @@ namespace TravelClubProto.Data
             SqlConnection con = new SqlConnection(DaService.ConnectionString);
             try
             {
+                DateTime dateMixer = DateTime.Now;
                 //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string query = "INSERT INTO [dbo].[PriceAgent] (FK_AccountID) VALUES(@FK_CustomerID)";
+                string query = "INSERT INTO [dbo].[PriceAgent] (FK_AccountID, CreationDate) VALUES(@FK_CustomerID, @CreationDate)";
                 //SqlCommand is used to build up commands
                 SqlCommand sqlCommand = new SqlCommand(query, con);
                 con.Open();
                 sqlCommand.Parameters.AddWithValue("@FK_CustomerID", FK_CustomerID);
+                sqlCommand.Parameters.AddWithValue("@CreationDate", dateMixer);
                 //The built commands are executed
                 sqlCommand.ExecuteNonQuery();
 
+                GetAgentID(dateMixer);
+
+
                 //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string queryPrice = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference, PreferenceType) VALUES(@Preference, @PreferenceType)";
+                string queryPrice = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference ,FK_PriceAgentID, PreferenceType) VALUES(@Preference, @FK_PriceAgentID, @PreferenceType)";
                 //SqlCommand is used to build up commands
                 SqlCommand sqlCommandPrice = new SqlCommand(queryPrice, con);
                 sqlCommandPrice.Parameters.AddWithValue("@Preference", MaxPrice);
+                sqlCommandPrice.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
                 sqlCommandPrice.Parameters.AddWithValue("@PreferenceType", "MaxPrice");
                 //The built commands are executed
                 sqlCommandPrice.ExecuteNonQuery();
 
                 //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string queryLocation = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference, PreferenceType) VALUES(@Preference, @PreferenceType)";
+                string queryLocation = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference, FK_PriceAgentID, PreferenceType) VALUES(@Preference, @FK_PriceAgentID, @PreferenceType)";
                 //SqlCommand is used to build up commands
                 SqlCommand sqlCommandLocation = new SqlCommand(queryLocation, con);
                 sqlCommandLocation.Parameters.AddWithValue("@Preference", DestinationPreference);
+                sqlCommandLocation.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
                 sqlCommandLocation.Parameters.AddWithValue("@PreferenceType", "Destination");
                 //The built commands are executed
                 sqlCommandLocation.ExecuteNonQuery();
@@ -162,10 +169,11 @@ namespace TravelClubProto.Data
                 foreach (string act in ActPreferences)
                 {
                     //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                    string queryAct = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference, PreferenceType) VALUES(@Preference, @PreferenceType)";
+                    string queryAct = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference, FK_PriceAgentID, PreferenceType) VALUES(@Preference, @FK_PriceAgentID, @PreferenceType)";
                     //SqlCommand is used to build up commands
                     SqlCommand sqlCommandAct = new SqlCommand(queryAct, con);
                     sqlCommandAct.Parameters.AddWithValue("@Preference", act);
+                    sqlCommandAct.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
                     sqlCommandAct.Parameters.AddWithValue("@PreferenceType", "Activity");
                     //The built commands are executed
                     sqlCommandAct.ExecuteNonQuery();
@@ -183,5 +191,33 @@ namespace TravelClubProto.Data
             }
         }
 
+        private void GetAgentID(DateTime DateMixer)
+        {
+            try
+            {
+                using (SqlConnection myConnection = new SqlConnection(DaService.ConnectionString))
+                {
+                    //The * means all. So data from [dbo].[Destination] table are selected by the database
+                    string query = "SELECT * FROM [dbo].[PriceAgent] WHERE CreationDate=@DateMixer";
+                    SqlCommand sqlCommand = new SqlCommand(query, myConnection);
+                    sqlCommand.Parameters.AddWithValue("@DateMixer", DateMixer);
+                    myConnection.Open();
+                    //Reads all the executed sql commands
+                    using (SqlDataReader Reader = sqlCommand.ExecuteReader())
+                    {
+                        // Reads all data and converts to object and type matches
+                        while (Reader.Read())
+                        {
+                            PriceAgentID = Convert.ToInt32(Reader["ID"]);
+                        }
+                        myConnection.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 }

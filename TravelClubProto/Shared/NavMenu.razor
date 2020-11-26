@@ -205,8 +205,7 @@
             DateTime expiry = Convert.ToDateTime(loginresult[1]);
             if (expiry > DateTime.Now)
             {
-                Login login = new Login();
-                acc = await login.GetAccountByID(daService, ID);
+                acc = await DaService.GetAccountById(ID);
                 DaService.LoggedInType = acc.Type;
             }
 

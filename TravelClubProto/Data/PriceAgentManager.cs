@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace TravelClubProto.Data
 {
-    class PriceAgentManager
+    public class PriceAgentManager
     {
-        private string Email;
-        private List<PriceAgent> Agents;
-        private List<Vacation> ReleventVacations = new List<Vacation>();
-        private List<Vacation> DiscardedVacations = new List<Vacation>();
-        private int FK_CustomerID;
+        public string Email;
+        public List<PriceAgent> Agents;
+        public List<Vacation> ReleventVacations = new List<Vacation>();
+        public List<Vacation> DiscardedVacations = new List<Vacation>();
+        public int FK_CustomerID;
         DataAccessService DaService;
 
         public PriceAgentManager(DataAccessService daService, string email, int customerID)
@@ -98,7 +98,5 @@ namespace TravelClubProto.Data
             }
             Console.WriteLine(vacsToSend);
         }
-
-
     }
 }

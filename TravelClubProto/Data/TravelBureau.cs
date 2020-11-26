@@ -15,5 +15,10 @@ namespace TravelClubProto.Data
             Type = "TravelBureau";
         }
 
+        public TravelBureau(int ID, string email, string password, DataAccessService daService) : base(ID, email, password, daService)
+        {
+            Type = "TravelBureau";
+        }
+
     }
 }
