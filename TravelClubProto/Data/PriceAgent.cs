@@ -36,12 +36,13 @@ namespace TravelClubProto.Data
 
         private void GetPreferences()
         {
+            ActPreferences = new List<string>();
             try
             {
                 using (SqlConnection myConnection = new SqlConnection(DaService.ConnectionString))
                 {
                     //The * means all. So data from [dbo].[Destination] table are selected by the database
-                    string query = "SELECT * FROM [dbo].[Account] WHERE FK_PriceAgentID=@FK_PriceAgentID";
+                    string query = "SELECT * FROM [dbo].[PriceAgentPreferences] WHERE FK_PriceAgentID=@FK_PriceAgentID";
                     SqlCommand sqlCommand = new SqlCommand(query, myConnection);
                     sqlCommand.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
                     myConnection.Open();
@@ -82,31 +83,71 @@ namespace TravelClubProto.Data
             List<Vacation> allVacs = DaService.GetAllVacations(DaService).GetAwaiter().GetResult();
             List<Vacation> RecentlyChangedVacations = allVacs.Where(v => v.Dates["PriceChangeDate"] > DateTime.Now.AddDays(-1)).ToList();
             List<Vacation> RelevantChangedVacations = new List<Vacation>();
-            List<Vacation> ignorableVacations = GetIgnorableVacations().GetAwaiter().GetResult();
+            List<int> ignorableVacations = GetIgnorableVacations().GetAwaiter().GetResult();
             foreach (Vacation vac in RecentlyChangedVacations)
             {
                 if (vac.Destination.CountryLocationHotel == DestinationPreference && vac.CurrentPrice().GetAwaiter().GetResult() <= MaxPrice)
                 {
                     bool contains = true;
-                    foreach (Activity act in vac.Destination.Activities)
+                    foreach (string act in ActPreferences)
                     {
-                        if (!(ActPreferences.Contains(act.Type)))
+                        bool tempContains = false;
+                        foreach (Activity VacAct in vac.Destination.Activities)
+                        {
+                            
+                            if (act == VacAct.Type)
+                            {
+                                tempContains = true;
+                            }
+                        }
+                        if (tempContains == false)
                         {
                             contains = false;
+                            break;
                         }
                     }
-                    if (contains == true && (!(ignorableVacations.Contains(vac))))
+
+                    
+                    if (contains == true && (!(ignorableVacations.Contains(vac.ID))))
                     {
                         RelevantChangedVacations.Add(vac);
+                        InsertIntoDiscardedVacations(vac.ID);
                     }
                 }
             }
             return RelevantChangedVacations;
         }
 
-        private async Task<List<Vacation>> GetIgnorableVacations()
+        private void InsertIntoDiscardedVacations(int vacID)
         {
-            List<Vacation> vacations = new List<Vacation>();
+            SqlConnection con = new SqlConnection(DaService.ConnectionString);
+            try
+            {
+                DateTime dateMixer = DateTime.Now;
+                //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
+                string query = "INSERT INTO [dbo].[DiscardedVacations] (FK_PriceAgentID, FK_VacationID) VALUES(@FK_PriceAgentID, @FK_VacationID)";
+                //SqlCommand is used to build up commands
+                SqlCommand sqlCommand = new SqlCommand(query, con);
+                con.Open();
+                sqlCommand.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
+                sqlCommand.Parameters.AddWithValue("@FK_VacationID", vacID);
+                //The built commands are executed
+                sqlCommand.ExecuteNonQuery();
+            }
+            //Catches the error and prints it
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        private async Task<List<int>> GetIgnorableVacations()
+        {
+            List<int> vacations = new List<int>();
             try
             {
                 //Creates a table
@@ -117,17 +158,21 @@ namespace TravelClubProto.Data
                 //Structures the data such that it can be read 
                 da.Fill(dt);
                 //Reads data into designated class
-                vacations = await DaService.FillVacationList(dt);
+                foreach (DataRow row in dt.Rows)
+                {
+                    vacations.Add(Convert.ToInt32(row["FK_VacationID"]));
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+
             //Waits for Task to be finished and then returns the list of Destinations
             return await Task.FromResult(vacations);
         }
 
-        public void InsertIntoDatabase()
+        public async void InsertIntoDatabase()
         {
             SqlConnection con = new SqlConnection(DaService.ConnectionString);
             try
@@ -143,43 +188,9 @@ namespace TravelClubProto.Data
                 //The built commands are executed
                 sqlCommand.ExecuteNonQuery();
 
-                GetAgentID(dateMixer);
-
-
-                //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string queryPrice = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference ,FK_PriceAgentID, PreferenceType) VALUES(@Preference, @FK_PriceAgentID, @PreferenceType)";
-                //SqlCommand is used to build up commands
-                SqlCommand sqlCommandPrice = new SqlCommand(queryPrice, con);
-                sqlCommandPrice.Parameters.AddWithValue("@Preference", MaxPrice);
-                sqlCommandPrice.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
-                sqlCommandPrice.Parameters.AddWithValue("@PreferenceType", "MaxPrice");
-                //The built commands are executed
-                sqlCommandPrice.ExecuteNonQuery();
-
-                //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string queryLocation = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference, FK_PriceAgentID, PreferenceType) VALUES(@Preference, @FK_PriceAgentID, @PreferenceType)";
-                //SqlCommand is used to build up commands
-                SqlCommand sqlCommandLocation = new SqlCommand(queryLocation, con);
-                sqlCommandLocation.Parameters.AddWithValue("@Preference", DestinationPreference);
-                sqlCommandLocation.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
-                sqlCommandLocation.Parameters.AddWithValue("@PreferenceType", "Destination");
-                //The built commands are executed
-                sqlCommandLocation.ExecuteNonQuery();
-
-                foreach (string act in ActPreferences)
-                {
-                    //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                    string queryAct = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference, FK_PriceAgentID, PreferenceType) VALUES(@Preference, @FK_PriceAgentID, @PreferenceType)";
-                    //SqlCommand is used to build up commands
-                    SqlCommand sqlCommandAct = new SqlCommand(queryAct, con);
-                    sqlCommandAct.Parameters.AddWithValue("@Preference", act);
-                    sqlCommandAct.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
-                    sqlCommandAct.Parameters.AddWithValue("@PreferenceType", "Activity");
-                    //The built commands are executed
-                    sqlCommandAct.ExecuteNonQuery();
-                }
+                PriceAgentID = await GetAgentID(dateMixer);
+                
             }
-
             //Catches the error and prints it
             catch (Exception e)
             {
@@ -189,10 +200,50 @@ namespace TravelClubProto.Data
             {
                 con.Close();
             }
+            InsertPreferences(PriceAgentID);
         }
 
-        private void GetAgentID(DateTime DateMixer)
+        private void InsertPreferences(int PriceAgentID)
         {
+            SqlConnection con = new SqlConnection(DaService.ConnectionString);
+            //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
+            string queryPrice = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference ,FK_PriceAgentID, PreferenceType) VALUES(@Preference, @FK_PriceAgentID, @PreferenceType)";
+            //SqlCommand is used to build up commands
+            SqlCommand sqlCommandPrice = new SqlCommand(queryPrice, con);
+            con.Open();
+            sqlCommandPrice.Parameters.AddWithValue("@Preference", MaxPrice);
+            sqlCommandPrice.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
+            sqlCommandPrice.Parameters.AddWithValue("@PreferenceType", "MaxPrice");
+            //The built commands are executed
+            sqlCommandPrice.ExecuteNonQuery();
+
+            //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
+            string queryLocation = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference, FK_PriceAgentID, PreferenceType) VALUES(@Preference, @FK_PriceAgentID, @PreferenceType)";
+            //SqlCommand is used to build up commands
+            SqlCommand sqlCommandLocation = new SqlCommand(queryLocation, con);
+            sqlCommandLocation.Parameters.AddWithValue("@Preference", DestinationPreference);
+            sqlCommandLocation.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
+            sqlCommandLocation.Parameters.AddWithValue("@PreferenceType", "Destination");
+            //The built commands are executed
+            sqlCommandLocation.ExecuteNonQuery();
+
+            foreach (string act in ActPreferences)
+            {
+                //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
+                string queryAct = "INSERT INTO [dbo].[PriceAgentPreferences] (Preference, FK_PriceAgentID, PreferenceType) VALUES(@Preference, @FK_PriceAgentID, @PreferenceType)";
+                //SqlCommand is used to build up commands
+                SqlCommand sqlCommandAct = new SqlCommand(queryAct, con);
+                sqlCommandAct.Parameters.AddWithValue("@Preference", act);
+                sqlCommandAct.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
+                sqlCommandAct.Parameters.AddWithValue("@PreferenceType", "Activity");
+                //The built commands are executed
+                sqlCommandAct.ExecuteNonQuery();
+            }
+        }
+
+        private async Task<int> GetAgentID(DateTime DateMixer)
+        {
+            int id = -1;
             try
             {
                 using (SqlConnection myConnection = new SqlConnection(DaService.ConnectionString))
@@ -208,7 +259,7 @@ namespace TravelClubProto.Data
                         // Reads all data and converts to object and type matches
                         while (Reader.Read())
                         {
-                            PriceAgentID = Convert.ToInt32(Reader["ID"]);
+                            id = Convert.ToInt32(Reader["PriceAgentID"]);
                         }
                         myConnection.Close();
                     }
@@ -218,6 +269,7 @@ namespace TravelClubProto.Data
             {
                 Console.WriteLine(e);
             }
+            return await Task.FromResult(id);
         }
     }
 }

@@ -17,6 +17,12 @@ namespace TravelClubProto.Data
             DaService = daService;
         }
 
+        public async Task<int> NumberOfJoinedUsers()
+        {
+            int users = (await GetUserIDsFromRelation(FK_VacationID, "Joined").ConfigureAwait(false)).Count;
+            return await Task.FromResult(users);
+        }
+
         /// <summary>
         /// newRelation has to be either "Joined" or "Favourited"
         /// </summary>
@@ -38,7 +44,15 @@ namespace TravelClubProto.Data
 
                     //The built commands are executed
                     sqlCommand.ExecuteNonQuery();
-
+                    using (var sc2 = new SqlConnection(DaService.ConnectionString))
+                    using (var cmd2 = sc2.CreateCommand())
+                    {
+                        sc2.Open();
+                        cmd2.CommandText = "UPDATE [dbo].Vacation SET PriceChangeDate = @PriceChangeDate WHERE ID=@FK_VacationID";
+                        cmd2.Parameters.AddWithValue("@PriceChangeDate", DateTime.Now);
+                        cmd2.Parameters.AddWithValue("@FK_VacationID", FK_VacationID);
+                        cmd2.ExecuteNonQuery();
+                    }
 
                 }
                 //Catches the error and prints it
@@ -51,6 +65,8 @@ namespace TravelClubProto.Data
                     con.Close();
                 }
             }
+
+
         }
 
         public async Task<bool> CheckForRelation(int customerID, string relation)
@@ -98,7 +114,7 @@ namespace TravelClubProto.Data
                     {
                         isRelated = true;
                         using (var sc2 = new SqlConnection(DaService.ConnectionString))
-                        using (var cmd2 = sc.CreateCommand())
+                        using (var cmd2 = sc2.CreateCommand())
                         {
                             sc2.Open();
                             cmd2.CommandText = "UPDATE [dbo].CustomerVacationRelations SET RelationType = @newRelation WHERE FK_CustomerID=@CustomerID";

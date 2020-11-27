@@ -209,7 +209,6 @@ namespace TravelClubProto.Data
 
         public async Task<int> FindAccountInDatabase(string email, string password, DataAccessService daService)
         {
-            Account user = new Customer(email, password, daService);
             daService.LoggedIn = false;
             try
             {
@@ -227,14 +226,14 @@ namespace TravelClubProto.Data
                         // Reads all data and converts to object and type matches
                         while (Reader.Read())
                         {
-                            user.ID = Convert.ToInt32(Reader["AccountID"]);
-                            if (Reader["Email"] as string == user.Email && Reader["Password"] as string == user.Password)
+                            int ID = Convert.ToInt32(Reader["AccountID"]);
+                            if (Reader["Email"] as string == email && Reader["Password"] as string == password)
                             {
                                 daService.LoggedIn = true;
-                                daService.LoggedInAccountID = user.ID;
+                                daService.LoggedInAccountID = ID;
 
                                 myConnection.Close();
-                                return await Task.FromResult(user.ID);
+                                return await Task.FromResult(ID);
                             }
                         }
                         myConnection.Close();

@@ -32,6 +32,7 @@
 <button class="btn btn-dark" @onclick="EmailCreator">Send Mail</button>
 <br />
 <button class="btn btn-info" @onclick="CreatePriceAgent">Create Price Agent</button>
+<button class="btn btn-info" @onclick="GatherVacationFromAgents">Gather relevant Vacations</button>
 
 
 
@@ -187,6 +188,15 @@
             actPreferences.Add("Tivoli");
             Customer cust = (Customer)temp;
             cust.priceAgentManager.CreatePriceAgent(DaService.getDestinationByID(55).GetAwaiter().GetResult().CountryLocationHotel, actPreferences, 50000);
+        }
+    }
+
+    private void GatherVacationFromAgents()
+    {
+        Account temp = DaService.GetAccountById(DaService.LoggedInAccountID).GetAwaiter().GetResult();
+        if (temp is Customer)
+        {
+            Customer cust = (Customer)temp;
             cust.priceAgentManager.GatherVacations();
         }
     }
