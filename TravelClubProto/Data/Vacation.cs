@@ -7,19 +7,23 @@ using Microsoft.Data.SqlClient;
 
 namespace TravelClubProto.Data
 {
-
     public class Vacation : IEquatable<Vacation>
     {
         public Dictionary<string, DateTime> Dates = new Dictionary<string, DateTime>();
-
-        //public Dictionary<int, decimal> Prices = new Dictionary<int, decimal>();
 
         public List<int> StretchGoals = new List<int>();
         public List<decimal> Prices = new List<decimal>();
         public Destination Destination { get; set; }
         public int ID { get; set; }
         public int MinNumberOfUsers { get; set; }
-        public int MinNumberOfUsersExceeded => MinNumberOfUsers >= TravelGroup.NumberOfJoinedUsers().GetAwaiter().GetResult() ? 0 : 1;
+        public int MinNumberOfUsersExceeded()
+        {
+            if (!(TravelGroup is null))
+            {
+                return MinNumberOfUsers >= TravelGroup.NumberOfJoinedUsers().GetAwaiter().GetResult() ? 0 : 1;
+            }
+            return 0;
+        }
         public string Description { get; set; }
         public int FK_DestinationID { get; set; }
         public int FK_PublisherID { get; set; }
@@ -138,7 +142,7 @@ namespace TravelClubProto.Data
                 con.Open();
                 sqlCommand.Parameters.AddWithValue("@State", State);
                 sqlCommand.Parameters.AddWithValue("@MinNumberOfusers", MinNumberOfUsers);
-                sqlCommand.Parameters.AddWithValue("@MinNumberOfUsersExceeded", MinNumberOfUsersExceeded);
+                sqlCommand.Parameters.AddWithValue("@MinNumberOfUsersExceeded", MinNumberOfUsersExceeded());
                 sqlCommand.Parameters.AddWithValue("@ProposalDate", Dates["ProposalDate"]);
                 sqlCommand.Parameters.AddWithValue("@Deadline", Dates["Deadline"]);
                 sqlCommand.Parameters.AddWithValue("@GracePeriodLength", Dates["GracePeriodLength"]);

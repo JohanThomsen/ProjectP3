@@ -198,7 +198,7 @@
     protected override async Task OnInitializedAsync()
     {
         departureDateSearch = DateTime.Now;
-        vacations = await DaService.GetAllVacations(DaService);
+        vacations = await DaService.GetAllPublishedVacations(DaService);
         destinations = await DaService.GetAllDestinations(DaService);
         ViewedVacations = vacations.ToList();
         foreach (Vacation vacation in vacations)

@@ -99,6 +99,30 @@ namespace TravelClubProto.Data
             return await Task.FromResult(activities);
         }
 
+        public async Task<List<Vacation>> GetAllPublishedVacations(DataAccessService DaService)
+        {
+            List<Vacation> vacations = new List<Vacation>();
+            try
+            {
+                //Creates a table
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(ConnectionString);
+                //Gets data from the sql database
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM [dbo].Vacation WHERE state='Published'", con);
+                //Structures the data such that it can be read 
+                da.Fill(dt);
+                //Reads data into designated class
+                vacations = await FillVacationList(dt);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            //Waits for Task to be finished and then returns the list of Destinations
+            return await Task.FromResult(vacations);
+        }
+
         public async Task<List<Vacation>> GetAllVacations(DataAccessService DaService)
         {
             List<Vacation> vacations = new List<Vacation>();
@@ -292,6 +316,31 @@ namespace TravelClubProto.Data
             return await Task.FromResult(foundAccount);
         }
 
+        public async Task<List<Customer>> GetAllCustomers()
+        {
+            List<Customer> customers = new List<Customer>();
+            try
+            {
+                using (SqlConnection myConnection = new SqlConnection(ConnectionString))
+                {
+                    //The * means all. So data from [dbo].[Destination] table are selected by the database
+                    string query = "SELECT * FROM [dbo].[Account] WHERE Type='Customer'";
+                    SqlCommand sqlCommand = new SqlCommand(query, myConnection);
+                    myConnection.Open();
+                    //Reads all the executed sql commands
+                    using (SqlDataReader Reader = sqlCommand.ExecuteReader())
+                    {
+                        customers.Add(new Customer(Convert.ToInt32(Reader["AccountID"]), Reader["Email"] as string, Reader["Password"] as string, this)); 
+                        myConnection.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return await Task.FromResult(customers);
+        }
         public async Task<Destination> getDestinationByID(int id)
         {
             Destination matchingDestination = new Destination(this);

@@ -20,11 +20,15 @@ namespace TravelClubProto
     public class Startup
     {
         private static Timer aTimer;
+        private static Timer HourTimer;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
             aTimer = new Timer();
             UpdateDatabaseForDeadline(aTimer);
+            HourTimer = new Timer();
+            PriceAgentCheck(HourTimer);
         }
 
         public IConfiguration Configuration { get; }
@@ -74,6 +78,11 @@ namespace TravelClubProto
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
         }
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            CheckForDeadlines();
+            Console.WriteLine($"Looping {e.SignalTime}");
+        }
 
         private async void CheckForDeadlines()
         {
@@ -94,11 +103,27 @@ namespace TravelClubProto
                 }
             }
         }
-
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        private void PriceAgentCheck(Timer hourTimer)
         {
-            CheckForDeadlines();
-            Console.WriteLine($"Looping {e.SignalTime}");
+            aTimer.Interval = 3600000;
+            aTimer.Elapsed += OnTimedEventHour;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+        }
+        private void OnTimedEventHour(object source, ElapsedEventArgs e)
+        {
+            UpdatePriceAgents();
+        }
+
+        private void UpdatePriceAgents()
+        {
+            DataAccessService DaService = new DataAccessService(Configuration);
+            List<Customer> customers = DaService.GetAllCustomers().GetAwaiter().GetResult();
+
+            foreach (Customer customer in customers)
+            {
+                customer.priceAgentManager.GatherVacations();
+            }
         }
 
         private void EmailCreator(string statechange)

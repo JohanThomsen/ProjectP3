@@ -80,7 +80,7 @@ namespace TravelClubProto.Data
 
         public List<Vacation> LookForRelevantPriceChanges()
         {
-            List<Vacation> allVacs = DaService.GetAllVacations(DaService).GetAwaiter().GetResult();
+            List<Vacation> allVacs = DaService.GetAllPublishedVacations(DaService).GetAwaiter().GetResult();
             List<Vacation> RecentlyChangedVacations = allVacs.Where(v => v.Dates["PriceChangeDate"] > DateTime.Now.AddDays(-1)).ToList();
             List<Vacation> RelevantChangedVacations = new List<Vacation>();
             List<int> ignorableVacations = GetIgnorableVacations().GetAwaiter().GetResult();
@@ -125,11 +125,11 @@ namespace TravelClubProto.Data
             {
                 DateTime dateMixer = DateTime.Now;
                 //Prepares the values (hotel, location) into coloums hotel and location on table [dbo].[Destination]
-                string query = "INSERT INTO [dbo].[DiscardedVacations] (FK_PriceAgentID, FK_VacationID) VALUES(@FK_PriceAgentID, @FK_VacationID)";
+                string query = "INSERT INTO [dbo].[DiscardedVacations] (FK_CustomerID, FK_VacationID) VALUES(@FK_CustomerID, @FK_VacationID)";
                 //SqlCommand is used to build up commands
                 SqlCommand sqlCommand = new SqlCommand(query, con);
                 con.Open();
-                sqlCommand.Parameters.AddWithValue("@FK_PriceAgentID", PriceAgentID);
+                sqlCommand.Parameters.AddWithValue("@FK_CustomerID", FK_CustomerID);
                 sqlCommand.Parameters.AddWithValue("@FK_VacationID", vacID);
                 //The built commands are executed
                 sqlCommand.ExecuteNonQuery();
@@ -154,7 +154,7 @@ namespace TravelClubProto.Data
                 DataTable dt = new DataTable();
                 SqlConnection con = new SqlConnection(DaService.ConnectionString);
                 //Gets data from the sql database
-                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].DiscardedVacations WHERE FK_PriceAgentID='{PriceAgentID}'", con);
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].DiscardedVacations WHERE FK_CustomerID='{FK_CustomerID}'", con);
                 //Structures the data such that it can be read 
                 da.Fill(dt);
                 //Reads data into designated class
