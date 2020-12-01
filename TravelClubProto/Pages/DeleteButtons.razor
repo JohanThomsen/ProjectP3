@@ -89,14 +89,14 @@
     async public void JoinVacation()
     {
         List<Vacation> templit = await DaService.GetAllVacations(DaService);
-        templit[0].TravelGroup.ChangeVacationRelation(15, 4, "Joined");
+        templit[0].TravelGroup.ChangeVacationRelation(15, "Joined");
     }
 
     async public void FavouriteVacation()
     {
         List<Vacation> templit = await DaService.GetAllVacations(DaService);
         Console.WriteLine(templit[0].ID);
-        templit[0].TravelGroup.ChangeVacationRelation(15, 4, "Favourited");
+        templit[0].TravelGroup.ChangeVacationRelation(15, "Favourited");
     }
 
     async public void LeaveVacation()

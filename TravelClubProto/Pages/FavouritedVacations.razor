@@ -77,8 +77,6 @@
                     {
                         if (item == vac.ID)
                         {
-                            <!-- vac.Destination.AddActivity(); -->
-
                             <BSJumbotron class="mytravelclubjumbotron">
 
                                 <div class="ViewVacationImage">
@@ -124,7 +122,6 @@
         {
             FavouritedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Favourited");
             vacations = await DaService.GetAllVacations(DaService);
-
         }
 
         CustomerVacations CustomerVac => new CustomerVacations(DaService, DaService.LoggedInAccountID);

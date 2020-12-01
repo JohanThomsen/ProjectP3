@@ -13,13 +13,12 @@
 
 @inject DataAccessService DaService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IJSRuntime JS;
 
 
 
 
 <h3 class="page_title">Se ferier</h3>
-
-<p>@VacationID</p>
 
 <BSJumbotron Class="ViewSingleVacationJumbotron">
     <div class="SingleVacationContainer">
@@ -45,10 +44,10 @@
                 }
             </div>
 
-            
+
             <div class="ParticipantDetailColumn">
                 <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-          
+
                 <span class="progressBarGeneratorVS">
                     @for (int i = 0; i < vac.StretchGoals.Count; i++)
                     {
@@ -65,7 +64,7 @@
                 <br />
 
                 <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
-                <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
+                <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />
 
                 @*MODAL FOR LOGIN PROMPT*@
                 <BSModal @ref="LoginModal" IsCentered="true">
@@ -174,6 +173,13 @@
         Console.WriteLine("Form succesfully submitted");
     }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CheckForAndFillHearts();
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -199,7 +205,7 @@
         if (DaService.LoggedIn == true)
         {
             notloggedinfeedback = string.Empty;
-            vac.TravelGroup.ChangeVacationRelation(DaService.LoggedInAccountID, vac.ID, "Joined");
+            vac.TravelGroup.ChangeVacationRelation(DaService.LoggedInAccountID, "Joined");
         }
         else
         {
@@ -210,24 +216,47 @@
 
     public void FavouriteVacation(Vacation vac)
     {
-        checkCookie();
-        if (DaService.LoggedIn == true)
+        if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == false)
         {
-            notloggedinfeedback = string.Empty;
-            vac.TravelGroup.ChangeVacationRelation(DaService.LoggedInAccountID, vac.ID, "Favourited");
+            checkCookie();
+            if (DaService.LoggedIn == true)
+            {
+                notloggedinfeedback = string.Empty;
+                vac.TravelGroup.ChangeVacationRelation(customerID, "Favourited");
+                JS.InvokeAsync<string>("ToggleClass", Convert.ToString(vac.ID));
+            }
+            else
+            {
+                notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
+                LoginModal.Toggle();
+            }
         }
         else
         {
-            notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
-            LoginModal.Toggle();
+            if (DaService.LoggedIn == true)
+            {
+                notloggedinfeedback = string.Empty;
+                vac.TravelGroup.LeaveVacation(customerID);
+                JS.InvokeAsync<string>("ToggleClass", Convert.ToString(vac.ID));
+            }
+        }
+    }
+
+    private void CheckForAndFillHearts()
+    {
+        checkCookie();
+        if (DaService.LoggedIn == true)
+        {
+            if (vac.TravelGroup.CheckForRelation(DaService.LoggedInAccountID, "Favourited").GetAwaiter().GetResult() == true)
+            {
+                JS.InvokeAsync<string>("FillHeart", Convert.ToString(vac.ID));
+            }
         }
     }
 
 
 
-
-
-        @*Calculates progress bar fill value from joined user and stretch goals*@
+    @*Calculates progress bar fill value from joined user and stretch goals*@
     int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
     {
         int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
@@ -249,18 +278,18 @@
 
 
 
-//async public void JoinVacation()
-//{
-//    List<Vacation> templit = await DaService.GetAllVacations(DaService);
-//    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Joined");
-//}
+    //async public void JoinVacation()
+    //{
+    //    List<Vacation> templit = await DaService.GetAllVacations(DaService);
+    //    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Joined");
+    //}
 
-//async public void FavouriteVacation()
-//{
-//    List<Vacation> templit = await DaService.GetAllVacations(DaService);
-//    Console.WriteLine(templit[0].ID);
-//    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Favourited");
-//}
+    //async public void FavouriteVacation()
+    //{
+    //    List<Vacation> templit = await DaService.GetAllVacations(DaService);
+    //    Console.WriteLine(templit[0].ID);
+    //    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Favourited");
+    //}
 
 
 }
