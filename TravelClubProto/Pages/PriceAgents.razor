@@ -79,11 +79,53 @@
         </div>
         <div class="mytravelclubcontent">
             <h2 class="welcomemytravelclub">Dine prisagenter</h2>
+            <div>
+                <BSModal @ref="AddModal" IsCentered="true">
+                    <BSModalHeader OnClick="@OnToggleAddPriceAgents">Opret Destination</BSModalHeader>
+                    <BSModalBody>
+                        <BSForm Model="formsModelVal" OnValidSubmit="ValidFormSubmitted">
+                            <p>Vælg en destination</p> <br />
+                            <BSDropdown IsOpen="@IsOpen1">
+                                <BSDropdownToggle Color="Color.Primary" @onclick="onClick1">Destination</BSDropdownToggle>
+                                <BSDropdownMenu @bind-IsOpen="@IsOpen1">
+                                    @foreach (Destination destination in destinations)
+                                    {
+                                        <BSDropdownItem IsButton="true" @onclick="@(e => getDestinationInfo(destination))">Land: @destination.Country . Lokation : @destination.Location . Hotel : @destination.Hotel </BSDropdownItem>
+                                        <BSDropdownItem IsDivider="true"></BSDropdownItem>
+                                    }
+                                </BSDropdownMenu>
+                                <pre> @destinationFeedback</pre>
+                            </BSDropdown>
+                            <BSFormGroup>
+                                <BSLabel For="Price">Maksimum pris</BSLabel>
+                                <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Indtast max pris" @bind-Value="formsModelVal.Price"></BSInput>
+                            </BSFormGroup>
+                            <BSForm Model="formsModelAct" OnValidSubmit="ActivitySubmitted" Context="PricesForm" IsInline="true">
+                                <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                                    <BSLabel For="Activity">Tilføj Aktivitet </BSLabel>
+                                    <BSInput Id="Activity" InputType="InputType.Text" PlaceHolder="Aktivitet" @bind-Value="formsModelAct.Type"></BSInput>
+                                </BSFormGroup>
+                                <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj Aktivitet  </BSButton>
+                                <pre>@activityFeedback</pre>
+                            </BSForm>
+                            <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</BSButton>
+                        </BSForm>
+                    </BSModalBody>
+                </BSModal>
+            </div>
+            <BSButton @onclick="@OnToggleAddPriceAgents" Color="Color.Secondary">Tilføj ny Pris agent</BSButton>
             <ul>
-                @*@foreach (int item in FavouritedVacs)
-                    {
-                        <li>@item</li>
-                    }*@
+                @foreach (PriceAgent agent in LoggedInAgents)
+                {
+                    <li>
+                        Destination: @agent.DestinationPreference <br />
+                        Max price:  @agent.MaxPrice <br />
+                        Activities: @foreach (string act in agent.ActPreferences)
+                        {
+                            @act
+                        }
+                    </li>
+                }
             </ul>
         </div>
     </div>
@@ -92,10 +134,23 @@
 
     @code {
         bool collapseNavMenu = true;
-
         string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
-
         string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
+        Customer loggedInCustomer;
+        public List<PriceAgent> LoggedInAgents;
+        public List<Destination> destinations;
+        public string destinationFeedback;
+        public string activeDestination;
+        BSModal AddModal;
+
+
+        protected override async Task OnInitializedAsync()
+        {
+            Login log = new Login();
+            loggedInCustomer = (Customer)(await log.GetAccountByID(DaService, DaService.LoggedInAccountID));
+            LoggedInAgents = loggedInCustomer.priceAgentManager.Agents;
+            destinations = await DaService.GetAllDestinations(DaService);
+        }
 
         void ToggleNavMenu()
         {
@@ -107,4 +162,68 @@
             DaService.LoggedIn = false;
         }
 
+        public List<string> Activities = new List<string>();
+        public string activityFeedback;
+        public bool IsOpen1 = false;
+        string inputFeedback = "Add a destination";
+
+
+        public void ValidFormSubmitted()
+        {
+            loggedInCustomer.priceAgentManager.CreatePriceAgent(activeDestination, Activities, formsModelVal.Price);
+        }
+
+        public class FormsModelVal
+        {
+            public int Price { get; set; }
+
+            [Required]
+            public Boolean Valid { get; set; }
+        }
+        FormsModelVal formsModelVal = new FormsModelVal();
+
+        public class FormsModelAct
+        {
+
+            [Required]
+            [StringLength(50, ErrorMessage = "Aktivited for lang (Maks 50 karakterer)")]
+            public string Type { get; set; }
+
+            [Required]
+            public Boolean Valid { get; set; }
+        }
+        FormsModelAct formsModelAct = new FormsModelAct();
+
+
+        public void ActivitySubmitted()
+        {
+            Activities.Add(formsModelAct.Type);
+
+            activityFeedback += "Aktivitet tilføjet: " + formsModelAct.Type + ".\n";
+            formsModelAct.Type = "";
+        }
+
+        public void getDestinationInfo(Destination dest)
+        {
+            activeDestination = dest.CountryLocationHotel;
+            IsOpen1 = false;
+            destinationFeedback = $"\nSelected Hotel: {dest.Hotel}, Location {dest.Location}, Country {dest.Country}";
+        }
+
+        public void onClick1()
+        {
+            if (IsOpen1 == false)
+            {
+                IsOpen1 = true;
+            }
+            else
+            {
+                IsOpen1 = false;
+            }
+        }
+
+        void OnToggleAddPriceAgents(MouseEventArgs e)
+        {
+            AddModal.Toggle();
+        }
     }

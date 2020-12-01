@@ -26,7 +26,7 @@ namespace TravelClubProto.Data
         /// <summary>
         /// newRelation has to be either "Joined" or "Favourited"
         /// </summary>
-        public void ChangeVacationRelation(int customerID, int FK_VacationID, string newRelation)
+        public void ChangeVacationRelation(int customerID, string newRelation)
         {
             if (CheckForAndChangeRelations(customerID, newRelation) == false)
             {
@@ -77,9 +77,10 @@ namespace TravelClubProto.Data
                 using var sc = new SqlConnection(DaService.ConnectionString);
                 using var cmd = sc.CreateCommand();
                 sc.Open();
-                cmd.CommandText = "SELECT COUNT(*) FROM [dbo].CustomerVacationRelations WHERE FK_CustomerID=@customerID AND RelationType=@relation";
+                cmd.CommandText = "SELECT COUNT(*) FROM [dbo].CustomerVacationRelations WHERE FK_CustomerID=@customerID AND RelationType=@relation AND FK_VacationID=@FK_VacationID";
                 cmd.Parameters.AddWithValue("@customerID", customerID);
                 cmd.Parameters.AddWithValue("@relation", relation);
+                cmd.Parameters.AddWithValue("@FK_VacationID", FK_VacationID);
 
                 int exists = (int)cmd.ExecuteScalar();
                 if (exists == 1)
@@ -91,7 +92,7 @@ namespace TravelClubProto.Data
             {
                 Console.WriteLine(e);
             }
-            return (succes);
+            return succes;
         }
 
 
@@ -105,9 +106,10 @@ namespace TravelClubProto.Data
                 using (var cmd = sc.CreateCommand())
                 {
                     sc.Open();
-                    cmd.CommandText = "SELECT COUNT(*) FROM [dbo].CustomerVacationRelations WHERE FK_CustomerID=@customerID AND RelationType=@oldRelation OR RelationType=@newRelation";
+                    cmd.CommandText = "SELECT COUNT(*) FROM [dbo].CustomerVacationRelations WHERE (FK_CustomerID=@customerID AND FK_VacationID=@FK_VacationID) AND (RelationType=@oldRelation OR RelationType=@newRelation)";
                     cmd.Parameters.AddWithValue("@customerID", customerID);
                     cmd.Parameters.AddWithValue("@oldRelation", oldRelation);
+                    cmd.Parameters.AddWithValue("@FK_VacationID", FK_VacationID);
                     cmd.Parameters.AddWithValue("@newRelation", newRelation);
                     int exists = (int)cmd.ExecuteScalar();
                     if (exists == 1)
@@ -117,9 +119,10 @@ namespace TravelClubProto.Data
                         using (var cmd2 = sc2.CreateCommand())
                         {
                             sc2.Open();
-                            cmd2.CommandText = "UPDATE [dbo].CustomerVacationRelations SET RelationType = @newRelation WHERE FK_CustomerID=@CustomerID";
+                            cmd2.CommandText = "UPDATE [dbo].CustomerVacationRelations SET RelationType = @newRelation WHERE FK_CustomerID=@CustomerID AND FK_VacationID=@FK_VacationID";
                             cmd2.Parameters.AddWithValue("@newRelation", newRelation);
                             cmd2.Parameters.AddWithValue("@CustomerID", customerID);
+                            cmd2.Parameters.AddWithValue("@FK_VacationID", FK_VacationID);
                             cmd2.ExecuteNonQuery();
                         }
                     }
@@ -140,8 +143,9 @@ namespace TravelClubProto.Data
                 using (var cmd = sc.CreateCommand())
                 {
                     sc.Open();
-                    cmd.CommandText = "DELETE FROM [dbo].CustomerVacationRelations WHERE FK_CustomerID=@CustomerID";
+                    cmd.CommandText = "DELETE FROM [dbo].CustomerVacationRelations WHERE FK_CustomerID=@CustomerID AND FK_VacationID=@VacationID";
                     cmd.Parameters.AddWithValue("@CustomerID", customerID);
+                    cmd.Parameters.AddWithValue("@VacationID", FK_VacationID);
                     cmd.ExecuteNonQuery();
                 }
             }

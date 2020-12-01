@@ -33,8 +33,20 @@
     <script src="_content/Blazored.Typeahead/blazored-typeahead.js"></script>
     <script>
         window.FillCheckBox = (elementID) => {
-            CheckBox = document.getElementById(elementID)
+            CheckBox = document.getElementById(elementID);
             CheckBox.checked = true;
+        }
+        window.FillHeart = (elementID) => {
+            button = document.getElementById(elementID);
+            button.className = "btn btn-outline-info btn-lg HeartIconFill";
+        }
+        window.ToggleClass = (elementID) => {
+            button = document.getElementById(elementID);
+            if (button.className == "btn btn-outline-info btn-lg HeartIconFill") {
+                button.className = "btn btn-outline-info btn-lg HeartIconNotFill";
+            } else {
+                button.className = "btn btn-outline-info btn-lg HeartIconFill";
+            }
         }
     </script> 
 

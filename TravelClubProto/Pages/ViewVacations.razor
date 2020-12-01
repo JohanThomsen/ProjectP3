@@ -71,30 +71,17 @@
 
                     </p>
                     <span class="progressBarGenerator">
-                        @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                        {
-                            <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
-
-                        }
                         <span>
-                        <div>
-                            @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                            {
-                                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                            <div>
+                                @for (int i = 0; i < vac.StretchGoals.Count; i++)
+                                {
+                                    <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
 
-                            }
+                                }
+                                <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" @ref="heartFavourite[vac.ID]"/>
+                                <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
 
-                            @if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
-                            {
-                                <BSButton class="btn btn-outline-info btn-lg HeartIconFill" @onclick="@(e => UnFavouriteVacation(vac))"></BSButton>
-                            }
-                            else
-                            {
-                            <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
-                            }
-                            <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
-
-                        </div>
+                            </div>
                         </span>
                     </span>
 
@@ -166,6 +153,7 @@
     private int minimumJoinedUsers;
     private Dictionary<string, ElementReference> destinationCheckbox = new Dictionary<string, ElementReference>();
     private Dictionary<string, ElementReference> departureAirportCheckbox = new Dictionary<string, ElementReference>();
+    private Dictionary<int, ElementReference> heartFavourite = new Dictionary<int, ElementReference>();
 
     [Parameter]
     public string DepartureAirportPara { get; set; }
@@ -193,10 +181,13 @@
         if (firstRender)
         {
             FillCheckBox();
+            CheckForAndFillHearts();
         }
     }
+
     protected override async Task OnInitializedAsync()
     {
+        checkCookie();
         departureDateSearch = DateTime.Now;
         vacations = await DaService.GetAllPublishedVacations(DaService);
         destinations = await DaService.GetAllDestinations(DaService);
@@ -257,6 +248,23 @@
         arrivalDateSearch = DateTime.FromBinary(Convert.ToInt64(ArrivalDatePara));
         DepartureAirportSearch = DepartureAirportPara;
         CountrySearch = CountryPara;
+    }
+
+    private void CheckForAndFillHearts()
+    {
+        checkCookie();
+        if (DaService.LoggedIn == true)
+        {
+            foreach (Vacation vac in vacations)
+            {
+                if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
+                {
+
+
+                    JS.InvokeAsync<string>("FillHeart", Convert.ToString(vac.ID));
+                }
+            }
+        }
     }
 
     private void FillCheckBox()
@@ -334,30 +342,30 @@
         }
     }
 
-    public void UnFavouriteVacation(Vacation vac)
-    {
-        if (DaService.LoggedIn == true)
-        {
-            notloggedinfeedback = string.Empty;
-            vac.TravelGroup.LeaveVacation(customerID);
-        }
-        else
-        {
-        }
-    }
-
     public void FavouriteVacation(Vacation vac)
     {
-        checkCookie();
-        if (DaService.LoggedIn == true)
+        if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == false)
         {
-            notloggedinfeedback = string.Empty;
-            vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
-        }
-        else
+            checkCookie();
+            if (DaService.LoggedIn == true)
+            {
+                notloggedinfeedback = string.Empty;
+                vac.TravelGroup.ChangeVacationRelation(customerID, "Favourited");
+                JS.InvokeAsync<string>("ToggleClass", Convert.ToString(vac.ID));
+            }
+            else
+            {
+                notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
+                LoginModal.Toggle();
+            }
+        } else
         {
-            notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
-            LoginModal.Toggle();
+            if (DaService.LoggedIn == true)
+            {
+                notloggedinfeedback = string.Empty;
+                vac.TravelGroup.LeaveVacation(customerID);
+                JS.InvokeAsync<string>("ToggleClass", Convert.ToString(vac.ID));
+            }
         }
     }
 
