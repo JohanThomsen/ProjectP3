@@ -292,10 +292,10 @@ progress.progressBarJoinedUsersVS {
 ----------------------------------------------------------------*/
 
 .mytravelclubmenulist {
-    display: table-cell;
     background-color: #30343e;
     color: inherit;
-    width: 245px;
+    position: inherit;
+    float: left;
 }
 .mytravelclubmenulisticon {
     position: absolute;
@@ -331,13 +331,14 @@ progress.progressBarJoinedUsersVS {
         text-decoration: underline;
     }
 .mytravelclubcontent {
-    position: inherit;
     background: #fff;
     padding: 1%;
     border: 1px solid #97aabf;
     float: right;
-    width: 73%;
-    margin-top: -32.3%;
+    width: 71%;
+    right: 42%;
+    position: inherit;
+    margin-right: 2%;
 }
 .mytravelbureaucontent{
     position: inherit;

@@ -10,53 +10,42 @@
 @inject DataAccessService DaService
 
 <BSJumbotron class="mytravelclubjumbotron">
-
-    <div>
-            <div>
-
-                <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-
-                    <BSNav IsList="true" IsVertical="true" class="mytravelclubadminmenulist">
-                        <li class="mytravelclubmenulistitem">
-                            <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
-                                <div class="mytravelclubmenulisticon">
-                                    <span class="oi oi-person" aria-hidden="true"></span>
-                                </div>
-                                Mit TravelClub
-                            </NavLink>
-                        </li>
-                        <li class="mytravelclubmenulistitem">
-                            <NavLink class="textcolor" href="PublishVacation">
-                                <div class="mytravelclubmenulisticon">
-                                    <span class="oi oi-cog" aria-hidden="true"></span>
-                                </div>
-                                Udgiv feriepakker
-                            </NavLink>
-                        </li>
-                        <li class="mytravelclubmenulistitem">
-                            <NavLink class="textcolor" href="AdminVacationTravelClub">
-                                <div class="mytravelclubmenulisticon">
-                                    <span class="oi oi-globe" aria-hidden="true"></span>
-                                </div>
-                                Administrer feriepakker
-                            </NavLink>
-                        </li>
-                        <li class="mytravelclubmenulistitem">
-                            <NavLink class="textcolor" href="AddTravelBureaus">
-                                <div class="mytravelclubmenulisticon">
-                                    <span class="oi oi-globe" aria-hidden="true"></span>
-                                </div>
-                                Tilføj rejsebureau
-                            </NavLink>
-                        </li>
-                    </BSNav>
+    <BSNav IsList="true" IsVertical="true" class="mytravelclubmenulist">
+        <li class="mytravelclubmenulistitem">
+            <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
+                <div class="mytravelclubmenulisticon">
+                    <span class="oi oi-person" aria-hidden="true"></span>
                 </div>
-            </div>
+                Mit TravelClub
+            </NavLink>
+        </li>
+        <li class="mytravelclubmenulistitem">
+            <NavLink class="textcolor" href="PublishVacation">
+                <div class="mytravelclubmenulisticon">
+                    <span class="oi oi-cog" aria-hidden="true"></span>
+                </div>
+                Udgiv feriepakker
+            </NavLink>
+        </li>
+        <li class="mytravelclubmenulistitem">
+            <NavLink class="textcolor" href="AdminVacationTravelClub">
+                <div class="mytravelclubmenulisticon">
+                    <span class="oi oi-globe" aria-hidden="true"></span>
+                </div>
+                Administrer feriepakker
+            </NavLink>
+        </li>
+        <li class="mytravelclubmenulistitem">
+            <NavLink class="textcolor" href="AddTravelBureaus">
+                <div class="mytravelclubmenulisticon">
+                    <span class="oi oi-globe" aria-hidden="true"></span>
+                </div>
+                Tilføj rejsebureau
+            </NavLink>
+        </li>
+    </BSNav>
 
-        <div class="mytravelclubadmincontent">
+        <div class="mytravelclubcontent">
             <h2 class="welcomemytravelclub">Udgiv feriepakker</h2>
         <ul>
             @foreach (Vacation vac in vacations)
@@ -102,7 +91,6 @@
              }
         </ul>
         </div>
-    </div>
 </BSJumbotron>
     @code {
         public List<Vacation> vacations;
@@ -117,12 +105,6 @@
             vac.State = state;
         }
 
-        bool collapseNavMenu = true;
-
-        string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
-
-        string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
-
         int ID;
 
         string loginInfo;
@@ -130,11 +112,6 @@
         string[] loginresult;
 
         Account acc;
-
-        void ToggleNavMenu()
-        {
-            collapseNavMenu = !collapseNavMenu;
-        }
 
         void LogOut(MouseEventArgs e)
         {

@@ -13,44 +13,34 @@
 
 
 <BSJumbotron class="mytravelclubjumbotron">
-    <div>
-        <div>
+    <BSNav IsList="true" IsVertical="true" class="mytravelclubmenulist">
+        <li class="mytravelclubmenulistitem">
+            <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
+                <div class="mytravelclubmenulisticon">
+                    <span class="oi oi-person" aria-hidden="true"></span>
+                </div>
+                Mit TravelClub
+            </NavLink>
+        </li>
+        <li class="mytravelclubmenulistitem">
+            <NavLink class="textcolor" href="ProposeVacation">
+                <div class="mytravelclubmenulisticon">
+                    <span class="oi oi-cog" aria-hidden="true"></span>
+                </div>
+                Tilbyd feriepakke
+            </NavLink>
+        </li>
+        <li class="mytravelclubmenulistitem">
+            <NavLink class="textcolor" href="AdminVacationBureau">
+                <div class="mytravelclubmenulisticon">
+                    <span class="oi oi-globe" aria-hidden="true"></span>
+                </div>
+                Administrer feriepakker
+            </NavLink>
+        </li>
+    </BSNav>
 
-            <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-                <BSNav IsList="true" IsVertical="true" class="mytravelbureaumenulist">
-                    <li class="mytravelclubmenulistitem">
-                        <NavLink class="textcolor" href="MyTravelClub" Match="NavLinkMatch.All">
-                            <div class="mytravelclubmenulisticon">
-                                <span class="oi oi-person" aria-hidden="true"></span>
-                            </div>
-                            Mit TravelClub
-                        </NavLink>
-                    </li>
-                    <li class="mytravelclubmenulistitem">
-                        <NavLink class="textcolor" href="ProposeVacation">
-                            <div class="mytravelclubmenulisticon">
-                                <span class="oi oi-cog" aria-hidden="true"></span>
-                            </div>
-                            Tilbyd feriepakke
-                        </NavLink>
-                    </li>
-                    <li class="mytravelclubmenulistitem">
-                        <NavLink class="textcolor" href="AdminVacationBureau">
-                            <div class="mytravelclubmenulisticon">
-                                <span class="oi oi-globe" aria-hidden="true"></span>
-                            </div>
-                            Administrer feriepakker
-                        </NavLink>
-                    </li>
-                </BSNav>
-            </div>
-        </div>
-
-
-        <div class="mytravelbureaucontent">
+        <div class="mytravelclubcontent">
 
           <h2 class="welcomemytravelclub">Foreslå Ferie</h2>
         <BSModal @ref="DestinationModal" IsCentered="true">
@@ -158,7 +148,6 @@
             <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilføj ferie</BSButton>
         </BSForm>
         </div>
-    </div>
 </BSJumbotron>
 
 @code {
@@ -173,18 +162,6 @@
     BSModal DestinationModal;
 
     string inputFeedback = "Add a destination";
-
-    bool collapseNavMenu = true;
-
-    string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
-
-    string NavMenuCssClass => baseMenuClass + (collapseNavMenu ? " collapse" : "");
-
-    void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
 
     protected override async Task OnInitializedAsync()
     {
