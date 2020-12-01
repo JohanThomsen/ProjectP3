@@ -53,10 +53,10 @@
                     @for (int i = 0; i < vac.StretchGoals.Count; i++)
                     {
                         <span class="progStretchGoal">
+                            <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
                             <div>
                                 @(vac.Prices[i]+ " kr.")
                             </div>
-                            <progress role="progressbar" class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)><span>@vac.StretchGoals[i]</span></progress>
                         </span>
                     }
                 </span>
