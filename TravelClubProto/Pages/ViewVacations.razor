@@ -171,18 +171,18 @@
         UpdateViewedVacation(true);
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             FillCheckBox();
             CheckForAndFillHearts();
         }
+        return base.OnAfterRenderAsync(firstRender);
     }
 
     protected override async Task OnInitializedAsync()
     {
-        checkCookie();
         departureDateSearch = DateTime.Now;
         vacations = await DaService.GetAllPublishedVacations(DaService);
         destinations = await DaService.GetAllDestinations(DaService);
@@ -252,10 +252,8 @@
         {
             foreach (Vacation vac in vacations)
             {
-                if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
+                if (vac.TravelGroup.CheckForRelation(DaService.LoggedInAccountID, "Favourited").GetAwaiter().GetResult() == true)
                 {
-
-
                     JS.InvokeAsync<string>("FillHeart", Convert.ToString(vac.ID));
                 }
             }
@@ -339,28 +337,26 @@
 
     public void FavouriteVacation(Vacation vac)
     {
-        if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == false)
+
+        if (DaService.LoggedIn == true)
         {
-            checkCookie();
-            if (DaService.LoggedIn == true)
+            if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == false)
             {
-                notloggedinfeedback = string.Empty;
+                checkCookie();
                 vac.TravelGroup.ChangeVacationRelation(customerID, "Favourited");
                 JS.InvokeAsync<string>("ToggleClass", Convert.ToString(vac.ID));
             }
             else
             {
-                notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
-                LoginModal.Toggle();
-            }
-        } else
-        {
-            if (DaService.LoggedIn == true)
-            {
-                notloggedinfeedback = string.Empty;
                 vac.TravelGroup.LeaveVacation(customerID);
                 JS.InvokeAsync<string>("ToggleClass", Convert.ToString(vac.ID));
             }
+        }
+        else
+        {
+            notloggedinfeedback = string.Empty;
+            notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
+            LoginModal.Toggle();
         }
     }
 
