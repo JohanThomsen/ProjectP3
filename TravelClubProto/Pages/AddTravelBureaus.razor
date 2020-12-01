@@ -58,15 +58,33 @@
 
         <div Class="mytravelclubadmincontent">
             <h2 class="welcomemytravelclub">Opret login til rejsebureau</h2>
-            <div>
-                @* Her indsættes højresiden af pagen *@
-            </div>
+                <p>
+                    <BSForm Model="@formsModelVal" OnValidSubmit="@ConsoleWrite" Class="position-relative">
+
+                        <BSFormGroup>
+                            @*Input for user email*@
+                            <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                            <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                        </BSFormGroup>
+
+                        <BSFormGroup>
+                            @*Input for user password*@
+                            <BSLabel for="InputPassword">Kodeord</BSLabel>
+                            <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                        </BSFormGroup>
+
+                        @*Submit Button*@
+                        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
+                    </BSForm>
+                </p>
         </div>
     </div>
 </BSJumbotron>
 
 
 @code {
+
+
     bool collapseNavMenu = true;
 
     string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
@@ -117,4 +135,32 @@
     {
         DaService.LoggedIn = false;
     }
+
+    void SaveProfileToTables(MouseEventArgs e)
+    {
+        Customer newUser = new Customer(formsModelVal.Email, formsModelVal.Password, DaService);
+        newUser.Type = "TravelBureau";
+        newUser.InsertIntoDatabase();
+    }
+    void ConsoleWrite()
+    {
+        Console.WriteLine("Form succesfully submitted");
+    }
+
+
+    public class FormsModelVal
+    {
+        [Required]
+        [StringLength(50, ErrorMessage = "email too long (50 character limit).")]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(20, ErrorMessage = "password too long (20 character limit).")]
+        public string Password { get; set; }
+
+        [Required]
+        public Boolean Valid { get; set; }
+    }
+    public FormsModelVal formsModelVal = new FormsModelVal();
+
 }
