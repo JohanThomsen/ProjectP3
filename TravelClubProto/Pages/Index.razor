@@ -5,24 +5,27 @@
 <div class="SearchFields">
     
 
-    <BSJumbotron IsFluid="true">
+    <BSJumbotron Class ="IndexHeaderBox"IsFluid="true">
+        
+        <BSImage Class="VacFigureImgHeaderIndex"src ="https://static.asiawebdirect.com/m/phuket/hotels/krabi-hotels-com/sunrisetropical/dining/hotelBanner/dining.jpg"></BSImage>
         <BSContainer>
             <BSForm Model="@formsModelVal">
-                <BSBasicForm IsInline="true">
+                <BSBasicForm Class="FormsCollection" IsInline="true">
+                        <BSFormGroup Class="home-search">
+                            <BlazoredTypeahead SearchMethod="SearchVacationAirport" @bind-Value="formsModelVal.Afrejselufthavn" PlaceHolder="Afrejselufthavn" Context="Departure" EnableDropDown="true" ShowDropDownOnFocus="true">
+                                <SelectedTemplate>@Departure</SelectedTemplate>
+                                <ResultTemplate>@Departure</ResultTemplate>
+                            </BlazoredTypeahead>
+                        </BSFormGroup>
 
-                    <BSFormGroup Class="home-search">
-                        <BlazoredTypeahead SearchMethod="SearchVacationAirport" @bind-Value="formsModelVal.Afrejselufthavn" Context="Departure" EnableDropDown="true" ShowDropDownOnFocus="true">
-                            <SelectedTemplate>@Departure</SelectedTemplate>
-                            <ResultTemplate>@Departure</ResultTemplate>
-                        </BlazoredTypeahead>
-                    </BSFormGroup>
-
-                    <BSFormGroup Class="home-search">
-                        <BlazoredTypeahead SearchMethod="SearchVacationDestination" @bind-Value="formsModelVal.Rejsemål" Context="Destination" EnableDropDown="true" ShowDropDownOnFocus="true">
-                            <SelectedTemplate>@Destination</SelectedTemplate>
-                            <ResultTemplate>@Destination</ResultTemplate>
-                        </BlazoredTypeahead>
-                    </BSFormGroup>
+                        <BSFormGroup Class="home-search">
+                            <BlazoredTypeahead Class="typeAHeads" SearchMethod="SearchVacationDestination" @bind-Value="formsModelVal.Rejsemål" PlaceHolder="Land" Context="Destination" EnableDropDown="true" ShowDropDownOnFocus="true">
+                                <SelectedTemplate>@Destination</SelectedTemplate>
+                                <ResultTemplate>@Destination</ResultTemplate>
+                            </BlazoredTypeahead>
+                        </BSFormGroup>
+                    @*<div>
+                    </div>*@
     
                     <BSFormGroup Class="home-search">
                         <BSLabel for="InputEmail"></BSLabel>

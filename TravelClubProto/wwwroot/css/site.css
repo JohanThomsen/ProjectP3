@@ -7,7 +7,6 @@
     background-size: cover;
     background-position: center;
     position: relative;
-
 }
 
 
@@ -39,7 +38,17 @@
     position:relative;
     height: inherit;
 }
-
+.blazored-typeahead{
+    border-radius:0px!important;
+    height:inherit;
+    max-width:79%!important;
+}
+.blazored-typeahead__input-icon {
+    border-radius: 0px !important;
+    box-sizing: border-box !important;
+    width: inherit !important;
+    height: inherit !important;
+}
 .IndexHeaderBox {
     position: relative;
     width: 100%;
@@ -51,6 +60,7 @@
     width: 100%;
     height:100%;
 }
+
 .FormsCollection{
     position: absolute;
     top: 72%;
@@ -59,24 +69,33 @@
     width: 88%;
 }
 
+.FormsCollection > button {
+    height: 3rem;
+    margin: 0.5%;
+}
 .home-search > input{
     border-radius:0;
     margin:0.5%;
     height:3rem;
 }
-
-.FormsCollection > button {
-    height:3rem;
-    margin:0.5%;
+.blazored-typeahead{
+    position: relative;
+    width: 100%;
+    border: 1px solid #bfbfbf;
+    border-radius: 0px;
+}
+.VacFigureImgHeaderIndex {
+    position: inherit;
+    width: inherit;
+    height: inherit;
 }
 
-.VacFigureImg{
+.VacFigureImg {
     position: relative;
-    width:19%;
-    height:7.5%;
+    width: 19%;
+    height: 7.5%;
     float: left;
-    margin:0.5%;
-    
+    margin: 0.5%;
 }
 
 /*Progressbar Appearance
