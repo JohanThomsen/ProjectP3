@@ -57,9 +57,50 @@
 
 
         <div Class="mytravelclubadmincontent">
-            <h2 class="welcomemytravelclub">Administrer modtagede feriepakker</h2>
+            <h2 class="welcomemytravelclub">Administrer offentliggjorte feriepakker</h2>
             <div>
-                @* Her indsættes højresiden af pagen *@
+                <ul>
+                    @foreach (Vacation vac in vacations)
+                    {
+                        if (vac.State == "Published")
+                        {
+                            <!-- vac.Destination.AddActivity(); -->
+
+                            <BSJumbotron class="mytravelclubjumbotron">
+
+                                <div class="ViewVacationImage">
+                                    <BSFigureImage src="@vac.ImageLink" />
+                                </div>
+
+                                <div class="ViewDescriptionRow">
+                                    <div class="VacationHotelColumn">
+                                        <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+                                        <h10>ID:  @vac.ID </h10>
+
+                                        <h2>Feriebeskrivelse: </h2>
+                                        <p>@vac.Description</p>
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+                                <p>
+                                    @for (int i = 0; i < @vac.Prices.Count; i++)
+                                    {
+                                        string priceIntervalHolder = "";
+                                        priceIntervalHolder += vac.Prices[i] + "kr.";
+                                        <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
+                                    }
+                                </p>
+                                <h6>Deadline: @vac.Dates["Deadline"]</h6>
+
+                                <BSButton @onclick="@(e => ChangeVacState(vac, "Cancelled"))">Fjern Ferie</BSButton>
+                            </BSJumbotron>
+                        }
+
+                    }
+                </ul>
             </div>
         </div>
     </div>
@@ -67,6 +108,8 @@
 
 
 @code {
+
+ 
     bool collapseNavMenu = true;
 
     string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";

@@ -15,6 +15,7 @@
 <BSJumbotron class="mytravelclubjumbotron">
     <div>
         <div>
+
             <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -93,68 +94,68 @@
                 </BSDropdownMenu>
                 <pre> @destinationFeedback</pre>
             </BSDropdown>
-                <BSButton @onclick="@OnToggleAddDestination" Color="Color.Secondary">Tilføj ny destination</BSButton>
-                <BSFormGroup>
-                    <BSLabel For="Description">Beskrivelse</BSLabel>
-                    <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
-                </BSFormGroup>
-                <BSFormGroup>
-                    <BSLabel For="DepartureAirport">Afrejse Lufthavn</BSLabel>
-                    <BSInput InputType="InputType.Text" Id="DepartureAirport" @bind-Value="@formsModelVal.DepartureAirport"></BSInput>
-                </BSFormGroup>
-                <BSFormGroup>
-                    <BSLabel For="TravelDate">Afrejse Dato</BSLabel>
-                    <BSInput InputType="InputType.Date" Id="TravelDate" @bind-Value="@formsModelVal.TravelDate"></BSInput>
-                </BSFormGroup>
-                <BSFormGroup>
-                    <BSLabel For="LeaveDate">Hjemrejse Dato</BSLabel>
-                    <BSInput InputType="InputType.Date" Id="LeaveDate" @bind-Value="@formsModelVal.LeaveDate"></BSInput>
-                </BSFormGroup>
-                <BSFormGroup>
-                    <BSLabel For="Deadline">Tilmeldingsfrist</BSLabel>
-                    <BSInput InputType="InputType.Date" Id="Deadline" @bind-Value="@formsModelVal.Deadline"></BSInput>
-                </BSFormGroup>
-                <BSFormGroup>
-                    <BSLabel For="TravelBureauWebsiteLink">Link til ferie på egen hjemmeside</BSLabel>
-                    <BSInput InputType="InputType.Text" Id="TravelBureauWebsiteLink" @bind-Value="@formsModelVal.TravelBureauWebsiteLink"></BSInput>
-                </BSFormGroup>
-                <BSFormGroup>
-                    <BSLabel For="GraceperiodLength">Betalingsperiode</BSLabel>
-                    <BSInput Id="GraceperiodLength" InputType="InputType.Number" PlaceHolder="Længde i dage" @bind-Value="formsModelVal.GraceperiodLength"></BSInput>
-                </BSFormGroup>
-                <BSFormGroup>
-                    <BSLabel For="ImageLink">Billede</BSLabel>
-                    <BSInput Id="ImageLink" InputType="InputType.Text" PlaceHolder="Webadresse til billede" @bind-Value="formsModelVal.ImageLink"></BSInput>
-                </BSFormGroup>
-                <BSFormGroup>
-                    <BSLabel For="minNumberOfUsers">Minimum antal deltagere</BSLabel>
-                    <BSInput Id="minNumberOfUsers" InputType="InputType.Number" PlaceHolder="0" @bind-Value="formsModelVal.minNumberOfUsers"></BSInput>
-                </BSFormGroup>
-                <BSRow>
-                    <BSCol>
-                        <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm">
-                            <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                                <div class="PricePoint">
-                                    <BSLabel For="Price">Pris </BSLabel>
-                                    <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Prispunkt" @bind-Value="formsModelPrices.price"></BSInput>
-                                </div>
-                            </BSFormGroup>
-                            <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
-                                <div class="NumberOfParticipants">
-                                    <BSLabel For="Break">Antal deltagere for pris </BSLabel>
-                                    <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Antal deltagere for pris" @bind-Value="formsModelPrices.breakPoint"></BSInput>
-                                </div>
-                            </BSFormGroup>
-                            <div class="AddPriceButton">
-                                <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
+            <BSButton class="new-destination-btn" @onclick="OnToggleAddDestination" Color="Color.Secondary">Tilføj ny destination</BSButton>
+            <BSFormGroup>
+                <BSLabel For="Description">Beskrivelse</BSLabel>
+                <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="DepartureAirport">Afrejse Lufthavn</BSLabel>
+                <BSInput InputType="InputType.Text" Id="DepartureAirport" @bind-Value="@formsModelVal.DepartureAirport"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="TravelDate">Afrejse Dato</BSLabel>
+                <BSInput InputType="InputType.Date" Id="TravelDate" @bind-Value="@formsModelVal.TravelDate"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="LeaveDate">Hjemrejse Dato</BSLabel>
+                <BSInput InputType="InputType.Date" Id="LeaveDate" @bind-Value="@formsModelVal.LeaveDate"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="Deadline">Tilmeldingsfrist</BSLabel>
+                <BSInput InputType="InputType.Date" Id="Deadline" @bind-Value="@formsModelVal.Deadline"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="TravelBureauWebsiteLink">Link til ferie på egen hjemmeside</BSLabel>
+                <BSInput InputType="InputType.Text" Id="TravelBureauWebsiteLink" @bind-Value="@formsModelVal.TravelBureauWebsiteLink"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="GraceperiodLength">Betalingsperiode</BSLabel>
+                <BSInput Id="GraceperiodLength" InputType="InputType.Number" PlaceHolder="Længde i dage" @bind-Value="formsModelVal.GraceperiodLength"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="ImageLink">Billede</BSLabel>
+                <BSInput Id="ImageLink" InputType="InputType.Text" PlaceHolder="Webadresse til billede" @bind-Value="formsModelVal.ImageLink"></BSInput>
+            </BSFormGroup>
+            <BSFormGroup>
+                <BSLabel For="minNumberOfUsers">Minimum antal deltagere</BSLabel>
+                <BSInput Id="minNumberOfUsers" InputType="InputType.Number" PlaceHolder="0" @bind-Value="formsModelVal.minNumberOfUsers"></BSInput>
+            </BSFormGroup>
+            <BSRow>
+                <BSCol>
+                    <BSForm Model="formsModelPrices" OnValidSubmit="PriceSubmitted" Context="PricesForm">
+                        <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                            <div class="PricePoint">
+                                <BSLabel For="Price">Pris </BSLabel>
+                                <BSInput Id="Price" InputType="InputType.Number" PlaceHolder="Prispunkt" @bind-Value="formsModelPrices.price"></BSInput>
                             </div>
-                        </BSForm>
-                    </BSCol>
-                    <BSCol>
-                        <pre class="textAddprice">@priceFeedback </pre>
-                    </BSCol>
-                </BSRow>
-                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilføj ferie</BSButton>
+                        </BSFormGroup>
+                        <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+                            <div class="NumberOfParticipants">
+                                <BSLabel For="Break">Antal deltagere for pris </BSLabel>
+                                <BSInput Id="Break" InputType="InputType.Number" PlaceHolder="Antal deltagere for pris" @bind-Value="formsModelPrices.breakPoint"></BSInput>
+                            </div>
+                        </BSFormGroup>
+                        <div class="AddPriceButton">
+                            <BSButton Color="Color.Secondary" ButtonType="ButtonType.Submit">Tilføj pris  </BSButton>
+                        </div>
+                    </BSForm>
+                </BSCol>
+                <BSCol>
+                    <pre class="textAddprice">@priceFeedback </pre>
+                </BSCol>
+            </BSRow>
+            <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Tilføj ferie</BSButton>
         </BSForm>
         </div>
     </div>
@@ -204,7 +205,7 @@
         v.ImageLink = formsModelVal.ImageLink;
         v.Description = formsModelVal.Description;
         v.FK_DestinationID = activeDestination;
-        v.FK_PublisherID = DaService.LoggedInAccountID;
+        v.FK_PublisherID = formsModelVal.PublisherID;
         v.DepartureAirport = formsModelVal.DepartureAirport;
         v.TravelBureauWebsiteLink = formsModelVal.TravelBureauWebsiteLink;
         v.InsertVacationToDatabase();
