@@ -6,8 +6,10 @@
     
 
     <BSJumbotron Class ="IndexHeaderBox"IsFluid="true">
-        
-        <BSImage Class="VacFigureImgHeaderIndex"src ="https://static.asiawebdirect.com/m/phuket/hotels/krabi-hotels-com/sunrisetropical/dining/hotelBanner/dining.jpg"></BSImage>
+        <div class="IndexImageContainer">
+            <div class="HeaderTitle">Find jeres billige rejse her</div>
+            <BSImage Class="VacFigureImgHeaderIndex"src ="https://static.asiawebdirect.com/m/phuket/hotels/krabi-hotels-com/sunrisetropical/dining/hotelBanner/dining.jpg"></BSImage>
+        </div>
         <BSContainer>
             <BSForm Model="@formsModelVal">
                 <BSBasicForm Class="FormsCollection" IsInline="true">
@@ -19,13 +21,11 @@
                         </BSFormGroup>
 
                         <BSFormGroup Class="home-search">
-                            <BlazoredTypeahead Class="typeAHeads" SearchMethod="SearchVacationDestination" @bind-Value="formsModelVal.Rejsemål" PlaceHolder="Land" Context="Destination" EnableDropDown="true" ShowDropDownOnFocus="true">
+                            <BlazoredTypeahead SearchMethod="SearchVacationDestination" @bind-Value="formsModelVal.Rejsemål" PlaceHolder="Land" Context="Destination" EnableDropDown="true" ShowDropDownOnFocus="true">
                                 <SelectedTemplate>@Destination</SelectedTemplate>
                                 <ResultTemplate>@Destination</ResultTemplate>
                             </BlazoredTypeahead>
                         </BSFormGroup>
-                    @*<div>
-                    </div>*@
     
                     <BSFormGroup Class="home-search">
                         <BSLabel for="InputEmail"></BSLabel>
@@ -36,12 +36,10 @@
                         <BSLabel for="InputPassword"></BSLabel>
                         <BSInput id="InputPassword" InputType="InputType.Date" PlaceHolder="Hjemrejse dato" @bind-Value="formsModelVal.HjemrejseDato"></BSInput>
                     </BSFormGroup>
-                    <a class="btn btn-primary" href="/vacationView/@formsModelVal.Afrejselufthavn/@formsModelVal.Rejsemål/@formsModelVal.AfrejseDato.ToBinary().ToString()/@formsModelVal.HjemrejseDato.ToBinary().ToString()" role="button">Se mere</a>
-                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit">Søg</BSButton>
+                    <a class="btn btn-primary index" href="/vacationView/@formsModelVal.Afrejselufthavn/@formsModelVal.Rejsemål/@formsModelVal.AfrejseDato.ToBinary().ToString()/@formsModelVal.HjemrejseDato.ToBinary().ToString()" role="button">Se mere</a>
                 </BSBasicForm>
             </BSForm>
             <h1 class=""> @formErrorInput</h1>
-            <p class=""></p>
         </BSContainer>
     </BSJumbotron>
 </div>
@@ -50,7 +48,7 @@
     <BSJumbotron IsFluid="true">
         <BSContainer>
             <h2 class="InfoOverskrift">Hvad er TravelClub</h2>
-            <p class="">Beskrivelsen omkring formålet med TravelClub</p>
+            <p><p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p></p>
         </BSContainer>
     </BSJumbotron>
 </div>
