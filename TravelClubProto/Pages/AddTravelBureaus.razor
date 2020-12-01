@@ -58,15 +58,33 @@
 
         <div Class="mytravelclubadmincontent">
             <h2 class="welcomemytravelclub">Opret login til rejsebureau</h2>
-            <div>
-                @* Her indsættes højresiden af pagen *@
-            </div>
+                <p>
+                    <BSForm Model="@formsModelVal" OnValidSubmit="@ConsoleWrite" Class="position-relative">
+
+                        <BSFormGroup>
+                            @*Input for user email*@
+                            <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                            <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                        </BSFormGroup>
+
+                        <BSFormGroup>
+                            @*Input for user password*@
+                            <BSLabel for="InputPassword">Kodeord</BSLabel>
+                            <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                        </BSFormGroup>
+
+                        @*Submit Button*@
+                        <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
+                    </BSForm>
+                </p>
         </div>
     </div>
 </BSJumbotron>
 
 
 @code {
+
+
     bool collapseNavMenu = true;
 
     string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
@@ -84,17 +102,6 @@
     void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
-    }
-
-    void ConsoleWrite()
-    {
-        Console.WriteLine("Form succesfully submitted");
-    }
-
-    void SaveProfileToTables(MouseEventArgs e)
-    {
-        TravelBureau TB = new TravelBureau(formsModelVal.Email, formsModelVal.Password, DaService);
-        TB.InsertIntoDatabase();
     }
 
     public class FormsModelVal
@@ -117,4 +124,16 @@
     {
         DaService.LoggedIn = false;
     }
+
+    void SaveProfileToTables(MouseEventArgs e)
+    {
+        Customer newUser = new Customer(formsModelVal.Email, formsModelVal.Password, DaService);
+        newUser.Type = "TravelBureau";
+        newUser.InsertIntoDatabase();
+    }
+    void ConsoleWrite()
+    {
+        Console.WriteLine("Form succesfully submitted");
+    }
+
 }

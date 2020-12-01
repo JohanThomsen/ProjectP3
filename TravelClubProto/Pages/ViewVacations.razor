@@ -18,17 +18,17 @@
         <div class="col-sm-2">
             <h6>Afrejse Dato</h6>
             <input type="date" id="start" name="trip-start" @onchange="eventArgs => { ArrivalDateUpdate( eventArgs.Value); }" min=@DateTime.Now>
-            <h6>Lande</h6>
+            <h6><b>Lande</b></h6>
             @foreach (Destination dest in activeDestinations)
             {
                 <input type="checkbox" id="@dest.Country" @ref="destinationCheckbox[dest.Country]" @onchange="eventArgs => { CheckboxClickedDest(dest.Country, eventArgs.Value); }" />@dest.Country<br />
             }
-            <h6>Aktiviteter </h6>
+            <h6><b>Aktiviteter</b> </h6>
             @foreach (Activity act in activeActivities)
             {
                 <input type="checkbox" @onchange="eventArgs => { CheckboxClickedAct(act, eventArgs.Value); }" />@act.Type<br />
             }
-            <h6>Lufthavne </h6>
+            <h6><b>Lufthavne</b> </h6>
             @foreach (string departureAirport in activeAirports)
             {
                 <input type="checkbox" id="@departureAirport" @ref="departureAirportCheckbox[departureAirport]" @onchange="eventArgs => { CheckboxClickedAirport(departureAirport, eventArgs.Value); }" />@departureAirport<br />
