@@ -20,10 +20,10 @@ namespace TravelClubProto.Data
             Email = email;
             DaService = daService;
             FK_CustomerID = customerID;
-            Agents = GetPriceAgentsIDs().GetAwaiter().GetResult();
+            Agents = GetPriceAgents().GetAwaiter().GetResult();
         }
 
-        public async Task<List<PriceAgent>> GetPriceAgentsIDs()
+        public async Task<List<PriceAgent>> GetPriceAgents()
         {
             List<int> IDs = new List<int>();
             List<PriceAgent> agents = new List<PriceAgent>();

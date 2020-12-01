@@ -15,7 +15,6 @@
     border: 1px solid rgb(149, 168, 189);
     border-radius:0;
     padding:2%;
-    border-radius: 0;
 }
 
 .NavigationBar {
@@ -34,10 +33,14 @@
 }
 /*Index Page Appearance
 ----------------------------------------------------------------------------------*/
-.IndexImageContainer{
+.IndexHeaderBox{
+    padding:0;
+}
+.IndexImageContainer {
     width: inherit;
     height: inherit;
 }
+
 .HeaderTitle {
     background-color: #e39a1a;
     color: white;
@@ -292,10 +295,10 @@ progress.progressBarJoinedUsersVS {
 ----------------------------------------------------------------*/
 
 .mytravelclubmenulist {
-    display: table-cell;
     background-color: #30343e;
     color: inherit;
-    width: 245px;
+    position: inherit;
+    float: left;
 }
 .mytravelclubmenulisticon {
     position: absolute;
@@ -331,13 +334,14 @@ progress.progressBarJoinedUsersVS {
         text-decoration: underline;
     }
 .mytravelclubcontent {
-    position: inherit;
     background: #fff;
     padding: 1%;
     border: 1px solid #97aabf;
     float: right;
-    width: 73%;
-    margin-top: -32.3%;
+    width: 71%;
+    right: 42%;
+    position: inherit;
+    margin-right: 2%;
 }
 .mytravelbureaucontent{
     position: inherit;
@@ -447,7 +451,15 @@ progress.progressBarJoinedUsersVS {
     background-size:100%;
     height: 2em;
     vertical-align: text-bottom;
-    
+}
+
+.HeartIconFill {
+    background-color: #f7fbfc !important;
+    background-size: 100%;
+    height: 2em;
+    background: url(https://www.flaticon.com/svg/static/icons/svg/535/535183.svg) no-repeat 5%;
+    border: none;
+    vertical-align:bottom;
 }
 
 .InfoButton {
@@ -467,15 +479,6 @@ progress.progressBarJoinedUsersVS {
     line-height: 1.5;
     border-radius: .25rem;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
-
-.HeartIconFill {
-    background-color: #f7fbfc !important;
-    background-size: 100%;
-    height: 2em;
-    background: url(https://www.flaticon.com/svg/static/icons/svg/535/535183.svg) no-repeat 5%;
-    border: none;
-    vertical-align:bottom;
 }
 
 .dropdown-toggle::before, .dropdown-toggle::after{
