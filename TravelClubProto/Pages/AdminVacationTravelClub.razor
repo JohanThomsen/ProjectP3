@@ -109,18 +109,7 @@
 
 @code {
 
-    public List<Vacation> vacations;
-
-    protected override async Task OnInitializedAsync()
-    {
-        vacations = await DaService.GetAllVacations(DaService);
-    }
-
-    void ChangeVacState(Vacation vac, string state)
-    {
-        vac.State = state;
-    }
-
+ 
     bool collapseNavMenu = true;
 
     string baseMenuClass = "navbar-collapse d-sm-inline-flex flex-sm-row-reverse";
