@@ -552,3 +552,7 @@ body {
     background: rgba(227,154,26,0.95);
     color: white;
 }
+
+.new-destination-btn {
+    position: relative;
+}

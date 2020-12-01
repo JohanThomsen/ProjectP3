@@ -94,14 +94,10 @@
                 </BSDropdownMenu>
                 <pre> @destinationFeedback</pre>
             </BSDropdown>
-            <BSButton @onclick="OnToggleAddDestination" Color="Color.Secondary">Tilføj ny destination</BSButton>
+            <BSButton class="new-destination-btn" @onclick="OnToggleAddDestination" Color="Color.Secondary">Tilføj ny destination</BSButton>
             <BSFormGroup>
                 <BSLabel For="Description">Beskrivelse</BSLabel>
                 <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
-            </BSFormGroup>
-            <BSFormGroup>
-                <BSLabel For="PublisherID">Input en relevant account ID. (Dette skal gøre automatisk senere, lige midlertidig løsning)</BSLabel>
-                <BSInput InputType="InputType.Number" Id="PublisherID" @bind-Value="@formsModelVal.PublisherID"></BSInput>
             </BSFormGroup>
             <BSFormGroup>
                 <BSLabel For="DepartureAirport">Afrejse Lufthavn</BSLabel>
