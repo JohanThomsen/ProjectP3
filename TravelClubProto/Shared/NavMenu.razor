@@ -13,7 +13,7 @@
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white">
     <div class="container" style="float:right;">
         <a href="/">
-            <BSImage Class="Logo1" src="https://i.imgur.com/KwVrth8.png" alt="Logo1" style="image-resolution:from-image;" ></BSImage>
+            <BSImage Class="Logo1" src="https://i.imgur.com/KwVrth8.png" alt="Logo1" style="image-resolution:from-image;"></BSImage>
         </a>
         <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
@@ -22,41 +22,14 @@
             <ul class="navbar-nav flex-grow-1">
                 <li class="nav-item">
                     <NavLink class="nav-link text-dark Nav Bar" href="" Match="NavLinkMatch.All">
-                        <span class="oi oi-home" aria-hidden="true"></span> Home
+                        <span class="oi oi-home" aria-hidden="true"></span> Hjem
                     </NavLink>
                 </li>
-                @*<li class="nav-item">
-                    <NavLink class="nav-link text-dark Nav Bar" href="counter">
-                        <span class="oi oi-plus" aria-hidden="true"></span> Counter
-                    </NavLink>
-                </li>*@
-                @*<li class="nav-item">
-                    <NavLink class="nav-link text-dark Nav Bar" href="fetchdata">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch Data
-                    </NavLink>
-                </li>*@
                 <li class="nav-item">
                     <NavLink class="nav-link text-dark Nav Bar" href="vacationView">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> View Vacations
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Se feriepakker
                     </NavLink>
                 </li>
-                @*<li class="nav-item">
-                    <NavLink class="nav-link text-dark Nav Bar" href="ProposeVacation">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Propose Vacation
-                    </NavLink>
-                </li>*@
-                @*<li class="nav-item">
-                    <NavLink class="nav-link text-dark Nav Bar" href="AddDestination">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Add Destination
-                    </NavLink>
-                    <i class='fas fa-user-alt'></i>
-                </li>*@
-                @*<li class="nav-item">
-                    <NavLink class="nav-link text-dark Nav Bar" href="SingleVacation/ID">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> View single vacation
-                    </NavLink>
-                    <i class='fas fa-user-alt'></i>
-                </li>*@
             </ul>
         </div>
     </div>
@@ -114,11 +87,7 @@
                     <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
                 </BSFormGroup>
 
-                <BSFormGroup IsCheck="true">
-                    @*Remember me check box*@
-                    <BSInput Id="ModalCheck" InputType="InputType.Checkbox" @bind-Value="formsModelVal.Valid"></BSInput>
-                    <BSLabel IsCheck="true" For="ModalCheck">Husk mig</BSLabel>
-                </BSFormGroup>
+                <BSButton class="createAccount" @onclick="OnToggleCreateProfile">Har du ikke en profil? Opret en profil her!</BSButton>
 
                 @*Submit Button*@
                 <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
@@ -146,6 +115,8 @@
                     <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
                 </BSFormGroup>
 
+                <BSButton class="createAccount" @onclick="OnToggleLogin">Har du allerede en profil? Log ind!</BSButton>
+
                 @*Submit Button*@
                 <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
             </BSForm>
@@ -161,9 +132,9 @@
 @if (DaService.LoggedIn == true)
 {
     //Midlertidig løsning, den skal kunne fade ud af sig selv
-<BSAlert @ref="LoggedInBox" IsDismissible="true" Color="Color.Info">
+    <BSAlert @ref="LoggedInBox" IsDismissible="true" Color="Color.Info">
         Du er nu logget ind!
-</BSAlert>
+    </BSAlert>
 }
 
 
@@ -182,11 +153,14 @@
 
     void OnToggleLogin(MouseEventArgs e)
     {
+        CreateProfileModal.Hide();
         LoginModal.Toggle();
+
     }
 
     void OnToggleCreateProfile(MouseEventArgs e)
     {
+        LoginModal.Hide();
         CreateProfileModal.Toggle();
     }
 

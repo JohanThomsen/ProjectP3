@@ -73,14 +73,14 @@
             <h2 class="welcomemytravelclub">Dine tilmeldte Feriepakker</h2>
             <ul>
                 @foreach (int item in JoinedVacs)
-                {
+                 {
                     foreach (Vacation vac in vacations)
                     {
                         if (item == vac.ID)
                         {
                             <!-- vac.Destination.AddActivity(); -->
 
-                            <BSJumbotron>
+                            <BSJumbotron class="mytravelclubjumbotron">
 
                                 <div class="ViewVacationImage">
                                     <BSFigureImage src="@vac.ImageLink" />
@@ -111,10 +111,10 @@
                             </BSJumbotron>
                         }
                     }
-                }
+                 }
             </ul>
         </div>
-    </BSJumbotron>
+</BSJumbotron>
 
 
     @code {
@@ -125,7 +125,7 @@
         {
             JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Joined");
             vacations = await DaService.GetAllVacations(DaService);
-
+            
         }
 
         CustomerVacations CustomerVac => new CustomerVacations(DaService, DaService.LoggedInAccountID);

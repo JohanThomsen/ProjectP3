@@ -71,7 +71,6 @@
                     <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
                     <BSModalBody>
                         <p>
-                            @notloggedinfeedback <br /><br />
                             <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
 
                                 <BSFormGroup>
@@ -86,14 +85,38 @@
                                     <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
                                 </BSFormGroup>
 
-                                <BSFormGroup IsCheck="true">
-                                    @*Remember me check box*@
-                                    <BSInput Id="ModalCheck" InputType="InputType.Checkbox" @bind-Value="formsModelVal.Valid"></BSInput>
-                                    <BSLabel IsCheck="true" For="ModalCheck">Husk mig</BSLabel>
-                                </BSFormGroup>
+                                <BSButton class="createAccount" @onclick="OnToggleCreateProfile">Har du ikke en profil? Opret en profil her!</BSButton>
 
                                 @*Submit Button*@
                                 <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
+                            </BSForm>
+                        </p>
+                    </BSModalBody>
+                </BSModal>
+
+                @*MODAL FOR CREATEPROFILE PROMPT*@
+                <BSModal @ref="CreateProfileModal" IsCentered="true">
+                    <BSModalHeader OnClick="@OnToggleCreateProfile">Opret Bruger</BSModalHeader>
+                    <BSModalBody>
+                        <p>
+                            <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+
+                                <BSFormGroup>
+                                    @*Input for user email*@
+                                    <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                                    <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                                </BSFormGroup>
+
+                                <BSFormGroup>
+                                    @*Input for user password*@
+                                    <BSLabel for="InputPassword">Kodeord</BSLabel>
+                                    <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                                </BSFormGroup>
+
+                                <BSButton class="createAccount" @onclick="OnToggleLogin">Har du allerede en profil? Log ind!</BSButton>
+
+                                @*Submit Button*@
+                                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
                             </BSForm>
                         </p>
                     </BSModalBody>
@@ -104,6 +127,15 @@
                     <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
                 </BSModal>
 
+                @if (DaService.LoggedIn == true)
+                {
+                    //Midlertidig løsning, den skal kunne fade ud af sig selv
+                    <BSAlert @ref="LoggedInBox" IsDismissible="true" Color="Color.Info">
+                        Du er nu logget ind!
+                    </BSAlert>
+                }
+
+
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
                 <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
@@ -111,11 +143,17 @@
             </div>
         </div>
     </div>
+    <BSModal @ref="JoinedInfoBox" Size="Size.Medium">
+        <BSModalHeader Class="Modal-title text-center" OnClick="@JoinVacation">INFO</BSModalHeader>
+        <BSModalBody><p>Du er nu tilmeldt denne ferie. <br />Du kan se dine tilmeldte ferie under "Min Profil" -> "Tilmeldte Ferie".</p></BSModalBody>
+    </BSModal>
 </BSJumbotron>
 
 
 @code {
+    BSModal JoinedInfoBox;
     BSModal LoginModal;
+    BSModal CreateProfileModal;
     BSModal WarningBox { get; set; }
     int joinedUsersHolder;
     int stretchGoalsMax;
@@ -129,20 +167,40 @@
 
     void OnToggleLogin(MouseEventArgs e)
     {
+        CreateProfileModal.Hide();
         LoginModal.Toggle();
+
+    }
+
+    void OnToggleCreateProfile(MouseEventArgs e)
+    {
+        LoginModal.Hide();
+        CreateProfileModal.Toggle();
+    }
+
+    void JoinVacation(MouseEventArgs e)
+    {
+        JoinedInfoBox.Toggle();
     }
 
     async void LogInToProfile(MouseEventArgs e)
     {
+        LoginModal.Toggle();
         //returnerer ID ved succes og -1 ved fail
         int ID = await DaService.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
 
-        LoginModal.Toggle();
+        if (ID != -1)
+        {
+            DaService.LoggedIn = true;
+        }
+        else
+        {
+            DaService.LoggedIn = false;
+        }
 
         if (DaService.LoggedIn == false)
         {
             WarningBox.Toggle();
-
         }
         else
         {
@@ -152,6 +210,12 @@
         }
     }
 
+    void SaveProfileToTables(MouseEventArgs e)
+    {
+        Customer newUser = new Customer(formsModelVal.Email, formsModelVal.Password, DaService);
+        newUser.InsertIntoDatabase();
+        CreateProfileModal.Toggle();
+    }
 
     public class FormsModelVal
     {
@@ -207,6 +271,7 @@
         {
             notloggedinfeedback = string.Empty;
             vac.TravelGroup.ChangeVacationRelation(DaService.LoggedInAccountID, "Joined");
+            JoinedInfoBox.Toggle();
         }
         else
         {
