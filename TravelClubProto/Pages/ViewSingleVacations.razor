@@ -13,16 +13,14 @@
 
 @inject DataAccessService DaService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IJSRuntime JS;
 
 
 
 
 <h3 class="page_title">Se ferier</h3>
 
-<p>@VacationID</p>
-
 <BSJumbotron Class="ViewSingleVacationJumbotron">
-    <div class="SingleVacationContainer">
         <div class="ViewSingleVacationImage">
             <BSFigureImage src="@vac.ImageLink" />
         </div>
@@ -33,7 +31,7 @@
             <h10>ID:  @vac.ID </h10>
         </div>
 
-        <div class="Row">
+
             <div class="VacationDescriptionColumn">
                 <h4>Beskrivelse af ferien:</h4>
                 <p><b>Afrejselufthavn:</b> @vac.DepartureAirport</p>
@@ -45,29 +43,21 @@
                 }
             </div>
 
-            
+
             <div class="ParticipantDetailColumn">
                 <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-          
-                <span class="progressBarGeneratorVS">
+
                     @for (int i = 0; i < vac.StretchGoals.Count; i++)
                     {
                         <span class="progStretchGoal">
-                            <div>
-                                @(vac.Prices[i] + " kr.")
+                            <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                            <div class="progressBarPriceGoal">
+                                @(vac.Prices[i]+ " kr.")
                             </div>
-                            <progress role="progressbar" class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)><span>@vac.StretchGoals[i]</span></progress>
                         </span>
-                    }
-                </span>
-
-
+                     }
                 <br />
 
-<<<<<<< Updated upstream
-                <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
-                <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
-=======
                 @if (!vac.TravelGroup.CheckForRelation(DaService.LoggedInAccountID, "Joined").GetAwaiter().GetResult())
                 {
                     <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
@@ -76,15 +66,13 @@
                 {
                     <BSButton @onclick="@(e => vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID))" Color="Color.Danger">Forlad Ferie</BSButton>
                 }
-                    <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />
->>>>>>> Stashed changes
+                    <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />              
 
                 @*MODAL FOR LOGIN PROMPT*@
                 <BSModal @ref="LoginModal" IsCentered="true">
                     <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
                     <BSModalBody>
                         <p>
-                            @notloggedinfeedback <br /><br />
                             <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
 
                                 <BSFormGroup>
@@ -99,14 +87,38 @@
                                     <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
                                 </BSFormGroup>
 
-                                <BSFormGroup IsCheck="true">
-                                    @*Remember me check box*@
-                                    <BSInput Id="ModalCheck" InputType="InputType.Checkbox" @bind-Value="formsModelVal.Valid"></BSInput>
-                                    <BSLabel IsCheck="true" For="ModalCheck">Husk mig</BSLabel>
-                                </BSFormGroup>
+                                <BSButton class="createAccount" @onclick="OnToggleCreateProfile">Har du ikke en profil? Opret en profil her!</BSButton>
 
                                 @*Submit Button*@
                                 <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
+                            </BSForm>
+                        </p>
+                    </BSModalBody>
+                </BSModal>
+
+                @*MODAL FOR CREATEPROFILE PROMPT*@
+                <BSModal @ref="CreateProfileModal" IsCentered="true">
+                    <BSModalHeader OnClick="@OnToggleCreateProfile">Opret Bruger</BSModalHeader>
+                    <BSModalBody>
+                        <p>
+                            <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+
+                                <BSFormGroup>
+                                    @*Input for user email*@
+                                    <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                                    <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                                </BSFormGroup>
+
+                                <BSFormGroup>
+                                    @*Input for user password*@
+                                    <BSLabel for="InputPassword">Kodeord</BSLabel>
+                                    <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                                </BSFormGroup>
+
+                                <BSButton class="createAccount" @onclick="OnToggleLogin">Har du allerede en profil? Log ind!</BSButton>
+
+                                @*Submit Button*@
+                                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
                             </BSForm>
                         </p>
                     </BSModalBody>
@@ -117,18 +129,19 @@
                     <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
                 </BSModal>
 
+
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
                 <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
             </div>
-        </div>
-    </div>
 </BSJumbotron>
 
 
 @code {
+    BSModal JoinedInfoBox;
     BSModal LoginModal;
+    BSModal CreateProfileModal;
     BSModal WarningBox { get; set; }
     int joinedUsersHolder;
     int stretchGoalsMax;
@@ -143,20 +156,40 @@
 
     void OnToggleLogin(MouseEventArgs e)
     {
+        CreateProfileModal.Hide();
         LoginModal.Toggle();
+
+    }
+
+    void OnToggleCreateProfile(MouseEventArgs e)
+    {
+        LoginModal.Hide();
+        CreateProfileModal.Toggle();
+    }
+
+    void JoinVacation(MouseEventArgs e)
+    {
+        JoinedInfoBox.Toggle();
     }
 
     async void LogInToProfile(MouseEventArgs e)
     {
+        LoginModal.Toggle();
         //returnerer ID ved succes og -1 ved fail
         int ID = await DaService.FindAccountInDatabase(formsModelVal.Email, formsModelVal.Password, DaService);
 
-        LoginModal.Toggle();
+        if (ID != -1)
+        {
+            DaService.LoggedIn = true;
+        }
+        else
+        {
+            DaService.LoggedIn = false;
+        }
 
         if (DaService.LoggedIn == false)
         {
             WarningBox.Toggle();
-
         }
         else
         {
@@ -166,6 +199,12 @@
         }
     }
 
+    void SaveProfileToTables(MouseEventArgs e)
+    {
+        Customer newUser = new Customer(formsModelVal.Email, formsModelVal.Password, DaService);
+        newUser.InsertIntoDatabase();
+        CreateProfileModal.Toggle();
+    }
 
 
     public class FormsModelVal
@@ -188,6 +227,14 @@
         Console.WriteLine("Form succesfully submitted");
     }
 
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CheckForAndFillHearts();
+        }
+        return base.OnAfterRenderAsync(firstRender);
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -213,7 +260,8 @@
         if (DaService.LoggedIn == true)
         {
             notloggedinfeedback = string.Empty;
-            vac.TravelGroup.ChangeVacationRelation(DaService.LoggedInAccountID, vac.ID, "Joined");
+            vac.TravelGroup.ChangeVacationRelation(DaService.LoggedInAccountID, "Joined");
+            JoinedInfoBox.Toggle();
         }
         else
         {
@@ -224,24 +272,43 @@
 
     public void FavouriteVacation(Vacation vac)
     {
-        checkCookie();
         if (DaService.LoggedIn == true)
         {
-            notloggedinfeedback = string.Empty;
-            vac.TravelGroup.ChangeVacationRelation(DaService.LoggedInAccountID, vac.ID, "Favourited");
+            if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == false)
+            {
+                checkCookie();
+                vac.TravelGroup.ChangeVacationRelation(customerID, "Favourited");
+                JS.InvokeAsync<string>("ToggleClass", Convert.ToString(vac.ID));
+            }
+            else
+            {
+                vac.TravelGroup.LeaveVacation(customerID);
+                JS.InvokeAsync<string>("ToggleClass", Convert.ToString(vac.ID));
+            }
         }
         else
         {
+            notloggedinfeedback = string.Empty;
             notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
             LoginModal.Toggle();
         }
     }
 
+    private void CheckForAndFillHearts()
+    {
+        checkCookie();
+        if (DaService.LoggedIn == true)
+        {
+            if (vac.TravelGroup.CheckForRelation(DaService.LoggedInAccountID, "Favourited").GetAwaiter().GetResult() == true)
+            {
+                JS.InvokeAsync<string>("FillHeart", Convert.ToString(vac.ID));
+            }
+        }
+    }
 
 
 
-
-        @*Calculates progress bar fill value from joined user and stretch goals*@
+    @*Calculates progress bar fill value from joined user and stretch goals*@
     int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
     {
         int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
@@ -263,18 +330,18 @@
 
 
 
-//async public void JoinVacation()
-//{
-//    List<Vacation> templit = await DaService.GetAllVacations(DaService);
-//    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Joined");
-//}
+    //async public void JoinVacation()
+    //{
+    //    List<Vacation> templit = await DaService.GetAllVacations(DaService);
+    //    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Joined");
+    //}
 
-//async public void FavouriteVacation()
-//{
-//    List<Vacation> templit = await DaService.GetAllVacations(DaService);
-//    Console.WriteLine(templit[0].ID);
-//    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Favourited");
-//}
+    //async public void FavouriteVacation()
+    //{
+    //    List<Vacation> templit = await DaService.GetAllVacations(DaService);
+    //    Console.WriteLine(templit[0].ID);
+    //    templit[0].TravelGroup.ChangeVacationRelation(15, 34, "Favourited");
+    //}
 
 
 }

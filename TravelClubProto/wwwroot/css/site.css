@@ -1,6 +1,5 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-
 .header{
     background-color: white;
     padding-top: 100px;
@@ -14,8 +13,7 @@
     background-color: #f7fbfc;
     border: 1px solid rgb(149, 168, 189);
     border-radius:0;
-    padding:0;
-    border-radius: 0;
+    padding:2%;
 }
 
 .NavigationBar {
@@ -32,10 +30,47 @@
 *{
     box-sizing: border-box;
 }
+
+/*Login modal and Create account modal
+----------------------------------------------------------------------------------*/
+.createAccount {
+    
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #069 !important;
+    text-decoration: underline;
+    cursor: pointer;
+    
+}
+
+
+
 /*Index Page Appearance
 ----------------------------------------------------------------------------------*/
-.SearchFields{
-    position:relative;
+.IndexHeaderBox{
+    padding:0;
+}
+.IndexImageContainer {
+    width: inherit;
+    height: inherit;
+}
+
+.HeaderTitle {
+    background-color: #e39a1a;
+    color: white;
+    position:absolute;
+    top:8%;
+    width: 45%;
+    height:20%;
+    font-size:2.5rem;
+    font-weight:bold;
+}
+.SearchFields {
+    position: relative;
     height: inherit;
 }
 .blazored-typeahead{
@@ -43,16 +78,40 @@
     height:inherit;
     max-width:79%!important;
 }
+.blazored-typeahead__input {
+    border-radius: 0px !important;
+    height: inherit!important;
+    /*max-width: inherit !important;*/
+}
+.blazored-typeahead valid {
+    width: 75% !important;
+}
 .blazored-typeahead__input-icon {
+    border:1px solid grey;
+    border-left:none;
     border-radius: 0px !important;
     box-sizing: border-box !important;
-    width: inherit !important;
+    width: 25%!important;
     height: inherit !important;
+    background-color:white!important;
 }
+.blazored-typeahead__input-icon > svg{
+    position:relative!important;
+    top:19%!important;
+}
+
+.FormsCollection > a {
+    position:relative!important;
+    margin:1rem!important;
+    height:inherit!important;
+    width:10%!important;
+    border-radius:0px!important;
+}
+
 .IndexHeaderBox {
     position: relative;
     width: 100%;
-    height: 329px;
+    height: 20rem;
 }
 
 .IndexBackgroundImage{
@@ -104,16 +163,26 @@
     height:1%;
     width: 1%;
 }
+.progStretchGoal{
+    position:relative;
+    float:left;
+    max-width:100%;
+}
 progress.progressBarJoinedUsers {
     -webkit-appearance: none;
     height: 2rem;
-    width: 6rem;
+    width: 100%;
+    border-right: 1px solid grey;
 }
 
-progress.progressBarJoinedUsersVS {
+.progressBarJoinedUsersVS {
     -webkit-appearance: none;
     height: 2rem;
-    width: 5rem;
+    width: 100%;
+}
+
+.progressBarPriceGoal{
+    width:100%
 }
 
 .progressBarJoinedUsers::-webkit-progress-bar {
@@ -137,12 +206,16 @@ progress.progressBarJoinedUsersVS {
     background-color: rgba(30,144,255,1);
 }
 
-.progStretchGoal{
-    float:left;
-}
-/*View singele vacations layout
------------------------------------------------------------*/
 
+
+/*View vacations and view single Vacation layout
+-----------------------------------------------------------------------------------*/
+.ViewVacationImage {
+    background: top center;
+    width: 50%;
+    margin-top: 1%;
+    float: right;
+}
 
 .ViewSingleVacationHotel {
     margin: 1%;
@@ -166,14 +239,6 @@ progress.progressBarJoinedUsersVS {
     margin: 0.5%;
 }
 
-.ViewVacationImage {
-    background:top center;
-    width:50%;
-    margin-top:1%;
-    float: right;
-}
-
-
 .ViewSingleVacationImage {
     display: block;
     margin-left: auto;
@@ -182,9 +247,29 @@ progress.progressBarJoinedUsersVS {
 }
 
 
-.SingleVacationContainer {
-    border: 1px solid rgb(149, 168, 189)
+/*Propose vacations page appearance
+-----------------------------------------------------------------*/
+.AddPriceButton{
+    margin-top:1%;
+    margin-bottom:1%;
 }
+
+.textAddprice {
+    font-family: Arial;
+    font-size:medium;
+    float: left;
+}
+
+.PricePoint {
+    width: 50%;
+}
+
+.NumberOfParticipants{
+    width:50%;
+}
+
+/*My travel club page appearabce
+----------------------------------------------------------------*/
 
 .mytravelclubcontentelementsright {
     position: relative;
@@ -220,43 +305,12 @@ progress.progressBarJoinedUsersVS {
     -o-transition: all .15s ease-out;
     transition: all .15s ease-out;
 }
-.ViewVacationImage {
-    background: top center;
-    width: 50%;
-    margin-top: 1%;
-    float: right;
-}
-
-
-/*Propose vacations page appearance
------------------------------------------------------------------*/
-.AddPriceButton{
-    margin-top:1%;
-    margin-bottom:1%;
-}
-
-.textAddprice {
-    font-family: Arial;
-    font-size:medium;
-    float: left;
-}
-
-.PricePoint {
-    width: 50%;
-}
-
-.NumberOfParticipants{
-    width:50%;
-}
-
-/*My travel club page appearabce
-----------------------------------------------------------------*/
 
 .mytravelclubmenulist {
-    display: table-cell;
     background-color: #30343e;
     color: inherit;
-    width: 245px;
+    position: inherit;
+    float: left;
 }
 .mytravelclubmenulisticon {
     position: absolute;
@@ -292,13 +346,14 @@ progress.progressBarJoinedUsersVS {
         text-decoration: underline;
     }
 .mytravelclubcontent {
-    position: inherit;
     background: #fff;
     padding: 1%;
     border: 1px solid #97aabf;
     float: right;
-    width: 73%;
-    margin-top: -32.3%;
+    width: 71%;
+    right: 42%;
+    position: inherit;
+    margin-right: 2%;
 }
 .mytravelbureaucontent{
     position: inherit;
@@ -417,7 +472,15 @@ progress.progressBarJoinedUsersVS {
     background-size:100%;
     height: 2em;
     vertical-align: text-bottom;
-    
+}
+
+.HeartIconFill {
+    background-color: #f7fbfc !important;
+    background-size: 100%;
+    height: 2em;
+    background: url(https://www.flaticon.com/svg/static/icons/svg/535/535183.svg) no-repeat 5%;
+    border: none;
+    vertical-align:bottom;
 }
 
 .InfoButton {
@@ -437,15 +500,6 @@ progress.progressBarJoinedUsersVS {
     line-height: 1.5;
     border-radius: .25rem;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
-
-.HeartIconFill {
-    background-color: #f7fbfc !important;
-    background-size: 100%;
-    height: 2em;
-    background: url(https://www.flaticon.com/svg/static/icons/svg/535/535183.svg) no-repeat 5%;
-    border: none;
-    vertical-align:bottom;
 }
 
 .dropdown-toggle::before, .dropdown-toggle::after{

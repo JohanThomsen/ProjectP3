@@ -18,17 +18,17 @@
         <div class="col-sm-2">
             <h6>Afrejse Dato</h6>
             <input type="date" id="start" name="trip-start" @onchange="eventArgs => { ArrivalDateUpdate( eventArgs.Value); }" min=@DateTime.Now>
-            <h6>Lande</h6>
+            <h6><b>Lande</b></h6>
             @foreach (Destination dest in activeDestinations)
             {
                 <input type="checkbox" id="@dest.Country" @ref="destinationCheckbox[dest.Country]" @onchange="eventArgs => { CheckboxClickedDest(dest.Country, eventArgs.Value); }" />@dest.Country<br />
             }
-            <h6>Aktiviteter </h6>
+            <h6><b>Aktiviteter</b> </h6>
             @foreach (Activity act in activeActivities)
             {
                 <input type="checkbox" @onchange="eventArgs => { CheckboxClickedAct(act, eventArgs.Value); }" />@act.Type<br />
             }
-            <h6>Lufthavne </h6>
+            <h6><b>Lufthavne</b> </h6>
             @foreach (string departureAirport in activeAirports)
             {
                 <input type="checkbox" id="@departureAirport" @ref="departureAirportCheckbox[departureAirport]" @onchange="eventArgs => { CheckboxClickedAirport(departureAirport, eventArgs.Value); }" />@departureAirport<br />
@@ -41,115 +41,120 @@
             {
                 int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
                 int stretchGoalsMax = vac.StretchGoals.Max();
-                <BSJumbotron>
-                    <a class="" href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
-                        <div class="ViewVacationImage">
-                            <BSFigureImage src="@vac.ImageLink" />
-                        </div>
-                    </a>
-                    <div class="ViewDescriptionRow">
-                        <div class="VacationHotelColumn">
-                            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                            <h10>ID:  @vac.ID </h10>
+        <BSJumbotron>
+            <a class="" href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
+                <div class="ViewVacationImage">
+                    <BSFigureImage src="@vac.ImageLink" />
+                </div>
+            </a>
+                
+            <div class="ViewDescriptionRow">
+                <div class="VacationHotelColumn">
+                    <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+                    <h10>ID:  @vac.ID </h10>
 
-                            <h2>Feriebeskrivelse: </h2>
-                            <p>@vac.Description</p>
-                        </div>
-                    </div>
+                    <h2>Feriebeskrivelse: </h2>
+                    <p>@vac.Description</p>
+                </div>
+            </div>
 
-                    <br />
+            <br />
 
-                    <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-                    <p>
-                        @for (int i = 0; i < @vac.Prices.Count; i++)
-                        {
-                            string priceIntervalHolder = "";
-                            priceIntervalHolder += vac.Prices[i] + "kr.";
-                            <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
-                        }
+            <span class="progressBarGenerator">
+                <span>
+                    <div>
 
-
-                    </p>
-                    <span class="progressBarGenerator">
                         @for (int i = 0; i < vac.StretchGoals.Count; i++)
                         {
-                            <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                            <span class="progStretchGoal">
+                                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                                <div>
+                                    @(vac.Prices[i]+ " kr.")
+                                </div>
+                            </span>
 
                         }
-                        <span>
-                        <div>
-                            @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                            {
-                                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                        <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" @ref="heartFavourite[vac.ID]" />
+                        <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
 
-                            }
+                    </div>
+                </span>
+            </span>
 
-                            @if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
-                            {
-                                <BSButton class="btn btn-outline-info btn-lg HeartIconFill" @onclick="@(e => UnFavouriteVacation(vac))"></BSButton>
-                            }
-                            else
-                            {
-                            <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
-                            }
-                            <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
+            @*MODAL FOR LOGIN PROMPT*@
+            <BSModal @ref="LoginModal" IsCentered="true">
+                <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
+                <BSModalBody>
+                    <p>
+                        <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
 
-                        </div>
-                        </span>
-                    </span>
+                            <BSFormGroup>
+                                @*Input for user email*@
+                                <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                                <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                            </BSFormGroup>
 
-                    @*MODAL FOR LOGIN PROMPT*@
-                    <BSModal @ref="LoginModal" IsCentered="true">
-                        <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
-                        <BSModalBody>
-                            <p>
-                                @notloggedinfeedback <br /><br />
-                                <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite" Context="login">
+                            <BSFormGroup>
+                                @*Input for user password*@
+                                <BSLabel for="InputPassword">Kodeord</BSLabel>
+                                <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                            </BSFormGroup>
 
-                                    <BSFormGroup>
-                                        @*Input for user email*@
-                                        <BSLabel for="InputEmail">Email-adresse</BSLabel>
-                                        <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
-                                    </BSFormGroup>
+                            <BSButton class="createAccount" @onclick="OnToggleCreateProfile">Har du ikke en profil? Opret en profil her!</BSButton>
 
-                                    <BSFormGroup>
-                                        @*Input for user password*@
-                                        <BSLabel for="InputPassword">Kodeord</BSLabel>
-                                        <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
-                                    </BSFormGroup>
+                            @*Submit Button*@
+                            <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
+                        </BSForm>
+                    </p>
+                </BSModalBody>
+            </BSModal>
 
-                                    <BSFormGroup IsCheck="true">
-                                        @*Remember me check box*@
-                                        <BSInput Id="ModalCheck" InputType="InputType.Checkbox" @bind-Value="formsModelVal.Valid"></BSInput>
-                                        <BSLabel IsCheck="true" For="ModalCheck">Husk mig</BSLabel>
-                                    </BSFormGroup>
+            @*MODAL FOR CREATEPROFILE PROMPT*@
+            <BSModal @ref="CreateProfileModal" IsCentered="true">
+                <BSModalHeader OnClick="@OnToggleCreateProfile">Opret Bruger</BSModalHeader>
+                <BSModalBody>
+                    <p>
+                        <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
 
-                                    @*Submit Button*@
-                                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
-                                </BSForm>
-                            </p>
-                        </BSModalBody>
-                    </BSModal>
+                            <BSFormGroup>
+                                @*Input for user email*@
+                                <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                                <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                            </BSFormGroup>
 
-                    <BSModal @ref="WarningBox" Size="Size.Medium">
-                        <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
-                        <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
-                    </BSModal>
+                            <BSFormGroup>
+                                @*Input for user password*@
+                                <BSLabel for="InputPassword">Kodeord</BSLabel>
+                                <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                            </BSFormGroup>
+
+                            <BSButton class="createAccount" @onclick="OnToggleLogin">Har du allerede en profil? Log ind!</BSButton>
+
+                            @*Submit Button*@
+                            <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
+                        </BSForm>
+                    </p>
+                </BSModalBody>
+            </BSModal>
+
+            <BSModal @ref="WarningBox" Size="Size.Medium">
+                <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
+                <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
+            </BSModal>
 
 
-                    <h6>Deadline: @vac.Dates["Deadline"]</h6>
-                </BSJumbotron>
+            <h6>Deadline: @vac.Dates["Deadline"]</h6>
+        </BSJumbotron>
             }
         </div>
     </div>
 </div>
 
 
-
-
 @code {
-    BSModal LoginModal;
     BSModal WarningBox { get; set; }
+    BSModal LoginModal;
+    BSModal CreateProfileModal;
     int customerID;
     public List<Vacation> ViewedVacations;
     public List<Vacation> vacations;
@@ -166,6 +171,7 @@
     private int minimumJoinedUsers;
     private Dictionary<string, ElementReference> destinationCheckbox = new Dictionary<string, ElementReference>();
     private Dictionary<string, ElementReference> departureAirportCheckbox = new Dictionary<string, ElementReference>();
+    private Dictionary<int, ElementReference> heartFavourite = new Dictionary<int, ElementReference>();
 
     [Parameter]
     public string DepartureAirportPara { get; set; }
@@ -188,13 +194,16 @@
         UpdateViewedVacation(true);
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             FillCheckBox();
+            CheckForAndFillHearts();
         }
+        return base.OnAfterRenderAsync(firstRender);
     }
+
     protected override async Task OnInitializedAsync()
     {
         departureDateSearch = DateTime.Now;
@@ -228,7 +237,14 @@
 
     void OnToggleLogin(MouseEventArgs e)
     {
+        CreateProfileModal.Hide();
         LoginModal.Toggle();
+    }
+
+    void OnToggleCreateProfile(MouseEventArgs e)
+    {
+        LoginModal.Hide();
+        CreateProfileModal.Toggle();
     }
 
     async void LogInToProfile(MouseEventArgs e)
@@ -251,12 +267,34 @@
         }
     }
 
+    void SaveProfileToTables(MouseEventArgs e)
+    {
+        Customer newUser = new Customer(formsModelVal.Email, formsModelVal.Password, DaService);
+        newUser.InsertIntoDatabase();
+        CreateProfileModal.Toggle();
+    }
+
     public void GetSearchParams()
     {
         departureDateSearch = DateTime.FromBinary(Convert.ToInt64(DepartureDatePara));
         arrivalDateSearch = DateTime.FromBinary(Convert.ToInt64(ArrivalDatePara));
         DepartureAirportSearch = DepartureAirportPara;
         CountrySearch = CountryPara;
+    }
+
+    private void CheckForAndFillHearts()
+    {
+        checkCookie();
+        if (DaService.LoggedIn == true)
+        {
+            foreach (Vacation vac in vacations)
+            {
+                if (vac.TravelGroup.CheckForRelation(DaService.LoggedInAccountID, "Favourited").GetAwaiter().GetResult() == true)
+                {
+                    JS.InvokeAsync<string>("FillHeart", Convert.ToString(vac.ID));
+                }
+            }
+        }
     }
 
     private void FillCheckBox()
@@ -334,28 +372,26 @@
         }
     }
 
-    public void UnFavouriteVacation(Vacation vac)
-    {
-        if (DaService.LoggedIn == true)
-        {
-            notloggedinfeedback = string.Empty;
-            vac.TravelGroup.LeaveVacation(customerID);
-        }
-        else
-        {
-        }
-    }
-
     public void FavouriteVacation(Vacation vac)
     {
-        checkCookie();
+
         if (DaService.LoggedIn == true)
         {
-            notloggedinfeedback = string.Empty;
-            vac.TravelGroup.ChangeVacationRelation(customerID, vac.ID, "Favourited");
+            if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == false)
+            {
+                checkCookie();
+                vac.TravelGroup.ChangeVacationRelation(customerID, "Favourited");
+                JS.InvokeAsync<string>("ToggleClass", Convert.ToString(vac.ID));
+            }
+            else
+            {
+                vac.TravelGroup.LeaveVacation(customerID);
+                JS.InvokeAsync<string>("ToggleClass", Convert.ToString(vac.ID));
+            }
         }
         else
         {
+            notloggedinfeedback = string.Empty;
             notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
             LoginModal.Toggle();
         }
@@ -517,7 +553,8 @@
         if (ViewedVacations.Count == 0)
         {
             noSearchFeedback = "Der findes ingen rejser der passer til dine søge filtre";
-        } else
+        }
+        else
         {
             noSearchFeedback = "";
         }
