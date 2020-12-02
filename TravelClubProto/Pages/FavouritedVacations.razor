@@ -6,7 +6,10 @@
 @using System.Threading.Tasks;
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
+
 @inject DataAccessService DaService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IJSRuntime JS;
 
 <BSJumbotron Class="mytravelclubjumbotron">
     <BSNav IsList="true" IsVertical="true" Class="mytravelclubmenulist">
@@ -67,72 +70,171 @@
             </NavLink>
         </li>
     </BSNav>
-           
-        <div class="mytravelclubcontent">
-            <h2 class="welcomemytravelclub">Dine tilmeldte Feriepakker</h2>
-            <ul>
-                @foreach (int item in FavouritedVacs)
+
+    <div class="mytravelclubcontent">
+        <h2 class="welcomemytravelclub">Dine Favoriserede Feriepakker</h2>
+        <ul>
+            @foreach (int item in FavouritedVacs)
+            {
+                foreach (Vacation vac in vacations)
                 {
-                    foreach (Vacation vac in vacations)
+                    if (item == vac.ID)
                     {
-                        if (item == vac.ID)
-                        {
-                            <BSJumbotron class="mytravelclubjumbotron">
+                       int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
+                       int stretchGoalsMax = vac.StretchGoals.Max();                        
+                         <BSJumbotron class="mytravelclubsubjumbotron">
 
-                                <div class="ViewVacationImage">
-                                    <BSFigureImage src="@vac.ImageLink" />
+
+                            <div class="ViewVacationImage">
+                                <BSFigureImage src="@vac.ImageLink" />
+                            </div>
+
+                            <div class="ViewDescriptionRow">
+                                <div class="VacationHotelColumn">
+                                    <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+                                    <h10>ID:  @vac.ID </h10>
+
+                                    <h2>Feriebeskrivelse: </h2>
+                                    <p>@vac.Description</p>
                                 </div>
+                            </div>
 
-                                <div class="ViewDescriptionRow">
-                                    <div class="VacationHotelColumn">
-                                        <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                                        <h10>ID:  @vac.ID </h10>
+                            <br />
 
-                                        <h2>Feriebeskrivelse: </h2>
-                                        <p>@vac.Description</p>
+                            <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+                            <p>
+                                @for (int i = 0; i < @vac.Prices.Count; i++)
+                                {
+                                    string priceIntervalHolder = "";
+                                    priceIntervalHolder += vac.Prices[i] + "kr.";
+                                    <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
+                                }
+                            </p>
+                            <h6>Deadline: @vac.Dates["Deadline"]</h6>
+
+
+                            <span class="progressBarGenerator">
+                                <span>
+                                    <div>
+
+                                        @for (int i = 0; i < vac.StretchGoals.Count; i++)
+                                        {
+                                            <span class="progStretchGoal">
+                                                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                                                <div>
+                                                    @(vac.Prices[i]+ " kr.")
+                                                </div>
+                                            </span>
+
+                                        }
+                                        <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconFill" @onclick="@(e => FavouriteVacation(vac))" @ref="heartFavourite[vac.ID]" />
+                                        <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
+
                                     </div>
-                                </div>
-
-                                <br />
-
-                                <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-                                <p>
-                                    @for (int i = 0; i < @vac.Prices.Count; i++)
-                                    {
-                                        string priceIntervalHolder = "";
-                                        priceIntervalHolder += vac.Prices[i] + "kr.";
-                                        <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
-                                    }
-                                </p>
-                                <h6>Deadline: @vac.Dates["Deadline"]</h6>
-                            </BSJumbotron>
-                        }
+                                </span>
+                            </span>
+                        </BSJumbotron>
                     }
                 }
-            </ul>
-        </div>
-    
+            }
+        </ul>
+    </div>
+
 </BSJumbotron>
 
-    @code {
-        public List<int> FavouritedVacs = new List<int>();
-        public List<Vacation> vacations;
+@code {
+    public List<int> FavouritedVacs = new List<int>();
+    public List<Vacation> vacations;
+    private Dictionary<int, ElementReference> heartFavourite = new Dictionary<int, ElementReference>();
+    int customerID;
 
-        protected override async Task OnInitializedAsync()
+
+    protected override async Task OnInitializedAsync()
+    {
+        FavouritedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Favourited");
+        vacations = await DaService.GetAllVacations(DaService);
+    }
+
+    CustomerVacations CustomerVac => new CustomerVacations(DaService, DaService.LoggedInAccountID);
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
         {
-            FavouritedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Favourited");
-            vacations = await DaService.GetAllVacations(DaService);
+            CheckForAndFillHearts();
         }
+        return base.OnAfterRenderAsync(firstRender);
+    }
 
-        CustomerVacations CustomerVac => new CustomerVacations(DaService, DaService.LoggedInAccountID);
+    public async void checkCookie()
+    {
+        string cookie = await localStorage.GetItemAsync<String>("login");
 
-        
-
-        void LogOut(MouseEventArgs e)
+        if (cookie != null)
         {
-            DaService.LoggedIn = false;
+            string[] splitCookie = cookie.Split(",");
+            if (Convert.ToDateTime(splitCookie[1]) > DateTime.Now)
+            {
+                customerID = Convert.ToInt32(splitCookie[0]);
+            }
         }
+    }
 
+    public void FavouriteVacation(Vacation vac)
+    {
+
+        if (DaService.LoggedIn == true)
+        {
+            if (vac.TravelGroup.CheckForRelation(customerID, "Favourited").GetAwaiter().GetResult() == true)
+            {
+                checkCookie();
+                vac.TravelGroup.LeaveVacation(customerID);
+                JS.InvokeAsync<string>("ToggleClass", Convert.ToString(vac.ID));
+            }
+        }
 
     }
 
+    private void CheckForAndFillHearts()
+    {
+        checkCookie();
+        if (DaService.LoggedIn == true)
+        {
+            foreach (Vacation vac in vacations)
+            {
+                if (vac.TravelGroup.CheckForRelation(DaService.LoggedInAccountID, "Favourited").GetAwaiter().GetResult() == true)
+                {
+                    JS.InvokeAsync<string>("FillHeart", Convert.ToString(vac.ID));
+                }
+            }
+        }
+    }
+
+
+    void LogOut(MouseEventArgs e)
+    {
+        DaService.LoggedIn = false;
+    }
+
+    //Calculates progress bar fill value from joined user and stretch goals
+    int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
+    {
+        int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
+        int prevGoal = stretchGoals[prevIndex];
+
+        if (joinedUsers >= currGoal)
+        {
+            return currGoal;
+        }
+        else if (currGoal.Equals(stretchGoals[0]))
+        {
+            return joinedUsers;
+        }
+        else
+        {
+            return joinedUsers - prevGoal;
+        }
+    }
+
+
+}

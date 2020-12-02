@@ -31,6 +31,25 @@
 *{
     box-sizing: border-box;
 }
+
+/*Login modal and Create account modal
+----------------------------------------------------------------------------------*/
+.createAccount {
+    
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #069 !important;
+    text-decoration: underline;
+    cursor: pointer;
+    
+}
+
+
+
 /*Index Page Appearance
 ----------------------------------------------------------------------------------*/
 .IndexHeaderBox{
@@ -441,6 +460,15 @@ progress.progressBarJoinedUsersVS {
     width: 100%;
     position: inherit;
     background-color: #fff;
+}
+.mytravelclubsubjumbotron {
+    box-sizing: border-box;
+    padding: 2%;
+    float: left;
+    width: 100%;
+    position: inherit;
+    background-color: #fff;
+    margin-left: -3%;
 }
 .iconcolumn {
     position: absolute;
