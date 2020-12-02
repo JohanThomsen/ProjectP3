@@ -351,6 +351,15 @@ progress.progressBarJoinedUsersVS {
     position: inherit;
     background-color: #fff;
 }
+.mytravelclubsubjumbotron {
+    box-sizing: border-box;
+    padding: 2%;
+    float: left;
+    width: 100%;
+    position: inherit;
+    background-color: #fff;
+    margin-left: -3%;
+}
 .iconcolumn {
     position: absolute;
     top: 25%;

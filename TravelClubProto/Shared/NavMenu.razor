@@ -37,7 +37,7 @@
                 </li>*@
                 <li class="nav-item">
                     <NavLink class="nav-link text-dark Nav Bar" href="vacationView">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> View Vacations
+                        <span class="oi oi-globe" aria-hidden="true"></span> Se feriepakker
                     </NavLink>
                 </li>
                 @*<li class="nav-item">
@@ -59,10 +59,6 @@
                 </li>*@
             </ul>
         </div>
-    </div>
-
-
-
     @if (DaService.LoggedIn == false)
     {
         <div class="dropdown">
@@ -93,6 +89,7 @@
             </div>
         </div>
     }
+    </div>
 </nav>
 
 @*MODAL FOR LOGIN PROMPT*@

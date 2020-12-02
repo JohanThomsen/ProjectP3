@@ -54,7 +54,7 @@
                     {
                         <span class="progStretchGoal">
                             <div>
-                                @(vac.Prices[i]+ " kr.")
+                                @(vac.Prices[i] + " kr.")
                             </div>
                             <progress role="progressbar" class="progressBarJoinedUsersVS" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)><span>@vac.StretchGoals[i]</span></progress>
                         </span>
@@ -64,8 +64,20 @@
 
                 <br />
 
+<<<<<<< Updated upstream
                 <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
                 <BSButton class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))"></BSButton>
+=======
+                @if (!vac.TravelGroup.CheckForRelation(DaService.LoggedInAccountID, "Joined").GetAwaiter().GetResult())
+                {
+                    <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
+                }
+                else
+                {
+                    <BSButton @onclick="@(e => vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID))" Color="Color.Danger">Forlad Ferie</BSButton>
+                }
+                    <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />
+>>>>>>> Stashed changes
 
                 @*MODAL FOR LOGIN PROMPT*@
                 <BSModal @ref="LoginModal" IsCentered="true">
@@ -121,6 +133,7 @@
     int joinedUsersHolder;
     int stretchGoalsMax;
     int customerID;
+    CustomerVacations cusvac;
     Vacation vac = null;
     public List<Vacation> vacations;
     string notloggedinfeedback;
@@ -152,6 +165,7 @@
             await localStorage.SetItemAsync("login", ID + "," + expiry);
         }
     }
+
 
 
     public class FormsModelVal
