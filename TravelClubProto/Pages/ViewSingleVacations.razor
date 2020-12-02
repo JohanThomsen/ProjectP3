@@ -47,15 +47,15 @@
             <div class="ParticipantDetailColumn">
                 <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
 
-                    @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                    {
-                        <span class="progStretchGoal">
-                            <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
-                            <div class="progressBarPriceGoal">
-                                @(vac.Prices[i]+ " kr.")
-                            </div>
-                        </span>
-                     }
+                @for (int i = 0; i < vac.StretchGoals.Count; i++)
+                {
+                    <span class="progStretchGoal">
+                        <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                        <div class="progressBarPriceGoal">
+                            @(vac.Prices[i]+ " kr.")
+                        </div>
+                    </span>
+                }
                 <br />
 
                 @if (!vac.TravelGroup.CheckForRelation(DaService.LoggedInAccountID, "Joined").GetAwaiter().GetResult())
@@ -66,7 +66,7 @@
                 {
                     <BSButton @onclick="@(e => vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID))" Color="Color.Danger">Forlad Ferie</BSButton>
                 }
-                    <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />              
+                <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />
 
                 @*MODAL FOR LOGIN PROMPT*@
                 <BSModal @ref="LoginModal" IsCentered="true">
@@ -129,6 +129,10 @@
                     <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
                 </BSModal>
 
+                <BSModal @ref="JoinedInfoBox" Size="Size.Medium">
+                    <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
+                    <BSModalBody><p>Du er nu tilmeldt denne ferie. <br /> Du kan finde den under "Min profil" --> "Tilmeldte feriepakker"</p></BSModalBody>
+                </BSModal>
 
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
 

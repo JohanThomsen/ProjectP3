@@ -80,10 +80,10 @@
                 {
                     if (item == vac.ID)
                     {
-                      <BSJumbotron class="mytravelclubsubjumbotron">
+                       int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
+                       int stretchGoalsMax = vac.StretchGoals.Max();                        
+                         <BSJumbotron class="mytravelclubsubjumbotron">
 
-                        int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
-                        int stretchGoalsMax = vac.StretchGoals.Max();                        
 
                             <div class="ViewVacationImage">
                                 <BSFigureImage src="@vac.ImageLink" />
