@@ -45,21 +45,31 @@
 
 
             <div class="ParticipantDetailColumn">
-                <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-               
-                    @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                    {
-                        <span class="progStretchGoal">
-                            <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
-                            <div class="progressBarPriceGoal">
-                                @(vac.Prices[i]+ " kr.")
+                <div class="ViewVacPriceContainer">
+                    <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+                    <div class="progressBarGenerator">
+                        @for (int i = 0; i < vac.StretchGoals.Count; i++)
+                        {
+                            <div class="progStretchGoal">
+                                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                                <div class="progressBarPriceGoal">
+                                    @(vac.Prices[i]+ " kr.")
+                                </div>
                             </div>
-                        </span>
-                     }
-                <br />
+                        }
+                    </div>
 
-                <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
-                <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />
+                    <div class="ViewVacationButtons">
+                        <BSButton Class="JoinButton" @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
+                        <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />
+                    </div>
+                    <div class="ViewVacDeadlineDate">
+                        <h6>Deadline: @vac.Dates["Deadline"]</h6>
+                    </div>
+                </div>
+                <div class="ViewVacMoreInfoBtn">
+                    <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
+                </div>
 
                 @*MODAL FOR LOGIN PROMPT*@
                 <BSModal @ref="LoginModal" IsCentered="true">
@@ -99,10 +109,6 @@
                     <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
                 </BSModal>
 
-                <h6>Deadline: @vac.Dates["Deadline"]</h6>
-
-                <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
-                <h6>Deadline: @vac.Dates["Deadline"]</h6>
             </div>
 </BSJumbotron>
 

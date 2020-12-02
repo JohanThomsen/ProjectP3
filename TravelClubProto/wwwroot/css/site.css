@@ -14,6 +14,7 @@
     border: 1px solid rgb(149, 168, 189);
     border-radius:0;
     padding:2%;
+    float:left;
 }
 
 .NavigationBar {
@@ -140,29 +141,34 @@
 
 /*Progressbar Appearance
 --------------------------------------------------------------------------------*/
-.progressBarGeneratorVS{
-    height:1%;
-    width: 1%;
+.progressBarGenerator {
+    float: left;
+    margin:inherit;
 }
-.progStretchGoal{
-    position:relative;
-    float:left;
-    max-width:100%;
+.progStretchGoal {
+    position: relative;
+    float: left;
+    width: auto;
+    margin-top: inherit;
+    margin-bottom: inherit;
 }
 progress.progressBarJoinedUsers {
     -webkit-appearance: none;
     height: 2rem;
     width: 100%;
-    border-right: 1px solid grey;
+    border: 1px solid grey;
 }
 
-.progressBarJoinedUsersVS {
+progress.progressBarJoinedUsersVS {
     -webkit-appearance: none;
     height: 2rem;
     width: 100%;
+    border: 1px solid grey;
+    margin: inherit;
 }
 
 .progressBarPriceGoal{
+    font-size:inherit;
     width:100%
 }
 
@@ -209,6 +215,7 @@ progress.progressBarJoinedUsers {
 }
 
 .ParticipantDetailColumn {
+    position:relative;
     float:right;
     width:30%;
     margin:1%;
@@ -220,19 +227,67 @@ progress.progressBarJoinedUsers {
     margin: 0.5%;
 }
 
+.ViewVacPriceContainer{
+    float:left;
+    margin:4px;
+}
+.ViewVacDeadlineDate{
+    position:relative;
+    float:left;
+}
+
+.ViewVacationButtons{
+    float:left;
+    margin: inherit;
+}
+.ViewVacationButtons > button{
+    border-radius:0;
+}
+.ViewVacMoreInfoBtn{
+    position:relative;
+    float:left;
+    margin:inherit;
+    width:inherit;
+}
+.btn.btn-primary {
+    position: relative;
+    float: right;
+    margin: inherit;
+    border-radius: 0px;
+}
+.InfoButton.btn-primary {
+    position: relative;
+    float: right;
+    margin: inherit;
+    border-radius: 0px;
+}
 .ViewSingleVacationImage {
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: 90%;
 }
+.btn.btn-outline-info.btn-lg.HeartIconNotFill {
+    position: relative;
+    float: right;
+    margin: inherit;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
 
+.btn.btn-primary.JoinButton {
+    position: relative;
+    float: left;
+    margin: inherit;
+    height: auto;
+    width: auto;
+}
 
 /*Propose vacations page appearance
 -----------------------------------------------------------------*/
-.AddPriceButton{
-    margin-top:1%;
-    margin-bottom:1%;
+.AddPriceButton {
+    margin-top: 1%;
+    margin-bottom: 1%;
 }
 
 .textAddprice {
