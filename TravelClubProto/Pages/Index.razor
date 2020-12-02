@@ -58,12 +58,15 @@
         <BSFigure Class="VacFigures">
             @foreach (Vacation vac in vacations.Take(10))
             {
-                <div class="VacFigureImg">
-                    <a href="/SingleVacation/@vac.ID.ToString()">
-                        <BSFigureImage src=@vac.ImageLink />
-                        <BSFigureCaption>@vac.Destination </BSFigureCaption>
-                    </a>
-                </div>
+                if (vac.State == "Published")
+                {
+                    <div class="VacFigureImg">
+                        <a href="/SingleVacation/@vac.ID.ToString()">
+                            <BSFigureImage src=@vac.ImageLink />
+                            <BSFigureCaption>@vac.Destination </BSFigureCaption>
+                        </a>
+                    </div>
+                }
             }
         </BSFigure>
     </BSJumbotron>
