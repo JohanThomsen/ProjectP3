@@ -122,26 +122,12 @@
                     <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
                 </BSModal>
 
-                @if (DaService.LoggedIn == true)
-                {
-                    //Midlertidig løsning, den skal kunne fade ud af sig selv
-                    <BSAlert @ref="LoggedInBox" IsDismissible="true" Color="Color.Info">
-                        Du er nu logget ind!
-                    </BSAlert>
-                }
-
 
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
 
                 <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
                 <h6>Deadline: @vac.Dates["Deadline"]</h6>
-            </div>
-        </div>
-    </div>
-    <BSModal @ref="JoinedInfoBox" Size="Size.Medium">
-        <BSModalHeader Class="Modal-title text-center" OnClick="@JoinVacation">INFO</BSModalHeader>
-        <BSModalBody><p>Du er nu tilmeldt denne ferie. <br />Du kan se dine tilmeldte ferie under "Min Profil" -> "Tilmeldte Ferie".</p></BSModalBody>
-    </BSModal>
+            </div>   
 </BSJumbotron>
 
 
