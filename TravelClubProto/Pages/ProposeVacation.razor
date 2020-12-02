@@ -182,7 +182,7 @@
         v.ImageLink = formsModelVal.ImageLink;
         v.Description = formsModelVal.Description;
         v.FK_DestinationID = activeDestination;
-        v.FK_PublisherID = formsModelVal.PublisherID;
+        v.FK_PublisherID = DaService.LoggedInAccountID;
         v.DepartureAirport = formsModelVal.DepartureAirport;
         v.TravelBureauWebsiteLink = formsModelVal.TravelBureauWebsiteLink;
         v.InsertVacationToDatabase();

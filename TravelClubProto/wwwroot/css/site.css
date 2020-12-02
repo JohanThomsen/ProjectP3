@@ -1,6 +1,5 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-
 .header{
     background-color: white;
     padding-top: 100px;
@@ -69,7 +68,6 @@
     height:20%;
     font-size:2.5rem;
     font-weight:bold;
-    
 }
 .SearchFields {
     position: relative;
@@ -165,16 +163,26 @@
     height:1%;
     width: 1%;
 }
+.progStretchGoal{
+    position:relative;
+    float:left;
+    max-width:100%;
+}
 progress.progressBarJoinedUsers {
     -webkit-appearance: none;
     height: 2rem;
-    width: 6rem;
+    width: 100%;
+    border-right: 1px solid grey;
 }
 
-progress.progressBarJoinedUsersVS {
+.progressBarJoinedUsersVS {
     -webkit-appearance: none;
     height: 2rem;
-    width: 5rem;
+    width: 100%;
+}
+
+.progressBarPriceGoal{
+    width:100%
 }
 
 .progressBarJoinedUsers::-webkit-progress-bar {
@@ -198,12 +206,16 @@ progress.progressBarJoinedUsersVS {
     background-color: rgba(30,144,255,1);
 }
 
-.progStretchGoal{
-    float:left;
-}
-/*View singele vacations layout
------------------------------------------------------------*/
 
+
+/*View vacations and view single Vacation layout
+-----------------------------------------------------------------------------------*/
+.ViewVacationImage {
+    background: top center;
+    width: 50%;
+    margin-top: 1%;
+    float: right;
+}
 
 .ViewSingleVacationHotel {
     margin: 1%;
@@ -227,14 +239,6 @@ progress.progressBarJoinedUsersVS {
     margin: 0.5%;
 }
 
-.ViewVacationImage {
-    background:top center;
-    width:50%;
-    margin-top:1%;
-    float: right;
-}
-
-
 .ViewSingleVacationImage {
     display: block;
     margin-left: auto;
@@ -243,9 +247,29 @@ progress.progressBarJoinedUsersVS {
 }
 
 
-.SingleVacationContainer {
-    border: 1px solid rgb(149, 168, 189)
+/*Propose vacations page appearance
+-----------------------------------------------------------------*/
+.AddPriceButton{
+    margin-top:1%;
+    margin-bottom:1%;
 }
+
+.textAddprice {
+    font-family: Arial;
+    font-size:medium;
+    float: left;
+}
+
+.PricePoint {
+    width: 50%;
+}
+
+.NumberOfParticipants{
+    width:50%;
+}
+
+/*My travel club page appearabce
+----------------------------------------------------------------*/
 
 .mytravelclubcontentelementsright {
     position: relative;
@@ -281,37 +305,6 @@ progress.progressBarJoinedUsersVS {
     -o-transition: all .15s ease-out;
     transition: all .15s ease-out;
 }
-.ViewVacationImage {
-    background: top center;
-    width: 50%;
-    margin-top: 1%;
-    float: right;
-}
-
-
-/*Propose vacations page appearance
------------------------------------------------------------------*/
-.AddPriceButton{
-    margin-top:1%;
-    margin-bottom:1%;
-}
-
-.textAddprice {
-    font-family: Arial;
-    font-size:medium;
-    float: left;
-}
-
-.PricePoint {
-    width: 50%;
-}
-
-.NumberOfParticipants{
-    width:50%;
-}
-
-/*My travel club page appearabce
-----------------------------------------------------------------*/
 
 .mytravelclubmenulist {
     background-color: #30343e;
