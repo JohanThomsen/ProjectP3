@@ -270,7 +270,7 @@ progress.progressBarJoinedUsersVS {
 }
 .btn.btn-primary {
     position: relative;
-    float: right;
+    float: left;
     margin: inherit;
     border-radius: 0px;
 }
