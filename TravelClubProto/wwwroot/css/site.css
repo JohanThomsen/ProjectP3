@@ -225,6 +225,16 @@ progress.progressBarJoinedUsersVS {
 
 /*View vacations and view single Vacation layout
 -----------------------------------------------------------------------------------*/
+.ViewDescriptionRow {
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 120%;
+    -webkit-line-clamp: 10;
+    -webkit-box-orient: vertical;
+}
+
 .ViewVacationImage {
     background: top center;
     width: 50%;
