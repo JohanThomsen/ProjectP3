@@ -82,9 +82,9 @@
                         <BSDropdownItem IsDivider="true"></BSDropdownItem>
                     }
                 </BSDropdownMenu>
-                <pre> @destinationFeedback</pre>
             </BSDropdown>
             <BSButton class="new-destination-btn" @onclick="OnToggleAddDestination" Color="Color.Secondary">Tilføj ny destination</BSButton>
+                <pre> @destinationFeedback</pre>
             <BSFormGroup>
                 <BSLabel For="Description">Beskrivelse</BSLabel>
                 <BSInput Id="Description" InputType="InputType.TextArea" PlaceHolder="Indtast hotel" @bind-Value="formsModelVal.Description"></BSInput>
