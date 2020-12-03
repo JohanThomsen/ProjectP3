@@ -7,11 +7,11 @@
 
     <BSJumbotron Class ="IndexHeaderBox"IsFluid="true">
         <div class="IndexImageContainer">
-            <div class="HeaderTitle">Find jeres billige rejse her</div>
             <BSImage Class="VacFigureImgHeaderIndex"src ="https://static.asiawebdirect.com/m/phuket/hotels/krabi-hotels-com/sunrisetropical/dining/hotelBanner/dining.jpg"></BSImage>
+            <div class="HeaderTitle">Find jeres billige rejse her</div>
         </div>
-        <BSContainer>
-            <BSForm Model="@formsModelVal">
+        <BSContainer Class="FormsContainerIndex">
+            <BSForm Class="FormIndex" Model="@formsModelVal">
                 <BSBasicForm Class="FormsCollection" IsInline="true">
                         <BSFormGroup Class="home-search">
                             <BlazoredTypeahead SearchMethod="SearchVacationAirport" @bind-Value="formsModelVal.Afrejselufthavn" PlaceHolder="Afrejselufthavn" Context="Departure" EnableDropDown="true" ShowDropDownOnFocus="true">
@@ -46,8 +46,10 @@
 
 <div class="TravelClubInfo">
     <BSJumbotron IsFluid="true">
-        <BSContainer>
+        <div class="jumbotronHeader">
             <h2 class="InfoOverskrift">Hvad er TravelClub</h2>
+        </div>
+        <BSContainer Class="TravelClubInfoTextBox">
             <p><p>
             TravelClub er i samarbejde med adskillige rejse bureauer og har fundet frem til en ny måde at rejse billigere på. Vi gennemsøger en masse rejser, som er blev tilsendt fra rejse bureauerne og fremviser dem til jer.
             Modtag mails med relevante informationer for netop den ferie du finder attraktiv, ved at favoriserer ferien når du klikker på hjertet. 
@@ -58,7 +60,7 @@
     </BSJumbotron>
 </div>
 
-<div class="docs-example">
+<div class="docs-example id" id="DivPopularIndex">
     <h2 style="color:darkorange">Populære rejsepakker</h2>
     <BSJumbotron IsFluid="true" Class="ImageContainer">
         <BSFigure Class="VacFigures">
