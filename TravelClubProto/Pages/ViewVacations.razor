@@ -18,6 +18,7 @@
         <div class="col-sm-2"> <br />   
             <h6>Afrejse Dato</h6>
             <input type="date" id="start" name="trip-start" @onchange="eventArgs => { ArrivalDateUpdate( eventArgs.Value); }" min=@DateTime.Now>
+        <br />  
             <h6><b>Lande</b></h6>
             @foreach (Destination dest in activeDestinations)
             {
