@@ -14,8 +14,8 @@
 <button class="btn btn-danger" @onclick="OrderByPrice">Order by Price</button>
 <button class="btn btn-danger" @onclick="OrderByDeadline">Order by Deadline date</button>
 <div class="container">
-    <div class="row">
-        <div class="col-sm-2">
+    <div  class="row">
+        <div id="ViewVacCol" class="col-sm-2">
             <h6>Afrejse Dato</h6>
             <input type="date" id="start" name="trip-start" @onchange="eventArgs => { ArrivalDateUpdate( eventArgs.Value); }" min=@DateTime.Now>
             <h6><b>Lande</b></h6>
