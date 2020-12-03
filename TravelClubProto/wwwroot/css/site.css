@@ -10,11 +10,12 @@
 
 
 .jumbotron {
-    background-color: #f7fbfc;
+    background-color: white;
     border: 1px solid rgb(149, 168, 189);
     border-radius:0;
-    padding:2%;
+    margin:2%;
     float:left;
+    padding:0px;
 }
 
 .NavigationBar {
@@ -124,7 +125,7 @@
 .FormsCollection{
     position: absolute;
     top: 72%;
-    flex-wrap:nowrap; /*forcing into one line*/
+    flex-wrap:nowrap;
     left:4.5%;
     width: 88%;
 }
@@ -201,7 +202,7 @@ progress.progressBarJoinedUsersVS {
 }
 
 .progressBarJoinedUsers::-webkit-progress-bar {
-    background-color: rgba(30,144,255,0.1);
+    background-color: white;
     background-image: none;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25) inset;
 }
@@ -211,14 +212,13 @@ progress.progressBarJoinedUsersVS {
 }
 
 .progressBarJoinedUsersVS::-webkit-progress-bar {
-    background-color: rgba(30,144,255,0.1);
+    background-color: white;
     background-image: none;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25) inset;
-    
 }
 
 .progressBarJoinedUsersVS::-webkit-progress-value {
-    background-color: rgba(30,144,255,1);
+    background-color: white;
 }
 
 
@@ -226,6 +226,30 @@ progress.progressBarJoinedUsersVS {
 /*View vacations and view single Vacation layout
 -----------------------------------------------------------------------------------*/
 .ViewDescriptionRow {
+    position: relative;
+    float: left;
+    width: 50%;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 120%;
+    -webkit-line-clamp: 10;
+    -webkit-box-orient: vertical;
+}
+.VacationHotelColumn {
+    height: 25%;
+    width: 100%;
+    float: left;
+    position: relative;
+    background-color: #f7fbfc;
+    margin: 0;
+    padding: 1rem;
+    border-bottom: 1px solid rgb(149, 168, 189);
+}
+.VacationDescription {
+    float: left;
+    position: relative;
     word-break: break-word;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -235,12 +259,6 @@ progress.progressBarJoinedUsersVS {
     -webkit-box-orient: vertical;
 }
 
-.ViewVacationImage {
-    background: top center;
-    width: 50%;
-    margin-top: 1%;
-    float: right;
-}
 
 .ViewSingleVacationHotel {
     margin: 1%;
@@ -251,7 +269,18 @@ progress.progressBarJoinedUsersVS {
     width: 60%;
     margin: 2%;
 }
+.ViewVacImgLink {
+    width: 50%;
+    height: 50%;
+    float: right;
+}
 
+.ViewVacationImage {
+    position:relative;
+    background: top center;
+    width: 100%;
+    margin-top: 1%;
+}
 .ParticipantDetailColumn {
     position:relative;
     float:right;

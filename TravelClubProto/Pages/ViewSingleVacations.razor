@@ -21,129 +21,129 @@
 <h3 class="page_title">Se ferier</h3>
 
 <BSJumbotron Class="ViewSingleVacationJumbotron">
-        <div class="ViewSingleVacationImage">
-            <BSFigureImage src="@vac.ImageLink" />
-        </div>
-        <br />
+    <div class="ViewSingleVacationImage">
+        <BSFigureImage src="@vac.ImageLink" />
+    </div>
+    <br />
 
-        <div class="ViewSingleVacationHotel">
-            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-            <h10>ID:  @vac.ID </h10>
-        </div>
+    <div class="ViewSingleVacationHotel">
+        <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+        <h10>ID:  @vac.ID </h10>
+    </div>
 
 
-            <div class="SingleVacationDescriptionColumn">
-                <h4>Beskrivelse af ferien:</h4>
-                <p><b>Afrejselufthavn:</b> @vac.DepartureAirport</p>
-                <p>@vac.Description</p>
-                <h4>Activities:</h4>
-                @foreach (Activity item in vac.Destination.Activities)
+    <div class="SingleVacationDescriptionColumn">
+        <h4>Beskrivelse af ferien:</h4>
+        <p><b>Afrejselufthavn:</b> @vac.DepartureAirport</p>
+        <p>@vac.Description</p>
+        <h4>Activities:</h4>
+        @foreach (Activity item in vac.Destination.Activities)
+        {
+            <p>@item.Type</p>
+        }
+    </div>
+
+
+    <div class="ParticipantDetailColumn">
+        <div class="ViewVacPriceContainer">
+            <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+            <div class="progressBarGenerator">
+                @for (int i = 0; i < vac.StretchGoals.Count; i++)
                 {
-                    <p>@item.Type</p>
+                    <div class="progStretchGoal">
+                        <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                        <div class="progressBarPriceGoal">
+                            @(vac.Prices[i]+ " kr.")
+                        </div>
+                    </div>
                 }
             </div>
 
-
-            <div class="ParticipantDetailColumn">
-                <div class="ViewVacPriceContainer">
-                    <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-                    <div class="progressBarGenerator">
-                        @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                        {
-                            <div class="progStretchGoal">
-                                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
-                                <div class="progressBarPriceGoal">
-                                    @(vac.Prices[i]+ " kr.")
-                                </div>
-                            </div>
-                        }
-                    </div>
-
-                    <div class="ViewVacationButtons">
-                        @if (!vac.TravelGroup.CheckForRelation(DaService.LoggedInAccountID, "Joined").GetAwaiter().GetResult())
-                        {
-                            <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
-                        }
-                        else
-                        {
-                            <BSButton @onclick="@(e => vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID))" Color="Color.Danger">Forlad Ferie</BSButton>
-                        }
-                        <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />
-                    </div>
-                    <div class="ViewVacDeadlineDate">
-                        <h6>Deadline: @vac.Dates["Deadline"]</h6>
-                    </div>
-                </div>
-                <div class="ViewVacMoreInfoBtn">
-                    <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
-                </div>
+            <div class="ViewVacationButtons">
+                @if (!vac.TravelGroup.CheckForRelation(DaService.LoggedInAccountID, "Joined").GetAwaiter().GetResult())
+                {
+                    <BSButton @onclick="@(e => JoinVacation(vac))" Color="Color.Primary">Tilmeld Ferie</BSButton>
+                }
+                else
+                {
+                    <BSButton @onclick="@(e => vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID))" Color="Color.Danger">Forlad Ferie</BSButton>
+                }
+                <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />
             </div>
+            <div class="ViewVacDeadlineDate">
+                <h6>Deadline: @vac.Dates["Deadline"]</h6>
+            </div>
+        </div>
+        <div class="ViewVacMoreInfoBtn">
+            <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
+        </div>
+    </div>
 
-                @*MODAL FOR LOGIN PROMPT*@
-                <BSModal @ref="LoginModal" IsCentered="true">
-                    <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
-                    <BSModalBody>
-                        <p>
-                            <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+    @*MODAL FOR LOGIN PROMPT*@
+    <BSModal @ref="LoginModal" IsCentered="true">
+        <BSModalHeader OnClick="@OnToggleLogin">Log ind</BSModalHeader>
+        <BSModalBody>
+            <p>
+                <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
 
-                                <BSFormGroup>
-                                    @*Input for user email*@
-                                    <BSLabel for="InputEmail">Email-adresse</BSLabel>
-                                    <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
-                                </BSFormGroup>
+                    <BSFormGroup>
+                        @*Input for user email*@
+                        <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                        <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                    </BSFormGroup>
 
-                                <BSFormGroup>
-                                    @*Input for user password*@
-                                    <BSLabel for="InputPassword">Kodeord</BSLabel>
-                                    <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
-                                </BSFormGroup>
+                    <BSFormGroup>
+                        @*Input for user password*@
+                        <BSLabel for="InputPassword">Kodeord</BSLabel>
+                        <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                    </BSFormGroup>
 
-                                <BSButton class="createAccount" @onclick="OnToggleCreateProfile">Har du ikke en profil? Opret en profil her!</BSButton>
+                    <BSButton class="createAccount" @onclick="OnToggleCreateProfile">Har du ikke en profil? Opret en profil her!</BSButton>
 
-                                @*Submit Button*@
-                                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
-                            </BSForm>
-                        </p>
-                    </BSModalBody>
-                </BSModal>
+                    @*Submit Button*@
+                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="LogInToProfile">Log ind</BSButton>
+                </BSForm>
+            </p>
+        </BSModalBody>
+    </BSModal>
 
-                @*MODAL FOR CREATEPROFILE PROMPT*@
-                <BSModal @ref="CreateProfileModal" IsCentered="true">
-                    <BSModalHeader OnClick="@OnToggleCreateProfile">Opret Bruger</BSModalHeader>
-                    <BSModalBody>
-                        <p>
-                            <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
+    @*MODAL FOR CREATEPROFILE PROMPT*@
+    <BSModal @ref="CreateProfileModal" IsCentered="true">
+        <BSModalHeader OnClick="@OnToggleCreateProfile">Opret Bruger</BSModalHeader>
+        <BSModalBody>
+            <p>
+                <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
 
-                                <BSFormGroup>
-                                    @*Input for user email*@
-                                    <BSLabel for="InputEmail">Email-adresse</BSLabel>
-                                    <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
-                                </BSFormGroup>
+                    <BSFormGroup>
+                        @*Input for user email*@
+                        <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                        <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
+                    </BSFormGroup>
 
-                                <BSFormGroup>
-                                    @*Input for user password*@
-                                    <BSLabel for="InputPassword">Kodeord</BSLabel>
-                                    <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
-                                </BSFormGroup>
+                    <BSFormGroup>
+                        @*Input for user password*@
+                        <BSLabel for="InputPassword">Kodeord</BSLabel>
+                        <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
+                    </BSFormGroup>
 
-                                <BSButton class="createAccount" @onclick="OnToggleLogin">Har du allerede en profil? Log ind!</BSButton>
+                    <BSButton class="createAccount" @onclick="OnToggleLogin">Har du allerede en profil? Log ind!</BSButton>
 
-                                @*Submit Button*@
-                                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
-                            </BSForm>
-                        </p>
-                    </BSModalBody>
-                </BSModal>
+                    @*Submit Button*@
+                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
+                </BSForm>
+            </p>
+        </BSModalBody>
+    </BSModal>
 
-                <BSModal @ref="WarningBox" Size="Size.Medium">
-                    <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
-                    <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
-                </BSModal>
+    <BSModal @ref="WarningBox" Size="Size.Medium">
+        <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
+        <BSModalBody><p>Den indtastede Email eller Password er ikke indtastet korrekt. <br /> Prøv venligst igen.</p></BSModalBody>
+    </BSModal>
 
-                <BSModal @ref="JoinedInfoBox" Size="Size.Medium">
-                    <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
-                    <BSModalBody><p>Du er nu tilmeldt denne ferie. <br /> Du kan finde den under "Min profil" --> "Tilmeldte feriepakker"</p></BSModalBody>
-                </BSModal>
+    <BSModal @ref="JoinedInfoBox" Size="Size.Medium">
+        <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
+        <BSModalBody><p>Du er nu tilmeldt denne ferie. <br /> Du kan finde den under "Min profil" --> "Tilmeldte feriepakker"</p></BSModalBody>
+    </BSModal>
 </BSJumbotron>
 
 
