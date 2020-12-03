@@ -47,7 +47,7 @@
 <div class="TravelClubInfo">
     <BSJumbotron IsFluid="true">
         <div class="jumbotronHeader">
-            <h2 class="InfoOverskrift">Hvad er TravelClub</h2>
+            <h2 class="InfoTitleIndex">Hvad er TravelClub</h2>
         </div>
         <BSContainer Class="TravelClubInfoTextBox">
             <p><p>
@@ -57,28 +57,30 @@
             Bare fordi at der er flere deltagere, betyder det altså ikke at man behøver og rejse sammen. Tværtimod tilbyder alle rejsepakkerne private værelser til dem du rejser med!            
             </p></p>
         </BSContainer>
+        <div class="docs-example id" id="DivPopularIndex">
+            <div class="jumbotronHeader">
+                <h2 class="descTitleIndex">Populære rejsepakker</h2>
+            </div>
+            
+                <BSFigure Class="VacFigures">
+                    @foreach (Vacation vac in vacations.Take(10))
+                    {
+                        if (vac.State=="Published")
+                        {
+                            <div class="VacFigureImg">
+                                <a href="/SingleVacation/@vac.ID.ToString()">
+                                    <BSFigureImage src=@vac.ImageLink />
+                                    <BSFigureCaption style="color:black">@vac.Destination.Location, @vac.Destination.Hotel </BSFigureCaption>
+                                </a>
+                            </div>
+                        }
+                    }
+                </BSFigure>
+            
+        </div>
     </BSJumbotron>
 </div>
 
-<div class="docs-example id" id="DivPopularIndex">
-    <h2 style="color:darkorange">Populære rejsepakker</h2>
-    <BSJumbotron IsFluid="true" Class="ImageContainer">
-        <BSFigure Class="VacFigures">
-            @foreach (Vacation vac in vacations.Take(10))
-            {
-                if (vac.State=="Published")
-                {
-                    <div class="VacFigureImg">
-                        <a href="/SingleVacation/@vac.ID.ToString()">
-                            <BSFigureImage src=@vac.ImageLink />
-                            <BSFigureCaption style="color:black">@vac.Destination.Location, @vac.Destination.Hotel </BSFigureCaption>
-                        </a>
-                    </div>
-                }
-            }
-        </BSFigure>
-    </BSJumbotron>
-</div>
 
 @code
 {

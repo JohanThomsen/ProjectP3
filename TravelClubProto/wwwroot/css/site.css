@@ -16,6 +16,7 @@
     margin:2px;
     float:left;
     padding:0px;
+    position:relative;
 }
 
 .NavigationBar {
@@ -180,11 +181,14 @@
     position: relative;
     width: inherit;
     height: inherit;
-    left:
 }
-
-.VacFigures{
-
+.InfoTitleIndex {
+    border-bottom: 2px solid #e39a1a;
+    position: relative;
+    float: left;
+    left: 35.5%;
+    font-weight: bold;
+    color: #a56d28;
 }
 
 .VacFigureImg {
@@ -193,6 +197,14 @@
     height: 7.5%;
     float: left;
     margin: 0.5%;
+}
+.descTitleIndex {
+    border-bottom: 2px solid #e39a1a;
+    position: relative;
+    float: left;
+    left: 35.5%;
+    font-weight: bold;
+    color: #a56d28;
 }
 #DivPopularIndex{
     position:relative;
@@ -303,7 +315,12 @@ progress.progressBarJoinedUsersVS {
     -webkit-line-clamp: 10;
     -webkit-box-orient: vertical;
 }
-
+.descTitleViewVac {
+    /*border-bottom: 2px solid #e39a1a;*/
+    
+    font-weight: bold;
+    color: #a56d28;
+}
 
 .ViewSingleVacationHotel {
     margin: 1%;
@@ -336,7 +353,8 @@ progress.progressBarJoinedUsersVS {
 .VacationDescriptionColumn {
     float: left;
     width: 19%;
-    margin: 0.5%;
+    margin: 2px;
+    padding:2px;
 }
 
 .ViewVacPriceContainer{
@@ -711,7 +729,6 @@ a {
 }
 
 .nav-link:hover {
-    /*background-color: rgba(30,144,255,0.1);*/
     border-bottom: 2px solid #e39a1a;
     color: white;
 }

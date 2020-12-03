@@ -17,22 +17,22 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-2"> <br />   
-            <h6>Afrejse Dato</h6>
+            <h6 class="descTitleViewVac">Afrejse Dato</h6>
             <input type="date" id="start" name="trip-start" @onchange="eventArgs => { ArrivalDateUpdate( eventArgs.Value); }" min=@DateTime.Now>
         <br />  
-            <h6><b>Lande</b></h6>
+            <h6 class="descTitleViewVac"><b>Lande</b></h6>
             @foreach (Destination dest in activeDestinations)
             {
                 <input type="checkbox" id="@dest.Country" @ref="destinationCheckbox[dest.Country]" @onchange="eventArgs => { CheckboxClickedDest(dest.Country, eventArgs.Value); }" />@dest.Country<br />
             }
         <br />  
-            <h6><b>Aktiviteter</b> </h6>
+            <h6 class="descTitleViewVac"><b>Aktiviteter</b> </h6>
             @foreach (Activity act in activeActivities)
             {
                 <input type="checkbox" @onchange="eventArgs => { CheckboxClickedAct(act, eventArgs.Value); }" />@act.Type<br />
             }
         <br />  
-            <h6><b>Lufthavne</b> </h6>
+            <h6 class="descTitleViewVac"><b>Lufthavne</b> </h6>
             @foreach (string departureAirport in activeAirports)
             {
                 <input type="checkbox" id="@departureAirport" @ref="departureAirportCheckbox[departureAirport]" @onchange="eventArgs => { CheckboxClickedAirport(departureAirport, eventArgs.Value); }" />@departureAirport<br />
@@ -40,14 +40,14 @@
 
         </div>
         <div class="col-sm-10">
-            <h2>@noSearchFeedback</h2>
+            <h2 class="descTitleViewVac">@noSearchFeedback</h2>
             @foreach (Vacation vac in ViewedVacations)
             {
                 int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
                 int stretchGoalsMax = vac.StretchGoals.Max();
                 <BSJumbotron>
                     <div class="jumbotronHeader">
-                        <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>                   
+                        <h2 class="descTitleViewVac">@vac.Destination.Hotel, @vac.Destination.Location</h2>                   
                     </div>
                 
                     <div class="ViewVacImgLink">
@@ -60,7 +60,7 @@
                 
                     <div class="ViewDescriptionRow">
                         <div class="VacationDescriptionColum">
-                            <h2>Feriebeskrivelse: </h2>
+                            <h2 class="descTitleViewVac">Feriebeskrivelse: </h2>
                             <p>@vac.Description</p>
                         </div>
                     </div>
