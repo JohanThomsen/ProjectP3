@@ -362,7 +362,7 @@ else if (DaService.LoggedInType == "TravelClub")
 
     Account acc;
 
-    string customerName;
+    string customerName = string.Empty;
 
 
 
@@ -379,7 +379,7 @@ else if (DaService.LoggedInType == "TravelClub")
             loginInfo = await localStorage.GetItemAsync<String>("login");
             loginresult = loginInfo.Split(",");
             ID = Convert.ToInt32(loginresult[0]);
-            customerName = GetCustomer(DaService.LoggedInAccountID).PI.Name;
+            customerName = GetCustomerName(DaService.LoggedInAccountID);
             DateTime expiry = Convert.ToDateTime(loginresult[1]);
             if (expiry > DateTime.Now)
             {
@@ -390,15 +390,15 @@ else if (DaService.LoggedInType == "TravelClub")
         }
     }
 
-    public Customer GetCustomer(int accountid)
+    public string GetCustomerName(int accountid)
     {
         Account temp = DaService.GetAccountById(accountid).GetAwaiter().GetResult();
         if (temp is Customer)
         {
             Customer c = (Customer)temp;
-            return c;
+            return c.PI.Name;
         }
 
-        return null;
+        return string.Empty;
     }
 }

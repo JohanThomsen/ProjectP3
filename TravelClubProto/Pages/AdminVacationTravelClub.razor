@@ -51,7 +51,7 @@
                 <ul>
                     @foreach (Vacation vac in vacations)
                     {
-                        if (vac.State == "Published")
+                        if (vac.State == "Published" || vac.State == "GracePeriod")
                         {
                             <!-- vac.Destination.AddActivity(); -->
 
@@ -64,7 +64,7 @@
                                 <div class="ViewDescriptionRow">
                                     <div class="VacationHotelColumn">
                                         <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                                        <h10>ID:  @vac.ID </h10>
+                                        
 
                                         <h2>Feriebeskrivelse: </h2>
                                         <p>@vac.Description</p>
