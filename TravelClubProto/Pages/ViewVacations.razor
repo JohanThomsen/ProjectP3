@@ -15,7 +15,7 @@
 <button class="btn btn-danger" @onclick="OrderByDeadline">Order by Deadline date</button>
 <div class="container">
     <div class="row">
-        <div class="col-sm-2">
+        <div class="col-sm-2"> <br />   
             <h6>Afrejse Dato</h6>
             <input type="date" id="start" name="trip-start" @onchange="eventArgs => { ArrivalDateUpdate( eventArgs.Value); }" min=@DateTime.Now>
             <h6><b>Lande</b></h6>
@@ -23,11 +23,13 @@
             {
                 <input type="checkbox" id="@dest.Country" @ref="destinationCheckbox[dest.Country]" @onchange="eventArgs => { CheckboxClickedDest(dest.Country, eventArgs.Value); }" />@dest.Country<br />
             }
+        <br />  
             <h6><b>Aktiviteter</b> </h6>
             @foreach (Activity act in activeActivities)
             {
                 <input type="checkbox" @onchange="eventArgs => { CheckboxClickedAct(act, eventArgs.Value); }" />@act.Type<br />
             }
+        <br />  
             <h6><b>Lufthavne</b> </h6>
             @foreach (string departureAirport in activeAirports)
             {
@@ -50,8 +52,7 @@
                 
             <div class="ViewDescriptionRow">
                 <div class="VacationHotelColumn">
-                    <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                    <h10>ID:  @vac.ID </h10>
+                    <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>                   
 
                     <h2>Feriebeskrivelse: </h2>
                     <p>@vac.Description</p>
