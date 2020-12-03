@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,10 +36,38 @@ namespace TravelClubProto.Data
 
         public PersonalInformation PI;
 
-        public void ChangePersonalInformation(string name, string emailAddress)
+        public int ChangePersonalInformation(string name, string emailAddress)
         {
             PI.Name         = name;
             PI.EmailAddress = emailAddress;
+
+            int count = 0;
+            SqlConnection con = new SqlConnection(DaService.ConnectionString);
+            try
+            {
+                using (var sc2 = new SqlConnection(DaService.ConnectionString))
+                using (var cmd2 = sc2.CreateCommand())
+                {
+                    sc2.Open();
+                    cmd2.CommandText = "UPDATE [dbo].Account SET Email = @emailAddress, Name = @name WHERE AccountID=@CustomerID";
+                    cmd2.Parameters.AddWithValue("@emailAddress", emailAddress);
+                    cmd2.Parameters.AddWithValue("@name", name);
+                    cmd2.Parameters.AddWithValue("@CustomerID", customerID);
+
+                    count = cmd2.ExecuteNonQuery();
+                }
+
+            }
+            //Catches the error and prints it
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            finally
+            {
+                con.Close();
+            }
+            return count;
         }
     }
 }
