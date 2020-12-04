@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TravelClubProto.Data.Tests
+namespace TravelClubProtoTests.Data.Tests
 {
     [TestClass()]
     public class VacationTests
