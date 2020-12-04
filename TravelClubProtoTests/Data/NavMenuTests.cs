@@ -68,8 +68,43 @@ namespace TravelClubProto.Data.Tests
             Assert.IsNotNull(ex);
         }
 
+        [TestMethod()]
+        public void CreateUserModalOpenTest()
+        {
+            using var ctx = new Bunit.TestContext();
+            InitialiseTestContext(ctx);
+            var cut = ctx.RenderComponent<NavMenu>();
 
+            cut.Find(".btn.dropdown-toggle.oi.oi-menu").Click();
+            cut.FindAll("a.dropdown-item")[1].Click();
+            cut.Find(".modal-dialog.modal-dialog-centered");
+        }
 
+        [TestMethod()]
+        public void CreateUserModalCloseTest()
+        {
+            using var ctx = new Bunit.TestContext();
+            InitialiseTestContext(ctx);
+            var cut = ctx.RenderComponent<NavMenu>();
+
+            cut.Find(".btn.dropdown-toggle.oi.oi-menu").Click();
+            cut.FindAll("a.dropdown-item")[1].Click();
+            cut.Find("button.close").Click();
+
+            ElementNotFoundException ex = Assert.ThrowsException<ElementNotFoundException>(() => cut.Find("div.modal.fade.show"));
+            Assert.IsNotNull(ex);
+        }
+
+        [TestMethod()]
+        public void NavBarLinkActivationTest()
+        {
+            using var ctx = new Bunit.TestContext();
+            InitialiseTestContext(ctx);
+            var cut = ctx.RenderComponent<NavMenu>();
+
+            cut.FindAll("a.nav-link.text-dark.Nav.Bar")[1].Click();
+            Assert.IsTrue(cut.FindAll("a.nav-link.text-dark.Nav.Bar")[1].ClassList.Contains("active"));
+        }
 
 
 
