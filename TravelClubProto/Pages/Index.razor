@@ -3,15 +3,15 @@
 @using TravelClubProto.Data
 @inject DataAccessService DaService
 <div class="SearchFields">
-    
+
 
     <BSJumbotron Class ="IndexHeaderBox"IsFluid="true">
         <div class="IndexImageContainer">
-            <div class="HeaderTitle">Find jeres billige rejse her</div>
             <BSImage Class="VacFigureImgHeaderIndex"src ="https://static.asiawebdirect.com/m/phuket/hotels/krabi-hotels-com/sunrisetropical/dining/hotelBanner/dining.jpg"></BSImage>
+            <div class="HeaderTitle">Find jeres billige rejse her</div>
         </div>
-        <BSContainer>
-            <BSForm Model="@formsModelVal">
+        <BSContainer Class="FormsContainerIndex">
+            <BSForm Class="FormIndex" Model="@formsModelVal">
                 <BSBasicForm Class="FormsCollection" IsInline="true">
                         <BSFormGroup Class="home-search">
                             <BlazoredTypeahead SearchMethod="SearchVacationAirport" @bind-Value="formsModelVal.Afrejselufthavn" PlaceHolder="Afrejselufthavn" Context="Departure" EnableDropDown="true" ShowDropDownOnFocus="true">
@@ -26,7 +26,7 @@
                                 <ResultTemplate>@Destination</ResultTemplate>
                             </BlazoredTypeahead>
                         </BSFormGroup>
-    
+
                     <BSFormGroup Class="home-search">
                         <BSLabel for="InputEmail"></BSLabel>
                         <BSInput id="InputEmail" InputType="InputType.Date" PlaceHolder="Afrejse dato" @bind-Value="formsModelVal.AfrejseDato"></BSInput>
@@ -36,7 +36,7 @@
                         <BSLabel for="InputPassword"></BSLabel>
                         <BSInput id="InputPassword" InputType="InputType.Date" PlaceHolder="Hjemrejse dato" @bind-Value="formsModelVal.HjemrejseDato"></BSInput>
                     </BSFormGroup>
-                    <a class="btn btn-primary index" href="/vacationView/@formsModelVal.Afrejselufthavn/@formsModelVal.Rejsemål/@formsModelVal.AfrejseDato.ToBinary().ToString()/@formsModelVal.HjemrejseDato.ToBinary().ToString()" role="button">Se mere</a>
+                    <a class="btn btn-primary index" href="/vacationView/@formsModelVal.Afrejselufthavn/@formsModelVal.Rejsemål/@formsModelVal.AfrejseDato.ToBinary().ToString()/@formsModelVal.HjemrejseDato.ToBinary().ToString()" role="button">Søg</a>
                 </BSBasicForm>
             </BSForm>
             <h1 class=""> @formErrorInput</h1>
@@ -46,31 +46,40 @@
 
 <div class="TravelClubInfo">
     <BSJumbotron IsFluid="true">
-        <BSContainer>
-            <h2 class="InfoOverskrift">Hvad er TravelClub</h2>
-            <p><p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p></p>
+        <div class="jumbotronHeader">
+            <h2 class="InfoTitleIndex">Hvad er TravelClub</h2>
+        </div>
+        <BSContainer Class="TravelClubInfoTextBox">
+            <p><p>
+            TravelClub er i samarbejde med adskillige rejse bureauer og har fundet frem til en ny måde at rejse billigere på. Vi gennemsøger en masse rejser, som er blev tilsendt fra rejse bureauerne og fremviser dem til jer.
+            Modtag mails med relevante informationer for netop den ferie du finder attraktiv, ved at favoriserer ferien når du klikker på hjertet. 
+            Men hvorfor er dette en ny måde at rejse billigere på? Travelclub tilbyder variende priser for en ferie, jo flere deltagere der er på en ferie, desto billigere bliver din ferie. 
+            Bare fordi at der er flere deltagere, betyder det altså ikke at man behøver og rejse sammen. Tværtimod tilbyder alle rejsepakkerne private værelser til dem du rejser med!            
+            </p></p>
         </BSContainer>
+        <div class="docs-example id" id="DivPopularIndex">
+            <div class="jumbotronHeader">
+                <h2 class="descTitleIndex">Populære rejsepakker</h2>
+            </div>
+            
+                <BSFigure Class="VacFigures">
+                    @foreach (Vacation vac in vacations.Take(10))
+                    {
+                        if (vac.State=="Published")
+                        {
+                            <div class="VacFigureImg">
+                                <a href="/SingleVacation/@vac.ID.ToString()">
+                                    <BSFigureImage src=@vac.ImageLink />
+                                    <BSFigureCaption style="color:black">@vac.Destination.Location, @vac.Destination.Hotel </BSFigureCaption>
+                                </a>
+                            </div>
+                        }
+                    }
+                </BSFigure>
+            
+        </div>
     </BSJumbotron>
 </div>
-
-<div class="docs-example">
-    <BSJumbotron IsFluid="true" Class="ImageContainer">
-        <BSFigure Class="VacFigures">
-            @foreach (Vacation vac in vacations.Take(10))
-            {
-                <div class="VacFigureImg">
-                    <a href="/SingleVacation/@vac.ID.ToString()">
-                        <BSFigureImage src=@vac.ImageLink />
-                        <BSFigureCaption>@vac.Destination </BSFigureCaption>
-                    </a>
-                </div>
-            }
-        </BSFigure>
-    </BSJumbotron>
-</div>
-
-
-
 
 
 @code
