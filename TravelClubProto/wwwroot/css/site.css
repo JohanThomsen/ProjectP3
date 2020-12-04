@@ -804,3 +804,7 @@ body {
 .new-destination-btn {
     position: relative;
 }
+
+#blazor-error-ui {
+    visibility: hidden;
+}
