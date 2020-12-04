@@ -151,7 +151,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        FavouritedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Favourited");
+        FavouritedVacs = await CustomerVac.GetRelatedVacationsForCustomer("Favourited");
         vacations = await DaService.GetAllVacations(DaService);
     }
 
