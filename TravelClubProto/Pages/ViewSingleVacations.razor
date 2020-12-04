@@ -66,7 +66,7 @@
                 }
                 else
                 {
-                    <BSButton @onclick="@(e => LeaveVacation(vac))" Color="Color.Danger">Forlad Ferie</BSButton>
+                    <BSButton @onclick="@(e => vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID))" Color="Color.Danger">Forlad Ferie</BSButton>
                 }
                 <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />
             </div>
@@ -141,12 +141,8 @@
     </BSModal>
 
     <BSModal @ref="JoinedInfoBox" Size="Size.Medium">
-        <BSModalHeader Class="Modal-title text-center" OnClick ="@JoinVacation">INFO</BSModalHeader>
+        <BSModalHeader Class="Modal-title text-center" OnClick="@LogInToProfile">INFO</BSModalHeader>
         <BSModalBody><p>Du er nu tilmeldt denne ferie. <br /> Du kan finde den under "Min profil" --> "Tilmeldte feriepakker"</p></BSModalBody>
-    </BSModal>
-    <BSModal @ref="LeaveInfoBox" Size ="Size.Medium">
-        <BSModalHeader Class="Modal-title text-center" OnClick ="@LeftVacation">ADVARSEL</BSModalHeader>
-        <BSModalBody><p>Du har nu forladt denne ferie. <br /> Ønsker du at finde ferien igen, skal du søge efter den under "Se ferier"</p></BSModalBody>
     </BSModal>
 </BSJumbotron>
 
@@ -156,7 +152,6 @@
     BSModal LoginModal;
     BSModal CreateProfileModal;
     BSModal WarningBox { get; set; }
-    BSModal LeaveInfoBox;
     int joinedUsersHolder;
     int stretchGoalsMax;
     int customerID;
@@ -184,11 +179,6 @@
     void JoinVacation(MouseEventArgs e)
     {
         JoinedInfoBox.Toggle();
-    }
-
-    void LeftVacation(MouseEventArgs e)
-    {
-        LeaveInfoBox.Toggle();
     }
 
     async void LogInToProfile(MouseEventArgs e)
@@ -287,23 +277,6 @@
             notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
             LoginModal.Toggle();
         }
-    }
-
-    public void LeaveVacation(Vacation vac)
-    {
-        checkCookie();
-        if(DaService.LoggedIn == true)
-        {
-            notloggedinfeedback = string.Empty;
-            vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID);
-            LeaveInfoBox.Toggle();
-        }
-        else
-        {
-            notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
-            LoginModal.Toggle();
-        }
-
     }
 
     public void FavouriteVacation(Vacation vac)
