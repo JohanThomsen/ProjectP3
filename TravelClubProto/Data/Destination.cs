@@ -22,6 +22,7 @@ namespace TravelClubProto
         public Destination(DataAccessService daService)
         {
             DaService = daService;
+            AddActivity().GetAwaiter().GetResult();
         }
         public async Task AddActivity()
         {
@@ -78,6 +79,7 @@ namespace TravelClubProto
                         while (Reader.Read())
                         {
                             returnid = Convert.ToInt32(Reader["DestinationID"]);
+                            ID = returnid;
                         }
                         myConnection.Close();
                     }

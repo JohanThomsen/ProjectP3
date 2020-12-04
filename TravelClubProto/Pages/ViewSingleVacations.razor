@@ -26,17 +26,17 @@
     </div>
     <br />
 
-    <div class="ViewSingleVacationHotel">
-        <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+    <div class="jumbotronHeader">
+        <h2 class="descTitleViewVac">@vac.Destination.Hotel, @vac.Destination.Location</h2>
         <h10>ID:  @vac.ID </h10>
     </div>
 
 
     <div class="SingleVacationDescriptionColumn">
-        <h4>Beskrivelse af ferien:</h4>
-        <p><b>Afrejselufthavn:</b> @vac.DepartureAirport</p>
+        <h2 class="descTitleViewVac">Beskrivelse af ferien:</h2>
+        <p class="descTitleViewVac"><b>Afrejselufthavn:</b> @vac.DepartureAirport</p>
         <p>@vac.Description</p>
-        <h4>Activities:</h4>
+        <h2 class="descTitleViewVac">Activities:</h2>
         @foreach (Activity item in vac.Destination.Activities)
         {
             <p>@item.Type</p>

@@ -88,8 +88,7 @@
 
                     <div class="ViewDescriptionRow">
                         <div class="VacationHotelColumn">
-                            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                            <h10>ID:  @vac.ID </h10>
+                            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>                            
 
                             <h2>Feriebeskrivelse: </h2>
                             <p>@vac.Description</p>
@@ -128,7 +127,7 @@
 
         protected override async Task OnInitializedAsync()
         {
-            JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Joined");
+            JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer("Joined");
             vacations = await DaService.GetAllVacations(DaService);
 
         }
