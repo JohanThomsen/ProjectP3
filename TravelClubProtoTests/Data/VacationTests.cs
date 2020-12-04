@@ -1,12 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TravelClubProto.Data;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 
-namespace TravelClubProtoTests.Data.Tests
+namespace TravelClubProto.Data.Tests
 {
     [TestClass()]
     public class VacationTests
