@@ -80,7 +80,7 @@
                 {
                     if (item == vac.ID)
                     {
-<<<<<<< Updated upstream
+
                         if (item == vac.ID)
                         {
                             <!-- vac.Destination.AddActivity(); -->
@@ -118,8 +118,6 @@
                     <BSButton style="float:right" @onclick="@(e => vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID))" Color="Color.Danger">Forlad Ferie</BSButton>
                 </BSJumbotron>
                         }
-=======
-                        <!-- vac.Destination.AddActivity(); -->
                         int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
                         int stretchGoalsMax = vac.StretchGoals.Max();
                         <BSJumbotron class="mytravelclubsubjumbotron">
@@ -168,7 +166,6 @@
                             </div>
 
                         </BSJumbotron>
->>>>>>> Stashed changes
                     }
                 }
             }
@@ -188,18 +185,10 @@
     public List<int> JoinedVacs = new List<int>();
     public List<Vacation> vacations;
 
-<<<<<<< Updated upstream
-        protected override async Task OnInitializedAsync()
-        {
-            JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer("Joined");
-            vacations = await DaService.GetAllVacations(DaService);
-=======
     protected override async Task OnInitializedAsync()
     {
-        JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Joined");
+        JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer("Joined");
         vacations = await DaService.GetAllVacations(DaService);
->>>>>>> Stashed changes
-
     }
 
     CustomerVacations CustomerVac => new CustomerVacations(DaService, DaService.LoggedInAccountID);
@@ -217,8 +206,8 @@
 
     public void LeaveVacation(Vacation vac)
     {
-            vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID);
-            LeaveInfoBox.Toggle();
+        vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID);
+        LeaveInfoBox.Toggle();
     }
 
     //Calculates progress bar fill value from joined user and stretch goals

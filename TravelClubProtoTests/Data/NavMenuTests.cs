@@ -95,16 +95,7 @@ namespace TravelClubProto.Data.Tests
             Assert.IsNotNull(ex);
         }
 
-        [TestMethod()]
-        public void NavBarLinkActivationTest()
-        {
-            using var ctx = new Bunit.TestContext();
-            InitialiseTestContext(ctx);
-            var cut = ctx.RenderComponent<NavMenu>();
 
-            cut.FindAll("a.nav-link.text-dark.Nav.Bar")[1].Click();
-            Assert.IsTrue(cut.FindAll("a.nav-link.text-dark.Nav.Bar")[1].ClassList.Contains("active"));
-        }
 
 
 
@@ -125,7 +116,6 @@ namespace TravelClubProto.Data.Tests
             ctx.Services.AddSingleton<DataAccessService>();
             ctx.Services.AddSingleton<IConfiguration>(config);
             ctx.Services.AddBootstrapCss();
-
         }
 
     }
