@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using TravelClubProto.Data;
 using Microsoft.Data.SqlClient;
 
-namespace TravelClubProto.Tests
+namespace TravelClubProto.Data.Tests
 {
     [TestClass()]
     public class DestinationTests

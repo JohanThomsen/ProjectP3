@@ -114,10 +114,10 @@
     height: 20rem;
     padding:0px;   
 }
-.pb-3{
+/*.pb-3{
     position:relative;
     float:left;
-}
+}*/
 .IndexBackgroundImage{
     position: relative;
     width: 100%;
@@ -399,7 +399,6 @@ progress.progressBarJoinedUsersVS {
 }
 .btn.btn-outline-info.btn-lg.HeartIconNotFill {
     position: relative;
-    float: right;
     margin: inherit;
     padding-bottom: 0px;
     padding-top: 0px;

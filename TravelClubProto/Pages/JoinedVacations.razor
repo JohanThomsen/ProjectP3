@@ -8,6 +8,8 @@
 @using Microsoft.EntityFrameworkCore.Migrations.Operations;
 @using TravelClubProto.Data;
 @inject DataAccessService DaService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IJSRuntime JS;
 
 <BSJumbotron Class="mytravelclubjumbotron">
     <BSNav IsList="true" IsVertical="true" Class="mytravelclubmenulist">
@@ -69,13 +71,16 @@
         </li>
     </BSNav>
 
-        <div class="mytravelclubcontent">
-            <h2 class="welcomemytravelclub">Dine tilmeldte Feriepakker</h2>
-            <ul>
-                @foreach (int item in JoinedVacs)
-                 {
-                    foreach (Vacation vac in vacations)
+    <div class="mytravelclubcontent">
+        <h2 class="welcomemytravelclub">Dine tilmeldte Feriepakker</h2>
+        <ul>
+            @foreach (int item in JoinedVacs)
+            {
+                foreach (Vacation vac in vacations)
+                {
+                    if (item == vac.ID)
                     {
+<<<<<<< Updated upstream
                         if (item == vac.ID)
                         {
                             <!-- vac.Destination.AddActivity(); -->
@@ -88,8 +93,7 @@
 
                     <div class="ViewDescriptionRow">
                         <div class="VacationHotelColumn">
-                            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
-                            <h10>ID:  @vac.ID </h10>
+                            <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>                            
 
                             <h2>Feriebeskrivelse: </h2>
                             <p>@vac.Description</p>
@@ -114,30 +118,126 @@
                     <BSButton style="float:right" @onclick="@(e => vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID))" Color="Color.Danger">Forlad Ferie</BSButton>
                 </BSJumbotron>
                         }
+=======
+                        <!-- vac.Destination.AddActivity(); -->
+                        int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
+                        int stretchGoalsMax = vac.StretchGoals.Max();
+                        <BSJumbotron class="mytravelclubsubjumbotron">
+
+                            <div class="ViewVacationImage">
+                                <BSFigureImage src="@vac.ImageLink" />
+                            </div>
+
+                            <div class="ViewDescriptionRow">
+                                <div class="VacationHotelColumn">
+                                    <h2>@vac.Destination.Hotel, @vac.Destination.Location</h2>
+                                    <h10>ID:  @vac.ID </h10>
+
+                                    <h2>Feriebeskrivelse: </h2>
+                                    <p>@vac.Description</p>
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="ParticipantDetailColumn">
+                                <div class="ViewVacPriceContainer">
+                                    <h6>Prices from:<br /> @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+                                    <div class="progressBarGenerator">
+                                        @for (int i = 0; i < vac.StretchGoals.Count; i++)
+                                        {
+                                            <div class="progStretchGoal">
+                                                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                                                <div class="progressBarPriceGoal">
+                                                    @(vac.Prices[i]+ " kr.")
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <br />
+                                    <div class="ViewVacDeadlineDate">
+                                        <h5>Deadline:<br /> @vac.Dates["Deadline"]</h5>
+                                    </div>
+                                    <div class="ViewVacMoreInfoBtn">
+                                        <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
+                                    </div>
+                                    <div class="ViewVacationButtons">
+                                        <BSButton @onclick="@(e =>LeaveVacation(vac))" Color="Color.Danger">Forlad Ferie</BSButton>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </BSJumbotron>
+>>>>>>> Stashed changes
                     }
-                 }
-            </ul>
-        </div>
+                }
+            }
+        </ul>
+    </div>
+    <BSModal @ref="LeaveInfoBox" Size="Size.Medium">
+        <BSModalHeader Class="Modal-title text-center" OnClick="@LeftVacation">ADVARSEL</BSModalHeader>
+        <BSModalBody><p>Du har nu forladt denne ferie. <br /> Ønsker du at finde ferien igen, skal du søge efter den under "Se ferier"</p></BSModalBody>
+    </BSModal>
 </BSJumbotron>
 
 
-    @code {
-        Customer customer;
-        public List<int> JoinedVacs = new List<int>();
-        public List<Vacation> vacations;
+@code {
+    BSModal LeaveInfoBox;
+    Customer customer;
+    string customerID;
+    public List<int> JoinedVacs = new List<int>();
+    public List<Vacation> vacations;
 
+<<<<<<< Updated upstream
         protected override async Task OnInitializedAsync()
         {
             JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer("Joined");
             vacations = await DaService.GetAllVacations(DaService);
-
-        }
-
-        CustomerVacations CustomerVac => new CustomerVacations(DaService, DaService.LoggedInAccountID);
-
-        void LogOut(MouseEventArgs e)
-        {
-            DaService.LoggedIn = false;
-        }
+=======
+    protected override async Task OnInitializedAsync()
+    {
+        JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Joined");
+        vacations = await DaService.GetAllVacations(DaService);
+>>>>>>> Stashed changes
 
     }
+
+    CustomerVacations CustomerVac => new CustomerVacations(DaService, DaService.LoggedInAccountID);
+
+    void LogOut(MouseEventArgs e)
+    {
+        DaService.LoggedIn = false;
+    }
+
+    void LeftVacation(MouseEventArgs e)
+    {
+        LeaveInfoBox.Toggle();
+    }
+
+
+    public void LeaveVacation(Vacation vac)
+    {
+            vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID);
+            LeaveInfoBox.Toggle();
+    }
+
+    //Calculates progress bar fill value from joined user and stretch goals
+    int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
+    {
+        int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
+        int prevGoal = stretchGoals[prevIndex];
+
+        if (joinedUsers >= currGoal)
+        {
+            return currGoal;
+        }
+        else if (currGoal.Equals(stretchGoals[0]))
+        {
+            return joinedUsers;
+        }
+        else
+        {
+            return joinedUsers - prevGoal;
+        }
+    }
+}
