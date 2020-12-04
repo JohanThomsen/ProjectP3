@@ -46,12 +46,12 @@
 
     <div class="ParticipantDetailColumn">
         <div class="ViewVacPriceContainer">
-            <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+            <h6>Prices from: <br />@vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
             <div class="progressBarGenerator">
                 @for (int i = 0; i < vac.StretchGoals.Count; i++)
                 {
                     <div class="progStretchGoal">
-                        <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                        <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], vac.TravelGroup.NumberOfJoinedUsers().GetAwaiter().GetResult())></progress>
                         <div class="progressBarPriceGoal">
                             @(vac.Prices[i]+ " kr.")
                         </div>
@@ -71,7 +71,7 @@
                 <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" />
             </div>
             <div class="ViewVacDeadlineDate">
-                <h6>Deadline: @vac.Dates["Deadline"]</h6>
+                <h5>Deadline:<br /> @vac.Dates["Deadline"]</h5>
             </div>
         </div>
         <div class="ViewVacMoreInfoBtn">
@@ -141,22 +141,23 @@
     </BSModal>
 
     <BSModal @ref="JoinedInfoBox" Size="Size.Medium">
-        <BSModalHeader Class="Modal-title text-center" OnClick ="@JoinVacation">INFO</BSModalHeader>
+        <BSModalHeader Class="Modal-title text-center" OnClick="@JoinVacation">INFO</BSModalHeader>
         <BSModalBody><p>Du er nu tilmeldt denne ferie. <br /> Du kan finde den under "Min profil" --> "Tilmeldte feriepakker"</p></BSModalBody>
     </BSModal>
-    <BSModal @ref="LeaveInfoBox" Size ="Size.Medium">
-        <BSModalHeader Class="Modal-title text-center" OnClick ="@LeftVacation">ADVARSEL</BSModalHeader>
-        <BSModalBody><p>Du har nu forladt denne ferie. <br /> Ønsker du at finde ferien igen, skal du søge efter den under "Se ferier"</p></BSModalBody>
+
+    <BSModal @ref="LeaveInfoBox" Size="Size.Medium">
+        <BSModalHeader Class="Modal-title text-center" OnClick="@LeaveVacation">INFO</BSModalHeader>
+        <BSModalBody><p>Du har nu forladt denne ferie <br /> Ønsker du at finde ferien igen, skal du søge efter den under "Se ferier"</p></BSModalBody>
     </BSModal>
 </BSJumbotron>
 
 
 @code {
+    BSModal LeaveInfoBox;
     BSModal JoinedInfoBox;
     BSModal LoginModal;
     BSModal CreateProfileModal;
     BSModal WarningBox { get; set; }
-    BSModal LeaveInfoBox;
     int joinedUsersHolder;
     int stretchGoalsMax;
     int customerID;
@@ -186,9 +187,24 @@
         JoinedInfoBox.Toggle();
     }
 
-    void LeftVacation(MouseEventArgs e)
+    void LeaveVacation(MouseEventArgs e)
     {
         LeaveInfoBox.Toggle();
+    }
+    public void LeaveVacation(Vacation vac)
+    {
+        checkCookie();
+        if (DaService.LoggedIn == true)
+        {
+            notloggedinfeedback = string.Empty;
+            vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID);
+            LeaveInfoBox.Toggle();
+        }
+        else
+        {
+            notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
+            LoginModal.Toggle();
+        }
     }
 
     async void LogInToProfile(MouseEventArgs e)
@@ -289,23 +305,6 @@
         }
     }
 
-    public void LeaveVacation(Vacation vac)
-    {
-        checkCookie();
-        if(DaService.LoggedIn == true)
-        {
-            notloggedinfeedback = string.Empty;
-            vac.TravelGroup.LeaveVacation(DaService.LoggedInAccountID);
-            LeaveInfoBox.Toggle();
-        }
-        else
-        {
-            notloggedinfeedback = "Du skal være logged in før du kan bruge denne funktionalitet";
-            LoginModal.Toggle();
-        }
-
-    }
-
     public void FavouriteVacation(Vacation vac)
     {
         if (DaService.LoggedIn == true)
@@ -344,25 +343,25 @@
 
 
 
-    @*Calculates progress bar fill value from joined user and stretch goals*@
-    int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
-    {
-        int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
-        int prevGoal = stretchGoals[prevIndex];
+@*Calculates progress bar fill value from joined user and stretch goals*@
+int ValueCalc(List<int> stretchGoals, int currGoal, int joinedUsers)
+{
+    int prevIndex = stretchGoals.IndexOf(currGoal) == 0 ? 0 : stretchGoals.IndexOf(currGoal) - 1;
+    int prevGoal = stretchGoals[prevIndex];
 
-        if (joinedUsers >= currGoal)
-        {
-            return currGoal;
-        }
-        else if (currGoal.Equals(stretchGoals[0]))
-        {
-            return joinedUsers;
-        }
-        else
-        {
-            return joinedUsers - prevGoal;
-        }
+    if (joinedUsers >= currGoal)
+    {
+        return currGoal;
     }
+    else if (currGoal.Equals(stretchGoals[0]))
+    {
+        return joinedUsers;
+    }
+    else
+    {
+        return joinedUsers - prevGoal;
+    }
+}
 
 
 
