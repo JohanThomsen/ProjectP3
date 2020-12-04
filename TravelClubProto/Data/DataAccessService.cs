@@ -14,15 +14,14 @@ namespace TravelClubProto.Data
         public bool LoggedIn { get; set; }
         public int LoggedInAccountID { get; set; }
         public string LoggedInType { get; set; }
+        bool test = false;
 
-
-        private IConfiguration config;
+        public IConfiguration config;
         //IConfiguration gets key/value from appsettings.json
         public DataAccessService(IConfiguration configuration)
         {
             config = configuration;
         }
-
         //ConnectionString uses the data received from "Iconfiguration config" above which will be used to connect the project code with the azure sql database
         public string ConnectionString
         {
@@ -32,7 +31,7 @@ namespace TravelClubProto.Data
                 string _database = config.GetValue<string>("DbConfig:DatabaseName");
                 string _username = config.GetValue<string>("DbConfig:UserName");
                 string _password = config.GetValue<string>("DbConfig:Password");
-                return $"Server={_server};Database={_database};User ID={_username};Password={_password};Trusted_Connection=False;MultipleActiveResultSets=true;";
+                return $"Server={_server};Database={_database};User ID={_username};Password={_password};Trusted_Connection=False;MultipleActiveResultSets=true;";           
             }
         }
 
@@ -330,8 +329,11 @@ namespace TravelClubProto.Data
                     //Reads all the executed sql commands
                     using (SqlDataReader Reader = sqlCommand.ExecuteReader())
                     {
-                        customers.Add(new Customer(Convert.ToInt32(Reader["AccountID"]), Reader["Email"] as string, Reader["Password"] as string, this)); 
-                        myConnection.Close();
+                        while (Reader.Read())
+                        {
+                            customers.Add(new Customer(Convert.ToInt32(Reader["AccountID"]), Reader["Email"] as string, Reader["Password"] as string, this));
+                            myConnection.Close();
+                        }
                     }
                 }
             }

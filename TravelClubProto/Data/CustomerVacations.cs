@@ -23,7 +23,7 @@ namespace TravelClubProto.Data
             CustomerID = customerID;
         }
 
-        public async Task<List<int>> GetRelatedVacationsForCustomer(int customerID, string relation)
+        public async Task<List<int>> GetRelatedVacationsForCustomer(string relation)
         {
             List<int> relatedVacations = new List<int>();
             try
@@ -32,7 +32,7 @@ namespace TravelClubProto.Data
                 DataTable dt = new DataTable();
                 SqlConnection con = new SqlConnection(DaService.ConnectionString);
                 //Gets data from the sql database
-                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].CustomerVacationRelations WHERE RelationType='{relation}' AND FK_CustomerID='{customerID}'", con);
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM [dbo].CustomerVacationRelations WHERE RelationType='{relation}' AND FK_CustomerID='{CustomerID}'", con);
                 //Structures the data such that it can be read 
                 da.Fill(dt);
                 //Reads data into designated class

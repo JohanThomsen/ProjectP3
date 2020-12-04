@@ -127,7 +127,7 @@
 
         protected override async Task OnInitializedAsync()
         {
-            JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Joined");
+            JoinedVacs = await CustomerVac.GetRelatedVacationsForCustomer("Joined");
             vacations = await DaService.GetAllVacations(DaService);
 
         }

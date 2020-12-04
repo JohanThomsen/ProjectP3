@@ -109,7 +109,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ParticipatedVacs = await CustomerVac.GetRelatedVacationsForCustomer(DaService.LoggedInAccountID, "Participated");
+        ParticipatedVacs = await CustomerVac.GetRelatedVacationsForCustomer("Participated");
         vacations = await DaService.GetAllVacations(DaService);
     }
 
