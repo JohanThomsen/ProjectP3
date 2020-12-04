@@ -82,7 +82,7 @@
                     {
                        int joinedUsersHolder = vac.TravelGroup.GetUserIDsFromRelation(vac.ID, "Joined").ConfigureAwait(true).GetAwaiter().GetResult().Count;
                        int stretchGoalsMax = vac.StretchGoals.Max();                        
-                         <BSJumbotron class="mytravelclubsubjumbotron">
+                        <BSJumbotron class="mytravelclubsubjumbotron">
 
 
                             <div class="ViewVacationImage">
@@ -100,39 +100,36 @@
                             </div>
 
                             <br />
+                
 
-                            <h6>Prices from: @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
-                            <p>
-                                @for (int i = 0; i < @vac.Prices.Count; i++)
-                                {
-                                    string priceIntervalHolder = "";
-                                    priceIntervalHolder += vac.Prices[i] + "kr.";
-                                    <text>@priceIntervalHolder  &nbsp; &nbsp; &nbsp;</text>
-                                }
-                            </p>
-                            <h6>Deadline: @vac.Dates["Deadline"]</h6>
-
-
-                            <span class="progressBarGenerator">
-                                <span>
-                                    <div>
-
-                                        @for (int i = 0; i < vac.StretchGoals.Count; i++)
-                                        {
-                                            <span class="progStretchGoal">
-                                                <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
-                                                <div>
-                                                    @(vac.Prices[i]+ " kr.")
+                            <div class="ParticipantDetailColumn">
+                                <div class="ViewVacPriceContainer">
+                                    <h6>Prices from: <br /> @vac.Prices[vac.Prices.Count - 1] kr. - @vac.Prices[0] kr. </h6>
+                                        <div class="progressBarGenerator">
+                                            @for (int i = 0; i < vac.StretchGoals.Count; i++)
+                                            {
+                                                <div class="progStretchGoal">
+                                                    <progress class="progressBarJoinedUsers" max=@vac.StretchGoals[i] value=@ValueCalc(vac.StretchGoals, vac.StretchGoals[i], joinedUsersHolder)></progress>
+                                                    <div class="progressBarPriceGoal">
+                                                        @(vac.Prices[i]+ " kr.")
+                                                    </div>
                                                 </div>
-                                            </span>
-
-                                        }
-                                        <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconFill" @onclick="@(e => FavouriteVacation(vac))" @ref="heartFavourite[vac.ID]" />
-                                        <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
-
+                                            }
+                                        </div>
+                                    <div class="ViewVacationButtons">
+                                    <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconFill" @onclick="@(e => FavouriteVacation(vac))" @ref="heartFavourite[vac.ID]" />
                                     </div>
-                                </span>
-                            </span>
+                                    <br />
+                                    <div class="ViewVacDeadlineDate">
+                                        <h5>Deadline: <br /> @vac.Dates["Deadline"]</h5>
+                                    </div>
+                                </div>
+
+                                    <div class="ViewVacMoreInfoBtn">
+                                        <a class="btn btn-primary" href="@vac.TravelBureauWebsiteLink" role="button">Se mere</a>
+                                    </div>
+                            </div>
+               
                         </BSJumbotron>
                     }
                 }
