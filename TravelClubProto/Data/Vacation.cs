@@ -20,7 +20,7 @@ namespace TravelClubProto.Data
         {
             if (!(TravelGroup is null))
             {
-                return MinNumberOfUsers >= TravelGroup.NumberOfJoinedUsers().GetAwaiter().GetResult() ? 0 : 1;
+                return MinNumberOfUsers <= TravelGroup.NumberOfJoinedUsers().GetAwaiter().GetResult() ? 1 : 0;
             }
             return 0;
         }
@@ -73,7 +73,7 @@ namespace TravelClubProto.Data
         public Vacation(List<int> stretchGoals, List<decimal> prices, DataAccessService daService)
         {
             DaService = daService;
-            AddPrices(stretchGoals, prices);  
+            AddPrices(stretchGoals, prices);
             VacAdmin = new VacationAdministrator(daService, ID);
         }
 

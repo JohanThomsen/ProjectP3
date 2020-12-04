@@ -89,21 +89,17 @@ namespace TravelClubProto.Data
         private void RejectProposal(string state)
         {
             AddDateTimeAndChangeDate(state, "RejectionDate");
-            //TODO add stuff for TravelBureau
         }
 
         private void CancelVacation(string state)
         {
             AddDateTimeAndChangeDate(state, "CancelDate");
             DeleteVacationRelation();
-            //TODO Do stuff for travel Bureau
         }
 
         private void StartGracePeriod(string state)
         {
             AddDateTimeAndChangeDate(state, "GracePeriodDate");
-
-            //TODO add stuff for TravelBureau
         }
 
         

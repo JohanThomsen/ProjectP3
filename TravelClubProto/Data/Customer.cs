@@ -49,7 +49,7 @@ namespace TravelClubProto.Data
                 using (var cmd2 = sc2.CreateCommand())
                 {
                     sc2.Open();
-                    cmd2.CommandText = "UPDATE [dbo].Account SET Email = @emailAddress, Name = @name WHERE AccountID=@CustomerID";
+                    cmd2.CommandText = "UPDATE [dbo].Account SET Email=@emailAddress, Name=@name WHERE AccountID=@CustomerID";
                     cmd2.Parameters.AddWithValue("@emailAddress", emailAddress);
                     cmd2.Parameters.AddWithValue("@name", name);
                     cmd2.Parameters.AddWithValue("@CustomerID", customerID);
