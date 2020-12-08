@@ -111,25 +111,25 @@
     <BSModal @ref="CreateProfileModal" IsCentered="true">
         <BSModalHeader OnClick="@OnToggleCreateProfile">Opret Bruger</BSModalHeader>
         <BSModalBody>
-            <p>
+            <p class="text-danger">
                 <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
-
                     <BSFormGroup>
                         @*Input for user email*@
-                        <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                        <BSLabel for="InputEmail" Class="text-black-50">Email-adresse</BSLabel>
                         <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
                     </BSFormGroup>
 
                     <BSFormGroup>
                         @*Input for user password*@
-                        <BSLabel for="InputPassword">Kodeord</BSLabel>
+                        <BSLabel for="InputPassword" Class="text-black-50">Kodeord</BSLabel>
                         <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
                     </BSFormGroup>
 
-                    <BSButton class="createAccount" @onclick="OnToggleLogin">Har du allerede en profil? Log ind!</BSButton>
+                    <BSButton class="createAccount" @onclick="OnToggleLogin">Har du allerede en profil? Log ind!</BSButton> <br />
+                    Dette er en test hjemmeside. Password bliver ikke enkrypteret så brug et simpelt password som "123456" eller lignende
 
                     @*Submit Button*@
-                    <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
+                    <BSButton style="float:right" Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
                 </BSForm>
             </p>
         </BSModalBody>

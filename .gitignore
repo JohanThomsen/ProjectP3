@@ -348,3 +348,7 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+TravelClubProto/.config/dotnet-tools.json
+TravelClubProto/Properties/serviceDependencies.TravelClub - Web Deploy.json
+TravelClubProto/Properties/ServiceDependencies/TravelClub - Web Deploy/mssql1.arm.json
+TravelClubProto/Properties/ServiceDependencies/TravelClub - Web Deploy/profile.arm.json

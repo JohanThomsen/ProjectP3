@@ -16,22 +16,23 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-2"> <br />   
+        <div class="col-sm-2">
+            <br />
             <h6 class="descTitleViewVac">Afrejse Dato</h6>
             <input type="date" id="start" name="trip-start" @onchange="eventArgs => { ArrivalDateUpdate( eventArgs.Value); }" min=@DateTime.Now>
-        <br />  
+            <br />
             <h6 class="descTitleViewVac"><b>Lande</b></h6>
             @foreach (Destination dest in activeDestinations)
             {
                 <input type="checkbox" id="@dest.Country" @ref="destinationCheckbox[dest.Country]" @onchange="eventArgs => { CheckboxClickedDest(dest.Country, eventArgs.Value); }" />@dest.Country<br />
             }
-        <br />  
+            <br />
             <h6 class="descTitleViewVac"><b>Aktiviteter</b> </h6>
             @foreach (Activity act in activeActivities)
             {
                 <input type="checkbox" @onchange="eventArgs => { CheckboxClickedAct(act, eventArgs.Value); }" />@act.Type<br />
             }
-        <br />  
+            <br />
             <h6 class="descTitleViewVac"><b>Lufthavne</b> </h6>
             @foreach (string departureAirport in activeAirports)
             {
@@ -47,9 +48,9 @@
                 int stretchGoalsMax = vac.StretchGoals.Max();
                 <BSJumbotron>
                     <div class="jumbotronHeader">
-                        <h2 class="descTitleViewVac">@vac.Destination.Hotel, @vac.Destination.Location</h2>                   
+                        <h2 class="descTitleViewVac">@vac.Destination.Hotel, @vac.Destination.Location</h2>
                     </div>
-                
+
                     <div class="ViewVacImgLink">
                         <a href="/SingleVacation/@vac.ID.ToString()" role="button" show="Hide">
                             <div class="ViewVacationImage">
@@ -57,7 +58,7 @@
                             </div>
                         </a>
                     </div>
-                
+
                     <div class="ViewDescriptionRow">
                         <div class="VacationDescriptionColum">
                             <h2 class="descTitleViewVac">Feriebeskrivelse: </h2>
@@ -80,10 +81,10 @@
                             }
                         </div>
                         <div class="ViewVacationButtons">
-                            <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" @ref="heartFavourite[vac.ID]"/>
+                            <input type="button" id="@vac.ID" value="" class="btn btn-outline-info btn-lg HeartIconNotFill" @onclick="@(e => FavouriteVacation(vac))" @ref="heartFavourite[vac.ID]" />
                             <a class="InfoButton btn-primary" href="/SingleVacation/@vac.ID.ToString()" role="button">Se mere</a>
                         </div>
-                        <br/> 
+                        <br />
                         <div class="ViewVacDeadlineDate">
                             <h6>Deadline: @vac.Dates["Deadline"]</h6>
                         </div>
@@ -125,25 +126,25 @@
 <BSModal @ref="CreateProfileModal" IsCentered="true">
     <BSModalHeader OnClick="@OnToggleCreateProfile">Opret Bruger</BSModalHeader>
     <BSModalBody>
-        <p>
+        <p class="text-danger">
             <BSForm Model="@formsModelVal" OnValidSubmit="ConsoleWrite">
-
                 <BSFormGroup>
                     @*Input for user email*@
-                    <BSLabel for="InputEmail">Email-adresse</BSLabel>
+                    <BSLabel for="InputEmail" Class="text-black-50">Email-adresse</BSLabel>
                     <BSInput id="InputEmail" InputType="InputType.Email" PlaceHolder="Indtast Email" @bind-Value="formsModelVal.Email"></BSInput>
                 </BSFormGroup>
 
                 <BSFormGroup>
                     @*Input for user password*@
-                    <BSLabel for="InputPassword">Kodeord</BSLabel>
+                    <BSLabel for="InputPassword" Class="text-black-50">Kodeord</BSLabel>
                     <BSInput id="InputPassword" InputType="InputType.Password" PlaceHolder="Indtast Kodeord" @bind-Value="formsModelVal.Password"></BSInput>
                 </BSFormGroup>
 
-                <BSButton class="createAccount" @onclick="OnToggleLogin">Har du allerede en profil? Log ind!</BSButton>
+                <BSButton class="createAccount" @onclick="OnToggleLogin">Har du allerede en profil? Log ind!</BSButton> <br />
+                Dette er en test hjemmeside. Password bliver ikke enkrypteret så brug et simpelt password som "123456" eller lignende
 
                 @*Submit Button*@
-                <BSButton Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
+                <BSButton style="float:right" Color="Color.Primary" ButtonType="ButtonType.Submit" @onclick="SaveProfileToTables">Opret Bruger</BSButton>
             </BSForm>
         </p>
     </BSModalBody>
