@@ -33,6 +33,8 @@
 <br />
 <button class="btn btn-info" @onclick="CreatePriceAgent">Create Price Agent</button>
 <button class="btn btn-info" @onclick="GatherVacationFromAgents">Gather relevant Vacations</button>
+<br />
+<button class="btn btn-info" @onclick="CreateAndSendNotification">Send Mail notification</button>
 
 
 
@@ -199,5 +201,12 @@
             Customer cust = (Customer)temp;
             cust.priceAgentManager.GatherVacations();
         }
+    }
+
+    public void CreateAndSendNotification()
+    {
+        Notification not = new Notification("DeleteButton Email", new List<string>(), "UserJoined");
+        not.Execute();
+
     }
 }

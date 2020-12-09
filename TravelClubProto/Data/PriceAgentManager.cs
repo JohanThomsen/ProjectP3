@@ -89,14 +89,18 @@ namespace TravelClubProto.Data
 
         private void SendNotification(List<Vacation> AllRelevantVacations)
         {
-            string vacsToSend = "";
+            string content = "<h1>Your Price agent has found relevant vacations!</h1>";
+            List<string> mail = new List<string>() { Email };
             //Send email
             foreach (Vacation vac in AllRelevantVacations)
             {
                 //Construct Email
-                vacsToSend += vac.ToString();
+
+                content += $"<p>The <a href='https://travelclub.azurewebsites.net/SingleVacation/" + vac.ID + "'>vacation</a> matches your price agent preferences</p>";
             }
-            Console.WriteLine(vacsToSend);
+            Console.WriteLine(content);
+            Notification not = new Notification(content, mail, "PriceAgentUpdate");
+            not.Execute();
         }
     }
 }
